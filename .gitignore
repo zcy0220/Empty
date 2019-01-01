@@ -1,0 +1,12 @@
+
+.DS_Store
+
+/.vs
+/Library
+/Packages
+/ProjectSettings
+/Temp
+/obj
+
+*.csproj
+*.sln
