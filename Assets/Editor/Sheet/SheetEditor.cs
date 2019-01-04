@@ -12,6 +12,7 @@ using System.Data;
 using System;
 using System.Text;
 using Base.Utils;
+using Base.Debug;
 
 public class SheetEditor
 {
@@ -52,10 +53,11 @@ public class SheetEditor
                 }
             }
         }
-        //FileUtil.SafeWriteAllText("Assets/Scripts/Sheet/SheetManager.cs", sb.ToString());
-        //Debugger.Log("Generate SheetManager CS Done");
+        //FileUtil.SafeWriteAllText("Assets/Scripts/Sheet/SheetManager.cs", );
+        Base.Utils.FileUtil.WriteAllText("Assets/Scripts/Sheet/SheetProtobuf.cs", "1123");
+        Debugger.Log("Generate Protobuf CS Done");
 
-        //AssetDatabase.Refresh()
+        AssetDatabase.Refresh();
         //生成bytes
     }
 
