@@ -22,20 +22,39 @@ namespace Base.Utils
         }
 
         /// <summary>
-        /// 写入文本
+        /// Writes all text.
         /// </summary>
-        public static bool WriteAllText(string outFile, string text)
+        public static bool WriteAllText(string outFile, string outText)
         {
             try
             {
                 if (!CheckFileAndCreateDirWhenNeeded(outFile)) return false;
                 if (File.Exists(outFile)) File.SetAttributes(outFile, FileAttributes.Normal);
-                File.WriteAllText(outFile, text);
+                File.WriteAllText(outFile, outText);
                 return true;
             }
             catch (System.Exception e)
             {
                 Debugger.LogError("WriteAllText failed! path = {0} with err = {1}", outFile, e.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Writes all bytes.
+        /// </summary>
+        public static bool WriteAllBytes(string outFile, byte[] outBytes)
+        {
+            try
+            {
+                if (!CheckFileAndCreateDirWhenNeeded(outFile)) return false;
+                if (File.Exists(outFile)) File.SetAttributes(outFile, FileAttributes.Normal);
+                File.WriteAllBytes(outFile, outBytes);
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                Debugger.LogError("WriteAllBytes failed! path = {0} with err = {1}", outFile, e.Message);
                 return false;
             }
         }
