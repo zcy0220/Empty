@@ -25,7 +25,7 @@ public class SheetEditor
     private static string OUTSHEETBYTES = "Assets/Resources/Sheets/{0}.bytes";
 
     /// <summary>
-    /// 自定义的表数据key，默认情况为id
+    /// 默认情况下，表格只需导出以id为key的字典。特殊情况下，要在下面自定义key和导出数据的类型
     /// </summary>
     private static readonly Dictionary<string, SheetExportBase> sheetExportConst = new Dictionary<string, SheetExportBase>
     {

@@ -4,7 +4,7 @@
 
 namespace Base.Common
 {
-    public abstract class Singleton<T> where T : Singleton<T>, new()
+    public abstract class Singleton<T> where T : new()
     {
         private static T mInstance;
 
