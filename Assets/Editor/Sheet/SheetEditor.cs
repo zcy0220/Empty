@@ -24,13 +24,22 @@ public class SheetEditor
     private static string OUTSHEETMANAGERPATH = "Assets/Scripts/Sheet/SheetManager.cs";
     private static string OUTSHEETBYTES = "Assets/Resources/Sheets/{0}.bytes";
 
+    /// <summary>
+    /// 自定义的表数据key，默认情况为id
+    /// </summary>
+    private static readonly Dictionary<string, SheetExportBase> sheetExportConst = new Dictionary<string, SheetExportBase>
+    {
+        { "Example", new SheetExportBase("Example").SetKey("exampleInt").SetExportDataType(EExportDataType.BOTH)}
+    };
+
     [MenuItem("Tools/Sheet/Protobuf")]
     private static void Sheet2Protobuf()
     {
         var sheetDir = new DirectoryInfo(SHEETROOTPATH);
         var files = sheetDir.GetFiles();
         var sheetDict = new Dictionary<string, DataTable>();
-        //生成CS
+
+        //------------------------------生成CS--------------------------------
         var sheetCSSB = new StringBuilder();
         sheetCSSB.Append(LineText("/**"));
         sheetCSSB.Append(LineText(" * Tool generation, do not modify!!!"));
@@ -42,6 +51,7 @@ public class SheetEditor
         for (var i = 0; i < files.Length; i++)
         {
             var file = files[i];
+            if (file.Extension != SHEETEXT) continue;
             var name = file.Name.Replace(SHEETEXT, "");
             sheetCSSB.Append(LineText("[ProtoContract]", 1));
             sheetCSSB.Append(LineText("public class " + name, 1));
@@ -77,25 +87,43 @@ public class SheetEditor
             }
             sheetCSSB.Append(LineText("}\n", 1));
             sheetCSSB.Append(LineText("[ProtoContract]", 1));
-            sheetCSSB.Append(LineText("public class " + name + "Array : BaseArray", 1));
+            sheetCSSB.Append(LineText("public class " + name + "List : BaseList", 1));
             sheetCSSB.Append(LineText("{", 1));
             sheetCSSB.Append(LineText("[ProtoMember(1)]", 2));
-            sheetCSSB.Append(LineText(string.Format("public List<{0}> {1} = new List<{2}>();", name, name + "List", name), 2));
+            sheetCSSB.Append(LineText(string.Format("public List<{0}> Items = new List<{0}>();", name), 2));
             sheetCSSB.Append(LineText("}\n", 1));
         }
         sheetCSSB.Append(LineText("}"));
         Base.Utils.FileUtil.WriteAllText(OUTSHEETCSPATH, sheetCSSB.ToString());
         Debugger.Log("Generate Protobuf CS Done!");
 
-        //生成SheetManager
+        //------------------------------生成SheetManager------------------------------
         var sheetManagerSB = new StringBuilder();
         sheetManagerSB.Append(LineText("/**"));
         sheetManagerSB.Append(LineText(" * Tool generation, do not modify!!!"));
         sheetManagerSB.Append(LineText(" */\n"));
+        sheetManagerSB.Append(LineText("using Sheet;\nusing Base.Common;\nusing System.Collections.Generic;\n"));
+        sheetManagerSB.Append(LineText("public partial class SheetManager : Singleton<SheetManager>"));
+        sheetManagerSB.Append(LineText("{"));
+
+        foreach (var table in sheetDict)
+        {
+            var sheetName = table.Key;
+            SheetExportBase sheetExportBase;
+            if (!sheetExportConst.TryGetValue(sheetName, out sheetExportBase))
+            {
+                sheetExportBase = new SheetExportBase(sheetName);
+            }
+
+            string exportText = sheetExportBase.ExportScript();
+            sheetManagerSB.Append(exportText);
+        }
+
+        sheetManagerSB.Append("}");
         Base.Utils.FileUtil.WriteAllText(OUTSHEETMANAGERPATH, sheetManagerSB.ToString());
         Debugger.Log("Generate SheetManager Done!");
 
-        //生成bytes
+        //------------------------------生成bytes-------------------------------------
         var provider = new CSharpCodeProvider();
         var parameters = new CompilerParameters();
         parameters.ReferencedAssemblies.Add(Application.dataPath + "/Plugins/Protobuf/protobuf-net.dll");
@@ -114,8 +142,8 @@ public class SheetEditor
             {
                 var name = table.Key;
                 var data = table.Value;
-                var listObj = ass.CreateInstance("Sheet." + name + "Array");
-                var list = listObj.GetType().GetField(name + "List").GetValue(listObj);
+                var listObj = ass.CreateInstance("Sheet." + name + "List");
+                var list = listObj.GetType().GetField("Items").GetValue(listObj);
                 var addMethod = list.GetType().GetMethod("Add");
                 var rows = data.Rows.Count;
                 var cols = data.Columns.Count;
@@ -204,7 +232,7 @@ public class SheetEditor
     /// <summary>
     /// 获得每一行的字符串
     /// </summary>
-    private static string LineText(string text, int tabCount = 0)
+    public static string LineText(string text, int tabCount = 0)
     {
         string ret = "";
         for (int i = 1; i <= tabCount; i++)
@@ -221,7 +249,7 @@ public class SheetEditor
     /// </summary>
     private static string GetBaseArrayCode()
     {
-        return @"    public class BaseArray
+        return @"    public class BaseList
     {
         public void Export(string outFile)
         {

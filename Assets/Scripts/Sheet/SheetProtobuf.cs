@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Sheet
 {
-    public class BaseArray
+    public class BaseList
     {
         public void Export(string outFile)
         {
@@ -48,36 +48,10 @@ namespace Sheet
 	}
 
 	[ProtoContract]
-	public class ExampleArray : BaseArray
+	public class ExampleList : BaseList
 	{
 		[ProtoMember(1)]
-		public List<Example> ExampleList = new List<Example>();
-	}
-
-	[ProtoContract]
-	public class Test
-	{
-		[ProtoMember(1)]
-		public int exampleInt;
-		[ProtoMember(2)]
-		public string exampleString;
-		[ProtoMember(3)]
-		public float exampleFloat;
-		[ProtoMember(4)]
-		public bool exampleBool;
-		[ProtoMember(5)]
-		public List<int> exampleArray = new List<int>();
-		[ProtoMember(6)]
-		public int test1;
-		[ProtoMember(7)]
-		public int test2;
-	}
-
-	[ProtoContract]
-	public class TestArray : BaseArray
-	{
-		[ProtoMember(1)]
-		public List<Test> TestList = new List<Test>();
+		public List<Example> Items = new List<Example>();
 	}
 
 }
