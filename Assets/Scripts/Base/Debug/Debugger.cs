@@ -9,6 +9,11 @@ namespace Base.Debug
         /// <summary>
         /// 日志输出
         /// </summary>
+        public static void Log(object message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
+
         public static void Log(string message, params object[] args)
         {
             UnityEngine.Debug.Log(string.Format(message, args));
@@ -17,9 +22,9 @@ namespace Base.Debug
         /// <summary>
         /// 根据结果打印消息
         /// </summary>
-        public static void Log(bool result, string message)
+        public static void Log(bool err, string message)
         {
-            if (!result) LogError(message);
+            if (err) LogError(message);
         }
 
         /// <summary>

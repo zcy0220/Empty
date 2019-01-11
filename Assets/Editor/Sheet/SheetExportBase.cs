@@ -50,8 +50,8 @@ public class SheetExportBase
         var sb = new StringBuilder();
         sb.Append(SheetEditor.LineText(string.Format("//{0}", sheetName), 1));
         string initFuncName = StringUtil.Concat("Init", sheetName);
-        string ListParamName = StringUtil.Concat(sheetName, "List");
-        string dictParamName = StringUtil.Concat(sheetName, "Dict");
+        string ListParamName = StringUtil.Concat("m" + sheetName, "List");
+        string dictParamName = StringUtil.Concat("m" + sheetName, "Dict");
         bool exportList = (exportDataType == EExportDataType.ONLY_ARRAY || exportDataType == EExportDataType.BOTH);
         bool exportDict = (exportDataType == EExportDataType.ONLY_DICT || exportDataType == EExportDataType.BOTH);
 

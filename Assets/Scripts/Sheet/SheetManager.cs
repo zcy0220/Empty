@@ -9,30 +9,30 @@ using System.Collections.Generic;
 public partial class SheetManager : Singleton<SheetManager>
 {
 	//Example
-	private List<Example> ExampleList;
-	public List<Example> GetExampleList()
+	private List<Example> mExampleList;
+	public List<Example> GetmExampleList()
 	{
-		if (ExampleList == null)
+		if (mExampleList == null)
 		{
 			InitExample();
 		}
-		return ExampleList;
+		return mExampleList;
 	}
-	private Dictionary<int, Example> ExampleDict;
+	private Dictionary<int, Example> mExampleDict;
 	public Example GetExample(int key)
 	{
-		if (ExampleDict == null)
+		if (mExampleDict == null)
 		{
 			InitExample();
 		}
-		return ExampleDict[key];
+		return mExampleDict[key];
 	}
 	private void InitExample()
 	{
 		var items = GetSheetInfo<ExampleList>("Example").Items;
-		ExampleList = items;
-		ExampleDict = new Dictionary<int, Example>();
-		items.ForEach(item => ExampleDict[item.exampleInt] = item);
+		mExampleList = items;
+		mExampleDict = new Dictionary<int, Example>();
+		items.ForEach(item => mExampleDict[item.exampleInt] = item);
 	}
 	
 }
