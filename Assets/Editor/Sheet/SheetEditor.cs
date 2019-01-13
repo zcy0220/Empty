@@ -153,6 +153,8 @@ public class SheetEditor
                     var type = obj.GetType();
                     for (var j = 0; j < cols; j++)
                     {
+                        var row0 = data.Rows[0][j].ToString();
+                        if (row0.Equals("ignore")) continue;
                         var row1 = data.Rows[1][j].ToString();
                         var row2 = data.Rows[2][j].ToString();
                         var value = data.Rows[i][j];

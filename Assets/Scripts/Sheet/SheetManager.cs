@@ -10,7 +10,7 @@ public partial class SheetManager : Singleton<SheetManager>
 {
 	//Example
 	private List<Example> mExampleList;
-	public List<Example> GetmExampleList()
+	public List<Example> GetExampleList()
 	{
 		if (mExampleList == null)
 		{
