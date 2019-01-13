@@ -14,6 +14,9 @@ namespace Base.Debug
             UnityEngine.Debug.Log(message);
         }
 
+        /// <summary>
+        /// 带参输出
+        /// </summary>
         public static void Log(string message, params object[] args)
         {
             UnityEngine.Debug.Log(string.Format(message, args));
