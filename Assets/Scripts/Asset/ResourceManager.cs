@@ -48,6 +48,16 @@ public class ResourceManager : Singleton<ResourceManager>
         return mSyncLoader.SyncLoad<T>(assetPath);
     }
 
+    /// <summary>
+    /// 异步加载
+    /// </summary>
+    /// <param name="assetPath">资源路径，完整路径，包括扩展名</param>
+    /// <param name="callback">加载完成的回调</param>
+    public T AsyncLoad<T>(string assetPath, System.Action<AssetLoader> callback) where T : Object
+    {
+        return null;
+    }
+
     //======================AssetDatabase.LoadAssetAtPath 完整路径名(包括扩展名)======================
     //=================================需要拓展用到的类型的加载方法===================================
     public TextAsset LoadSheet(string path)
@@ -55,6 +65,14 @@ public class ResourceManager : Singleton<ResourceManager>
         var assetPath = StringUtil.Concat(AssetPath.Resources, path, ".bytes");
         var asset = SyncLoad<TextAsset>(assetPath);
         Debugger.Log(asset == null, StringUtil.Concat(assetPath , " not exist!"));
+        return asset;
+    }
+
+    public GameObject LoadPrefab(string path)
+    {
+        var assetPath = StringUtil.Concat(AssetPath.Resources, path, ".prefab");
+        var asset = SyncLoad<GameObject>(assetPath);
+        Debugger.Log(asset == null, StringUtil.Concat(assetPath, " not exist!"));
         return asset;
     }
 }
