@@ -4,5 +4,5 @@
 
 public class AssetPath
 {
-    public const string Resources = "Assets/Package/";
+    public const string Resources = "Assets/GameAssets/";
 }

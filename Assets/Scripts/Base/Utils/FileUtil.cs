@@ -3,12 +3,39 @@
  */
 
 using System.IO;
+using System.Text;
 using Base.Debug;
 
 namespace Base.Utils
 {
     public class FileUtil
     {
+        /// <summary>
+        /// 获取文件的MD5值
+        /// </summary>
+        /// <param name="filePath">文件绝对路径</param>
+        /// <returns></returns>
+        public static string GetMD5HashFromFile(string filePath)
+        {
+            try
+            {
+                var file = new FileStream(filePath, FileMode.Open);
+                var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                var retVal = md5.ComputeHash(file);
+                file.Close();
+                var sb = new StringBuilder();
+                for (var i = 0; i < retVal.Length; i++)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch (System.Exception e)
+            {
+                throw new System.Exception("GetMD5HashFromFile failed! err = " + e.Message);
+            }
+        }
+
         /// <summary>
         /// 检测文件并创建对应文件夹
         /// </summary>

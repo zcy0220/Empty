@@ -22,7 +22,7 @@ public class SheetEditor
     private const string SHEETEXT = ".xlsx";
     private static string OUTSHEETCSPATH = "Assets/Scripts/Sheet/SheetProtobuf.cs";
     private static string OUTSHEETMANAGERPATH = "Assets/Scripts/Sheet/SheetManager.cs";
-    private static string OUTSHEETBYTES = "Assets/Package/Sheets/{0}.bytes";
+    private static string OUTSHEETBYTES = "Assets/GameAssets/Sheets/{0}.bytes";
 
     /// <summary>
     /// 默认情况下，表格只需导出以id为key的字典。特殊情况下，要在下面自定义key和导出数据的类型
