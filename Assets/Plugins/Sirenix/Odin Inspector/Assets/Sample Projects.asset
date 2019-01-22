@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 800216746578e6941a3f10c778ba6840, type: 3}
+  m_Name: Sample Projects
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 2800000, guid: a78bffbeb81b48ae9ec71ad7969613e5, type: 3}
+  Title: Sample Projects
+  BtnWidth: 119.13
+  SubTitleFontSize: 22
+  TitleFontSize: 22
+  Examples:
+  - VerticalResources: 0
+    Title: RPG Editor Window
+    SubTitle: This project showcases Odin Editor Windows, Odin Selectors, various
+      attribute combinations, and custom drawers to build a feature-rich editor window
+      for managing scriptable objects.
+    Resources:
+    - Type: 0
+      ButtonName: Import Demo
+      HighlightButton: 0
+      UnityObject: {fileID: 102900000, guid: e74a7fdf7656bdc418bce45eff5c86d9, type: 3}
+      StringValue: Assets/Plugins/Sirenix/Demos/Sample - RPG Editor.unitypackage
+      windowSize: {x: 700, y: 500}
+    - Type: 1
+      ButtonName: Open Window
+      HighlightButton: 1
+      UnityObject: {fileID: 0}
+      StringValue: Sirenix.OdinInspector.Demos.RPGEditor.RPGEditorWindow
+      windowSize: {x: 900, y: 500}
+    - Type: 0
+      ButtonName: Open Script
+      HighlightButton: 0
+      UnityObject: {fileID: 11500000, guid: cc9f924b6c977ce4d991a0771e4a0b74, type: 3}
+      StringValue: 
+      windowSize: {x: 700, y: 500}
+  - VerticalResources: 0
+    Title: 
+    SubTitle: '
+
+      Reserved...
+
+'
+    Resources: []
