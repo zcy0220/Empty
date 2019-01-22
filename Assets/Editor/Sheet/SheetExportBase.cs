@@ -7,10 +7,10 @@ using Base.Utils;
 
 public enum EExportDataType
 {
-    NONE = 0,       // 什么数据都不导出
+    NONE = 0,        // 什么数据都不导出
     ONLY_DICT = 1,   // 只导出字典
-    ONLY_ARRAY = 2, // 只导出数组
-    BOTH = 3        // 同时导出数组和字典
+    ONLY_ARRAY = 2,  // 只导出数组
+    BOTH = 3         // 同时导出数组和字典
 }
 
 public class SheetExportBase
