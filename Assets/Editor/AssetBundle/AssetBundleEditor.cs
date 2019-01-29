@@ -9,31 +9,34 @@ using System.Collections.Generic;
 
 public class AssetBundleEditor
 {
-    public const string ABCONFIGPATH = "Assets/Editor/AssetBundle/ABConfig.asset";
-    public static string CreateAssetBundlesPath = Application.streamingAssetsPath;
-    //==============================================================================
-    private static List<string> mAllFilePathList = new List<string>();
+    /// <summary>
+    /// AssetBundle配置文件路径
+    /// </summary>
+    const string ABCONFIGPATH = "Assets/Editor/AssetBundle/ABConfig.asset";
+    /// <summary>
+    /// 生成AssetBundle路径
+    /// </summary>
+    static readonly string CreateAssetBundlesPath = Application.streamingAssetsPath;
+    /// <summary>
+    /// 所有文件夹或文件路径列表
+    /// </summary>
+    private static List<string> mAllPathList = new List<string>();
+    /// <summary>
+    /// 所有prefab对应的剔除冗余之后的依赖列表
+    /// </summary>
+    private static Dictionary<string, List<string>> mPrefabDependsDict = new Dictionary<string, List<string>>();
 
     [MenuItem("Tools/AssetBundle/Build")]
     public static void Build()
     {
-        mAllFilePathList.Clear();
+        mAllPathList.Clear();
+        mPrefabDependsDict.Clear();
 
         var abConfig = AssetDatabase.LoadAssetAtPath<ABConfig>(ABCONFIGPATH);
 
         foreach (var dirPath in abConfig.DirectoryPathDict)
         {
-            var dirInfo = new DirectoryInfo(dirPath.Value);
-            var files = dirInfo.GetFiles();
-            for (var i = 0; i < files.Length; i++)
-            {
-                var file = files[i];
-                if (file.Extension != ".meta")
-                {
-                    Debug.Log(file);
-                }
-            }
-            //mAllPathAB.Add(dirPath.Value);
+            mAllPathList.Add(dirPath.Value);
         }
 
         var prefabPathList = AssetDatabase.FindAssets("t:prefab", abConfig.PrefabDirPathList.ToArray());
@@ -41,14 +44,38 @@ public class AssetBundleEditor
         {
             var path = AssetDatabase.GUIDToAssetPath(prefabPathList[i]);
             EditorUtility.DisplayProgressBar("查找Prefab", "Path: " + path, i * 1.0f / prefabPathList.Length);
-            var depends = AssetDatabase.GetDependencies(path);
-            for (var j = 0; j < depends.Length; j++)
+            if (!ContainPath(path))
             {
-                //Debug.Log(depends[j]);
+                var depends = AssetDatabase.GetDependencies(path);
+                var dependsList = new List<string>();
+                for (var j = 0; j < depends.Length; j++)
+                {
+                    if (!ContainPath(depends[j]) && !depends[j].EndsWith(".cs"))
+                    {
+                        mAllPathList.Add(depends[j]);
+                        dependsList.Add(depends[j]);
+                    }
+                }
+                mPrefabDependsDict.Add(path, dependsList);
             }
         }
         EditorUtility.ClearProgressBar();
         AssetDatabase.Refresh();
+    }
+
+    /// <summary>
+    /// 是否包含路径
+    /// </summary>
+    private static bool ContainPath(string path)
+    {
+        foreach(var PATH in mAllPathList)
+        {
+            if (path == PATH || path.Contains(PATH))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>
