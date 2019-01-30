@@ -13,9 +13,12 @@ public class EditorAssetLoader : AssetLoader
     /// </summary>
     public override T SyncLoad<T>(string assetPath)
     {
-        //var assetImporter = AssetImporter.GetAtPath(assetPath);
-        //if (assetImporter == null) return null;
-        //return AssetDatabase.LoadAssetAtPath<T>(assetPath);
-        return null;
+        #if UNITY_EDITOR
+            //var assetImporter = AssetImporter.GetAtPath(assetPath);
+            //if (assetImporter == null) return null;
+            return AssetDatabase.LoadAssetAtPath<T>(assetPath);
+        #else
+            return null;
+        #endif
     }
 }
