@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEngine;
 using Base.Debug;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class AssetBundleEditor
 {
@@ -19,7 +21,15 @@ public class AssetBundleEditor
     /// <summary>
     /// 生成AssetBundle路径
     /// </summary>
-    static readonly string CreateAssetBundlesPath = Application.streamingAssetsPath;
+    static readonly string ASSETBUNDLESPATH = Application.streamingAssetsPath;
+    /// <summary>
+    /// AssetBundleConfig xml路径
+    /// </summary>
+    static readonly string ASSETBUNDLECONFIGXMLPATH = Application.dataPath + "/AssetBundleConfig.xml";
+    /// <summary>
+    /// AssetBundleConfig bytes路径
+    /// </summary>
+    static readonly string ASSETBUNDLECONFIGBYTESPATH = ASSETBUNDLESPATH + "/AssetBundleConfig.bytes";
     /// <summary>
     /// 所有文件夹或文件路径列表
     /// </summary>
@@ -32,6 +42,7 @@ public class AssetBundleEditor
     /// 所有prefab对应的剔除冗余之后的依赖列表
     /// </summary>
     private static Dictionary<string, List<string>> mPrefabDependsDict = new Dictionary<string, List<string>>();
+    private static List<string> mVaildPathList = new List<string>();
 
     [MenuItem("Tools/AssetBundle/Build")]
     public static void Build()
@@ -51,16 +62,19 @@ public class AssetBundleEditor
     {
         mAllPathList.Clear();
         mPrefabDependsDict.Clear();
+        mVaildPathList.Clear();
         var abConfig = AssetDatabase.LoadAssetAtPath<ABConfig>(ABCONFIGPATH);
         mDirectoryPathDict = abConfig.DirectoryPathDict;
         foreach (var dirPath in abConfig.DirectoryPathDict)
         {
             mAllPathList.Add(dirPath.Value);
+            mVaildPathList.Add(dirPath.Value);
         }
         var prefabPathList = AssetDatabase.FindAssets("t:prefab", abConfig.PrefabDirPathList.ToArray());
         for (var i = 0; i < prefabPathList.Length; i++)
         {
             var path = AssetDatabase.GUIDToAssetPath(prefabPathList[i]);
+            mVaildPathList.Add(path);
             EditorUtility.DisplayProgressBar("查找Prefab", "Path: " + path, i * 1.0f / prefabPathList.Length);
             if (!ContainPath(path))
             {
@@ -155,7 +169,8 @@ public class AssetBundleEditor
     private static void ClearUnUseAssetBundle()
     {
         var abNames = AssetDatabase.GetAllAssetBundleNames();
-        var direction = new DirectoryInfo(CreateAssetBundlesPath);
+        if (!Directory.Exists(ASSETBUNDLESPATH)) Directory.CreateDirectory(ASSETBUNDLESPATH);
+        var direction = new DirectoryInfo(ASSETBUNDLESPATH);
         var files = direction.GetFiles();
         for (var i = 0; i < files.Length; i++)
         {
@@ -198,19 +213,79 @@ public class AssetBundleEditor
             var allBundlePaths = AssetDatabase.GetAssetPathsFromAssetBundle(abNames[i]);
             for (var j = 0; j < allBundlePaths.Length; j++)
             {
+                if (!IsVaildPath(allBundlePaths[j])) continue;
                 resPathDict.Add(allBundlePaths[j], abNames[i]);
             }
         }
         ClearUnUseAssetBundle();
         CreateAssetBundles();
+        WriteAssetBundleConfig(resPathDict);
+    }
+
+    /// <summary>
+    /// 写配置文件
+    /// </summary>
+    private static void WriteAssetBundleConfig(Dictionary<string, string> resPathDict)
+    {
+        var assetBundleConfig = new AssetBundleConfig();
+        assetBundleConfig.AssetBundleList = new List<AssetBundleBase>();
+        foreach(var path in resPathDict.Keys)
+        {
+            var abBase = new AssetBundleBase();
+            abBase.MD5 = Base.Utils.FileUtil.GetMD5HashFromFile(path);
+            abBase.Path = path;
+            abBase.ABName = resPathDict[path];
+            abBase.AssetName = path.Remove(0, path.LastIndexOf("/") + 1);
+            abBase.ABDependList = new List<string>();
+            var dependencies = AssetDatabase.GetDependencies(path);
+            for (var i = 0; i < dependencies.Length; i++)
+            {
+                var tempPath = dependencies[i];
+                if (tempPath == path || tempPath.EndsWith(".cs")) continue;
+                if (resPathDict.ContainsKey(tempPath))
+                {
+                    var abName = resPathDict[tempPath];
+                    if (abName == resPathDict[path]) continue;
+                    if (!abBase.ABDependList.Contains(abName)) abBase.ABDependList.Add(abName);
+                }
+            }
+            assetBundleConfig.AssetBundleList.Add(abBase);
+        }
+
+        if (File.Exists(ASSETBUNDLECONFIGXMLPATH)) File.Delete(ASSETBUNDLECONFIGXMLPATH);
+        var fileStream = new FileStream(ASSETBUNDLECONFIGXMLPATH, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+        var sw = new StreamWriter(fileStream, System.Text.Encoding.UTF8);
+        var xs = new XmlSerializer(assetBundleConfig.GetType());
+        xs.Serialize(sw, assetBundleConfig);
+        sw.Close();
+        fileStream.Close();
+
+        assetBundleConfig.AssetBundleList.ForEach(abBase => abBase.Path = "");
+        var fs = new FileStream(ASSETBUNDLECONFIGBYTESPATH, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+        var bf = new BinaryFormatter();
+        bf.Serialize(fs, assetBundleConfig);
+        fs.Close();
+    }
+
+    /// <summary>
+    /// 判断是否为有效路径
+    /// </summary>
+    private static bool IsVaildPath(string path)
+    {
+        for (var i = 0; i < mVaildPathList.Count; i++)
+        {
+            if (path.Contains(mVaildPathList[i]))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
     /// 生成AssetBundles
     /// </summary>
-    public static void CreateAssetBundles()
+    private static void CreateAssetBundles()
     {
-        if (!Directory.Exists(CreateAssetBundlesPath)) Directory.CreateDirectory(CreateAssetBundlesPath);
-        BuildPipeline.BuildAssetBundles(CreateAssetBundlesPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        if (!Directory.Exists(ASSETBUNDLESPATH)) Directory.CreateDirectory(ASSETBUNDLESPATH);
+        BuildPipeline.BuildAssetBundles(ASSETBUNDLESPATH, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
     }
 }
