@@ -25,7 +25,7 @@ public class AssetBundleEditor
     /// <summary>
     /// AssetBundleConfig xml路径
     /// </summary>
-    static readonly string ASSETBUNDLECONFIGXMLPATH = Application.dataPath + "/AssetBundleConfig.xml";
+    static readonly string ASSETBUNDLECONFIGXMLPATH = Application.dataPath + "/Editor/AssetBundle/AssetBundleConfig.xml";
     /// <summary>
     /// AssetBundleConfig bytes路径
     /// </summary>
@@ -150,12 +150,15 @@ public class AssetBundleEditor
 
     /// <summary>
     /// 是否包含路径
+    /// 1.Assets/GameAssets/Shaders -- Assets/GameAssets/Shaders相同
+    /// 2.Assets/GameAssets/Shaders/ExampleShader.shader -- Assets/GameAssets/Shaders 包含
+    /// 3.Assets/GameAssets/ShadersTest -- Assets/GameAssets/Shaders 不包含
     /// </summary>
     private static bool ContainPath(string path)
     {
         foreach(var PATH in mAllPathList)
         {
-            if (path == PATH || path.Contains(PATH))
+            if (path == PATH || (path.Contains(PATH) && path.Replace(PATH, "")[0] == '/'))
             {
                 return true;
             }
