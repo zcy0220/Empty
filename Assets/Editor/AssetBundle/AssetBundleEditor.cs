@@ -29,7 +29,7 @@ public class AssetBundleEditor
     /// <summary>
     /// AssetBundleConfig bytes路径
     /// </summary>
-    static readonly string ASSETBUNDLECONFIGBYTESPATH = ASSETBUNDLESPATH + "/AssetBundleConfig.bytes";
+    static readonly string ASSETBUNDLECONFIGBYTESPATH = "Assets/GameAssets/Config/AssetBundleConfig.bytes";
     /// <summary>
     /// 所有文件夹或文件路径列表
     /// </summary>
@@ -221,8 +221,8 @@ public class AssetBundleEditor
             }
         }
         ClearUnUseAssetBundle();
-        CreateAssetBundles();
         WriteAssetBundleConfig(resPathDict);
+        CreateAssetBundles();
     }
 
     /// <summary>

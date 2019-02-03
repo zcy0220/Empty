@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2278062368
+CRC: 2130629911
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -12,11 +12,14 @@ AssetBundleManifest:
       Name: sounds
       Dependencies: {}
     Info_3:
+      Name: assetbundleconfig
+      Dependencies: {}
+    Info_4:
       Name: assets_gameassets_prefabs_exampleprefab1
       Dependencies:
         Dependency_0: shaders
         Dependency_1: sounds
-    Info_4:
+    Info_5:
       Name: assets_gameassets_prefabs_exampleprefab2
       Dependencies:
         Dependency_0: assets_gameassets_prefabs_exampleprefab1

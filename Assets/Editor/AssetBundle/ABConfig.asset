@@ -12,69 +12,13 @@ MonoBehaviour:
   m_Name: ABConfig
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
+    SerializedFormat: 0
+    SerializedBytes: 0100110000004469726563746f727950617468446963742f00000000006600000053797374656d2e436f6c6c656374696f6e732e47656e657269632e44696374696f6e61727960325b5b53797374656d2e537472696e672c206d73636f726c69625d2c5b53797374656d2e537472696e672c206d73636f726c69625d5d2c206d73636f726c696200000000010008000000636f6d70617265722f01000000005900000053797374656d2e436f6c6c656374696f6e732e47656e657269632e47656e65726963457175616c697479436f6d706172657260315b5b53797374656d2e537472696e672c206d73636f726c69625d5d2c206d73636f726c69620100000005060400000000000000042e280007000000736861646572732800190000004173736574732f47616d654173736574732f5368616465727305042e2800060000007368656574732800180000004173736574732f47616d654173736574732f53686565747305042e280006000000736f756e64732800180000004173736574732f47616d654173736574732f536f756e647305042e280011000000617373657462756e646c65636f6e6669672800180000004173736574732f47616d654173736574732f436f6e666967050705
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: DirectoryPathDict
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String,
-        mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 1
-      Data: shaders
-    - Name: 
-      Entry: 1
-      Data: Assets/GameAssets/Shaders
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 1
-      Data: sheets
-    - Name: 
-      Entry: 1
-      Data: Assets/GameAssets/Sheets
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 1
-      Data: sounds
-    - Name: 
-      Entry: 1
-      Data: Assets/GameAssets/Sounds
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   PrefabDirPathList:
   - Assets/GameAssets/Prefabs
