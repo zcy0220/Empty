@@ -12,67 +12,37 @@ using System.Collections.Generic;
 public class ResourceManager : Singleton<ResourceManager>
 {
     /// <summary>
-    /// 同步资源加载器
+    /// 缓存引用计数为0的资源，达到缓存上限时情掉最早没用的资源
     /// </summary>
-    private AssetLoader mSyncLoader;
+    private ResourceMapList<ResourceItem> mNoRefResourceMapList = new ResourceMapList<ResourceItem>();
     /// <summary>
-    /// 资源缓存
+    /// 缓存使用的资源列表
     /// </summary>
-    private Dictionary<string, object> mAssetsCache = new Dictionary<string, object>();
-
-    /// <summary>
-    /// 创建对应平台的加载器
-    /// </summary>
-    public ResourceManager()
-    {
-        if (AppConfig.UseAssetBundle)
-            mSyncLoader = PoolManager.Instance.Fetch<MobileAssetLoader>();
-        else
-            mSyncLoader = PoolManager.Instance.Fetch<EditorAssetLoader>();
-    }
-
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    public void Release()
-    {
-        mAssetsCache.Clear();
-    }
+    public Dictionary<string, ResourceItem> ResourceDict { get; private set; } = new Dictionary<string, ResourceItem>();
 
     /// <summary>
     /// 同步加载
     /// </summary>
-    public T SyncLoad<T>(string assetPath) where T : Object
+    public T Load<T>(string path) where T : Object
     {
-        if (mSyncLoader == null) return null;
-        return mSyncLoader.SyncLoad<T>(assetPath);
+        if (string.IsNullOrEmpty(path)) return null;
+        var md5 = FileUtil.GetMD5HashFromFile(path);
+        var item = GetCacheResourceItem(md5);
+        if (item != null) return item.Obj as T;
+        return default(T);
     }
 
     /// <summary>
-    /// 异步加载
+    /// 获取缓存里的资源项
     /// </summary>
-    /// <param name="assetPath">资源路径，完整路径，包括扩展名</param>
-    /// <param name="callback">加载完成的回调</param>
-    public T AsyncLoad<T>(string assetPath, System.Action<AssetLoader> callback) where T : Object
+    private ResourceItem GetCacheResourceItem(string md5)
     {
-        return null;
-    }
-
-    //======================AssetDatabase.LoadAssetAtPath 完整路径名(包括扩展名)======================
-    //=================================需要拓展用到的类型的加载方法===================================
-    public TextAsset LoadSheet(string path)
-    {
-        var assetPath = StringUtil.Concat(AssetPath.Resources, path, ".bytes");
-        var asset = SyncLoad<TextAsset>(assetPath);
-        Debugger.Log(asset == null, StringUtil.Concat(assetPath , " not exist!"));
-        return asset;
-    }
-
-    public GameObject LoadPrefab(string path)
-    {
-        var assetPath = StringUtil.Concat(AssetPath.Resources, path, ".prefab");
-        var asset = SyncLoad<GameObject>(assetPath);
-        Debugger.Log(asset == null, StringUtil.Concat(assetPath, " not exist!"));
-        return asset;
+        ResourceItem item = null;
+        if (ResourceDict.TryGetValue(md5, out item) && item != null))
+        {
+            item.RefCount++;
+            item.LastUseTime = Time.realtimeSinceStartup;
+        }
+        return item;
     }
 }

@@ -4,66 +4,70 @@
 
 using System.Collections.Generic;
 
-public class ClassObjectPool<T> where T : class, new()
+namespace Base.Pool
 {
-    /// <summary>
-    /// The pool
-    /// </summary>
-    protected Stack<T> mPool = new Stack<T>();
-    /// <summary>
-    /// 最大对象个数，-1表示不限个数
-    /// </summary>
-    protected int mMaxCount = 0;
-    /// <summary>
-    /// 没有回收的对象个数
-    /// </summary>
-    protected int mNoRecycleCount = 0;
-
-    /// <summary>
-    /// 初始化默认为不限个数
-    /// </summary>
-    public ClassObjectPool(int maxCount = -1)
+    public class ClassObjectPool<T> where T : class, new()
     {
-        mMaxCount = maxCount;
-    }
+        /// <summary>
+        /// The pool
+        /// </summary>
+        protected Stack<T> mPool = new Stack<T>();
+        /// <summary>
+        /// 最大对象个数，-1表示不限个数
+        /// </summary>
+        protected int mMaxCount = 0;
+        /// <summary>
+        /// 没有回收的对象个数
+        /// </summary>
+        protected int mNoRecycleCount = 0;
 
-    /// <summary>
-    /// 分配类对象
-    /// </summary>
-    public T Spawn()
-    {
-        mNoRecycleCount++;
-        if (mPool.Count > 0)
+        /// <summary>
+        /// 初始化默认为不限个数
+        /// </summary>
+        public ClassObjectPool(int maxCount = -1)
         {
-            T obj = mPool.Pop();
-            if (obj == null)
+            mMaxCount = maxCount;
+        }
+
+        /// <summary>
+        /// 分配类对象
+        /// </summary>
+        public T Spawn()
+        {
+            mNoRecycleCount++;
+            if (mPool.Count > 0)
             {
-                obj = new T();
+                T obj = mPool.Pop();
+                if (obj == null)
+                {
+                    obj = new T();
+                }
+                return obj;
             }
-            return obj;
+            else
+            {
+                T obj = new T();
+                return obj;
+            }
         }
-        else
+
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        public bool Recycle(T obj)
         {
-            T obj = new T();
-            return obj;
+            if (obj == null) return false;
+            mNoRecycleCount--;
+
+            if (mPool.Count >= mMaxCount && mMaxCount > 0)
+            {
+                obj = null;
+                return false;
+            }
+
+            mPool.Push(obj);
+            return true;
         }
-    }
-
-    /// <summary>
-    /// 回收对象
-    /// </summary>
-    public bool Recycle(T obj)
-    {
-        if (obj == null) return false;
-        mNoRecycleCount--;
-
-        if (mPool.Count >= mMaxCount && mMaxCount > 0)
-        {
-            obj = null;
-            return false;
-        }
-
-        mPool.Push(obj);
-        return true;
     }
 }
+

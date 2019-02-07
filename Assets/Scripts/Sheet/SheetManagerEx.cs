@@ -15,7 +15,8 @@ public partial class SheetManager : Singleton<SheetManager>
     /// </summary>
     public T GetSheetInfo<T>(string fileName)
     {
-        var text = ResourceManager.Instance.LoadSheet(StringUtil.Concat(SHEETPATH, fileName));
-        return ProtobufUtil.NDeserialize<T>(text.bytes);
+        //var text = ResourceManager.Instance.LoadSheet(StringUtil.Concat(SHEETPATH, fileName));
+        //return ProtobufUtil.NDeserialize<T>(text.bytes);
+        return default(T);
     }
 }

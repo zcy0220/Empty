@@ -12,4 +12,17 @@ public class ResourceItem
     public string ABName;
     public List<string> ABDependList;
     public AssetBundle AssetBundle;
+    //===============================
+    /// <summary>
+    /// 资源对象
+    /// </summary>
+    public Object Obj;
+    /// <summary>
+    /// 资源最后使用的时间
+    /// </summary>
+    public float LastUseTime;
+    /// <summary>
+    /// 引用次数
+    /// </summary>
+    public int RefCount;
 }
