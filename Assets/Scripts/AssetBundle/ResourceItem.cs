@@ -14,6 +14,10 @@ public class ResourceItem
     public AssetBundle AssetBundle;
     //===============================
     /// <summary>
+    /// 资源唯一标志
+    /// </summary>
+    public int Guid;
+    /// <summary>
     /// 资源对象
     /// </summary>
     public Object Obj;
