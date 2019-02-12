@@ -8,10 +8,10 @@ using System.Collections.Generic;
 public class ResourceItem
 {
     public string MD5;
+    public string Path;
     public string AssetName;
     public string ABName;
     public List<string> ABDependList;
-    public AssetBundle AssetBundle;
     //===============================
     /// <summary>
     /// 资源唯一标志

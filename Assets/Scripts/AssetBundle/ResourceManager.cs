@@ -13,9 +13,9 @@ using System.Collections;
 public class ResourceManager : MonoSingleton<ResourceManager>
 {
     /// <summary>
-    /// 对应平台模式下的资源加载器
+    /// 对应平台模式下的资源控制
     /// </summary>
-    private AssetLoader mAssetLoader;
+    private BaseResources mResources;
     /// <summary>
     /// 缓存引用计数为0的资源，达到缓存上限时情掉最早没用的资源
     /// </summary>
@@ -28,15 +28,15 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <summary>
     /// 初始化
     /// </summary>
-	private void Awake()
+    private ResourceManager()
 	{
         if (AppConfig.UseAssetBundle)
         {
-            mAssetLoader = new MobileAssetLoader();
+            mResources = new AssetBundleResources();
         }
         else
         {
-            mAssetLoader = new EditorAssetLoader();
+            mResources = new EditorResources();
         }
 	}
 
@@ -46,44 +46,13 @@ public class ResourceManager : MonoSingleton<ResourceManager>
 	public T SyncLoad<T>(string path) where T : UnityEngine.Object
     {
         if (string.IsNullOrEmpty(path)) return null;
-        var md5 = FileUtil.GetMD5HashFromFile(path);
-        var item = GetCacheResourceItem(md5);
+        var item = GetCacheResourceItem(path);
         if (item != null) return item.Obj as T;
-        T obj = null;
-#if UNITY_EDITOR
-        if (!AppConfig.UseAssetBundle)
-        {
-            obj = LoadAssetByEditor<T>(path);
-            item = AssetBundleManager.Instance.LoadResourceAssetBundle(md5);
-        }
-#endif
-        if (obj == null)
-        {
-            item = AssetBundleManager.Instance.LoadResourceAssetBundle(md5);
-            if (item != null && item.AssetBundle != null)
-            {
-                if (item.Obj != null)
-                {
-                    obj = item.Obj as T;
-                }
-                else
-                {
-                    obj = item.AssetBundle.LoadAsset<T>(item.AssetName);
-                }
-            }
-        }
-
-        CacheResourceItem(path, md5, obj, ref item);
-
+        item = mResources.CreateResourceItem(path);
+        var obj = mResources.SyncLoad<T>(path);
+        CacheResourceItem(path, obj, item);
         return obj;
     }
-
-#if UNITY_EDITOR
-    protected T LoadAssetByEditor<T>(string path) where T : UnityEngine.Object
-    {
-        return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
-    }
-#endif
 
     /// <summary>
     /// 不需要实例化的资源卸载
@@ -112,7 +81,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <summary>
     /// 缓存资源项
     /// </summary>
-    private void CacheResourceItem(string path, string md5, UnityEngine.Object obj, ref ResourceItem item)
+    private void CacheResourceItem(string path, Object obj, ResourceItem item)
     {
         ClearCache();
 
@@ -130,7 +99,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         item.Guid = obj.GetInstanceID();
         item.LastUseTime = Time.realtimeSinceStartup;
         item.RefCount++;
-        if (!ResourceDict.ContainsKey(md5)) ResourceDict.Add(md5, item);
+        if (!ResourceDict.ContainsKey(path)) ResourceDict.Add(path, item);
     }
 
     /// <summary>
@@ -138,7 +107,6 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// </summary>
     private void ClearCache()
     {
-        
     }
 
     /// <summary>
@@ -152,27 +120,21 @@ public class ResourceManager : MonoSingleton<ResourceManager>
             mNoRefResourceMapList.AddToHead(item);
             return;
         }
-        if (!ResourceDict.Remove(item.MD5)) return;
-        if (item.Obj != null) item.Obj = null;
-        AssetBundleManager.Instance.UnloadResourceAssetBundle(item);
+        if (!ResourceDict.Remove(item.Path)) return;
+        mResources.UnloadResource(item);
     }
 
     /// <summary>
     /// 获取缓存里的资源项
     /// </summary>
-    private ResourceItem GetCacheResourceItem(string md5)
+    private ResourceItem GetCacheResourceItem(string path)
     {
         ResourceItem item = null;
-        if (ResourceDict.TryGetValue(md5, out item) && item != null)
+        if (ResourceDict.TryGetValue(path, out item) && item != null)
         {
             item.RefCount++;
             item.LastUseTime = Time.realtimeSinceStartup;
         }
         return item;
     }
-
-    //IEnumerator ()
-    //{
-    //    yield return null;
-    //}
 }

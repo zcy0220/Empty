@@ -8,6 +8,7 @@ public class AppLaunch : MonoBehaviour
 {
     private void Awake()
     {
+        AppConfig.UseAssetBundle = true;
         AssetBundleManager.Instance.LoadAssetBundleConfig();
     }
 }

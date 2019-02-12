@@ -18,9 +18,9 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
     /// </summary>
     private readonly string ASSETBUNDLECONFIGPATH = Application.streamingAssetsPath + "/assetbundleconfig";
     /// <summary>
-    /// 存一份以md5为key的资源表
+    /// 以md5为key存储一份AssetBundleBase
     /// </summary>
-    private Dictionary<string, ResourceItem> mResourceItemDict = new Dictionary<string, ResourceItem>();
+    private Dictionary<string, AssetBundleBase> mAssetBundleBaseDict = new Dictionary<string, AssetBundleBase>();
     /// <summary>
     /// 存储加载的AssetBundleItem
     /// </summary>
@@ -35,7 +35,7 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
     /// </summary>
     public bool LoadAssetBundleConfig()
     {
-        mResourceItemDict.Clear();
+        mAssetBundleBaseDict.Clear();
         mAssetBundleItemDict.Clear();
         var assetBundle = AssetBundle.LoadFromFile(ASSETBUNDLECONFIGPATH);
         var textAsset = assetBundle.LoadAsset<TextAsset>("assetbundleconfig");
@@ -52,66 +52,34 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
         {
             var abBase = assetBundleConfig.AssetBundleList[i];
             var md5 = abBase.MD5;
-            if (mResourceItemDict.ContainsKey(md5))
+            if (mAssetBundleBaseDict.ContainsKey(md5))
             {
                 Debugger.LogError("Duplicate MD5! AssetName:{0}, ABName:{1}", abBase.AssetName, abBase.ABName);
             }
             else
             {
-                var item = new ResourceItem();
-                item.MD5 = abBase.MD5;
-                item.ABName = abBase.ABName;
-                item.AssetName = abBase.AssetName;
-                item.ABDependList = abBase.ABDependList;
-                mResourceItemDict.Add(md5, item);
+                mAssetBundleBaseDict.Add(md5, abBase);
             }
         }
         return true;
     }
 
     /// <summary>
-    /// 加载资源
+    /// 获取ABBase资源
     /// </summary>
-    public ResourceItem LoadResourceAssetBundle(string md5)
+    public AssetBundleBase GetAssetBundleBase(string md5)
     {
-        ResourceItem item = null;
-        if (!mResourceItemDict.TryGetValue(md5, out item) || item == null)
+        if (mAssetBundleBaseDict.ContainsKey(md5))
         {
-            Debugger.LogError("Can not find md5 {0}!", md5);
-            return item;
+            return mAssetBundleBaseDict[md5];
         }
-        if (item.AssetBundle != null) return item;
-        item.AssetBundle = LoadAssetBundle(item.ABName);
-        if (item.ABDependList != null)
-        {
-            for (var i = 0; i < item.ABDependList.Count; i++)
-            {
-                LoadAssetBundle(item.ABDependList[i]);
-            }
-        }
-        return item;
-    }
-
-    /// <summary>
-    /// 卸载资源
-    /// </summary>
-    public void UnloadResourceAssetBundle(ResourceItem item)
-    {
-        if (item == null) return;
-        if (item.ABDependList != null)
-        {
-            for (var i = 0; i < item.ABDependList.Count; i++)
-            {
-                UnloadAssetBundle(item.ABDependList[i]);
-            }
-        }
-        UnloadAssetBundle(item.ABName);
+        return null;
     }
 
     /// <summary>
     /// 根据AB包名加载AssetBundle
     /// </summary>
-    private AssetBundle LoadAssetBundle(string name)
+    public AssetBundle LoadAssetBundle(string name)
     {
         AssetBundleItem item = null;
         if (!mAssetBundleItemDict.TryGetValue(name, out item))
@@ -133,9 +101,26 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
     }
 
     /// <summary>
+    /// 加载AssetBundleBase所依赖的所有AB包
+    /// </summary>
+    public AssetBundle LoadAssetBundle(AssetBundleBase abBase)
+    {
+        if (abBase == null) return null;
+        var ab = LoadAssetBundle(abBase.ABName);
+        if (abBase.ABDependList != null)
+        {
+            for (var i = 0; i < abBase.ABDependList.Count; i++)
+            {
+                LoadAssetBundle(abBase.ABDependList[i]);
+            }
+        }
+        return ab;
+    }
+
+    /// <summary>
     /// 卸载AssetBundle
     /// </summary>
-    private void UnloadAssetBundle(string name)
+    public void UnloadAssetBundle(string name)
     {
         AssetBundleItem item = null;
         if (mAssetBundleItemDict.TryGetValue(name, out item) && item != null)
@@ -149,14 +134,5 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
                 mAssetBundleItemDict.Remove(name);
             }
         }
-    }
-
-    /// <summary>
-    /// 获取ResourceItem
-    /// </summary>
-    public ResourceItem GetResourceItem(string name)
-    {
-        if (mResourceItemDict.ContainsKey(name)) return mResourceItemDict[name];
-        return null;
     }
 }
