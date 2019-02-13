@@ -37,7 +37,7 @@ public class EditorResources : BaseResources
     public override void UnloadResource(ResourceItem item)
     {
         if (item == null) return;
-        Resources.UnloadAsset(item.Obj);
         item.Obj = null;
+        Resources.UnloadUnusedAssets();
     }
 }
