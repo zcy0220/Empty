@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 937422521
+CRC: 1808082971
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: bd50c7d49b884fedba37513479263c0a
+    Hash: addfe47eb21edc88b50d907e373d5509
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2ffe0311e20cd2b6b8ac4af1f92e0b2f
@@ -30,4 +30,4 @@ ClassTypes:
 Assets:
 - Assets/GameAssets/Prefabs/ExamplePrefab2.prefab
 Dependencies:
-- /Users/zhengchenyang/Documents/GitHub/Empty/Assets/StreamingAssets/assets_gameassets_prefabs_exampleprefab1
+- I:/Empty/Assets/StreamingAssets/assets_gameassets_prefabs_exampleprefab1

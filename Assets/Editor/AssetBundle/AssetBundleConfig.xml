@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<AssetBundleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <AssetBundleList MD5="6c67085cc1c059588924739e488a6436" Path="Assets/GameAssets/Config/AssetBundleConfig.bytes" ABName="assetbundleconfig" AssetName="AssetBundleConfig.bytes" ABDependList="" />
-  <AssetBundleList MD5="1d8170163152961aac44778aa4e2b4e0" Path="Assets/GameAssets/Prefabs/ExamplePrefab1.prefab" ABName="assets_gameassets_prefabs_exampleprefab1" AssetName="ExamplePrefab1.prefab" ABDependList="sounds shaders" />
-  <AssetBundleList MD5="f0e00cb8ca8f1bb8d6916e2b0411fd9d" Path="Assets/GameAssets/Prefabs/ExamplePrefab2.prefab" ABName="assets_gameassets_prefabs_exampleprefab2" AssetName="ExamplePrefab2.prefab" ABDependList="shaders" />
-  <AssetBundleList MD5="f39d5b18febc746d71f0be66c07bd94f" Path="Assets/GameAssets/Shaders/ShaderExample.shader" ABName="shaders" AssetName="ShaderExample.shader" ABDependList="" />
-  <AssetBundleList MD5="f430ef5cb8e571c55b109ba131c6f050" Path="Assets/GameAssets/Shaders/Test/sss.shader" ABName="shaders" AssetName="sss.shader" ABDependList="" />
+<AssetBundleConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AssetBundleList MD5="fc3bf36a66d0e4a16ba96171d24e80e1" Path="Assets/GameAssets/Config/AssetBundleConfig.bytes" ABName="assetbundleconfig" AssetName="AssetBundleConfig.bytes" ABDependList="" />
+  <AssetBundleList MD5="51d745aca1d67e4e5f04139e6ce07a8c" Path="Assets/GameAssets/Prefabs/ExamplePrefab1.prefab" ABName="assets_gameassets_prefabs_exampleprefab1" AssetName="ExamplePrefab1.prefab" ABDependList="sounds shaders" />
+  <AssetBundleList MD5="610117bbd4e9b854ffcef50aae4bc1cd" Path="Assets/GameAssets/Prefabs/ExamplePrefab2.prefab" ABName="assets_gameassets_prefabs_exampleprefab2" AssetName="ExamplePrefab2.prefab" ABDependList="shaders" />
+  <AssetBundleList MD5="b90f5e0a9d9dd9a240fbce25029c1d44" Path="Assets/GameAssets/Shaders/ShaderExample.shader" ABName="shaders" AssetName="ShaderExample.shader" ABDependList="" />
   <AssetBundleList MD5="df541edc6c9f824a7567c5372230cf48" Path="Assets/GameAssets/Sheets/Example.bytes" ABName="sheets" AssetName="Example.bytes" ABDependList="" />
   <AssetBundleList MD5="e78f1ab513c1d624204694a81e333c1a" Path="Assets/GameAssets/Sounds/SoundExample.wav" ABName="sounds" AssetName="SoundExample.wav" ABDependList="" />
 </AssetBundleConfig>

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 997505382
+CRC: 2379439306
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 76d3ce478af69fa069de69a6b8417c05
+    Hash: 867f4c02b06127f48e34d5718c3b7060
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2f016311bc7cc23cffc5078434aa0754
@@ -33,5 +33,5 @@ Assets:
 - Assets/GameAssets/Models/Materials/ExampleMaterial.mat
 - Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
 Dependencies:
-- /Users/zhengchenyang/Documents/GitHub/Empty/Assets/StreamingAssets/shaders
-- /Users/zhengchenyang/Documents/GitHub/Empty/Assets/StreamingAssets/sounds
+- I:/Empty/Assets/StreamingAssets/shaders
+- I:/Empty/Assets/StreamingAssets/sounds

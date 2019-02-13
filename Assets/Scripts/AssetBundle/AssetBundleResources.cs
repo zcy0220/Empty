@@ -13,9 +13,7 @@ public class AssetBundleResources : BaseResources
     public override ResourceItem CreateResourceItem(string path)
     {
         ResourceItem item = new ResourceItem();
-        var md5 = FileUtil.GetMD5HashFromFile(path);
-        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(md5);
-        item.MD5 = md5;
+        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(path);
         item.Path = path;
         item.ABName = abBase.ABName;
         item.AssetName = abBase.AssetName;
@@ -28,8 +26,7 @@ public class AssetBundleResources : BaseResources
     /// </summary>
     public override T SyncLoad<T>(string path)
     {
-        var md5 = FileUtil.GetMD5HashFromFile(path);
-        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(md5);
+        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(path);
         if (abBase != null)
         {
             var ab = AssetBundleManager.Instance.LoadAssetBundle(abBase);
@@ -52,13 +49,6 @@ public class AssetBundleResources : BaseResources
     {
         if (item == null) return;
         item.Obj = null;
-        if (item.ABDependList != null)
-        {
-            for (var i = 0; i < item.ABDependList.Count; i++)
-            {
-                AssetBundleManager.Instance.UnloadAssetBundle(item.ABDependList[i]);
-            }
-        }
-        AssetBundleManager.Instance.UnloadAssetBundle(item.ABName);
+        AssetBundleManager.Instance.UnloadAssetBundleByPath(item.Path);
     }
 }

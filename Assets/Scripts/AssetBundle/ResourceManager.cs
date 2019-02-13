@@ -57,7 +57,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <summary>
     /// 不需要实例化的资源卸载
     /// </summary>
-    public bool ReleaseResource(Object obj, bool destroyObj = false)
+    public bool ReleaseResource(Object obj, bool destroy = false)
     {
         if (obj == null) return false;
         ResourceItem item = null;
@@ -74,7 +74,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
             return false;
         }
         item.RefCount--;
-        RecycleResourceItem(item, destroyObj);
+        RecycleResourceItem(item, destroy);
         return true;
     }
 
@@ -112,10 +112,10 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <summary>
     /// 回收资源
     /// </summary>
-    private void RecycleResourceItem(ResourceItem item, bool destroyCache = false)
+    private void RecycleResourceItem(ResourceItem item, bool destroy = false)
     {
         if (item == null || item.RefCount > 0) return;
-        if (!destroyCache)
+        if (!destroy)
         {
             mNoRefResourceMapList.AddToHead(item);
             return;

@@ -14,8 +14,6 @@ public class EditorResources : BaseResources
     public override ResourceItem CreateResourceItem(string path)
 	{
         ResourceItem item = new ResourceItem();
-        var md5 = FileUtil.GetMD5HashFromFile(path);
-        item.MD5 = md5;
         item.Path = path;
         return item;
 	}
@@ -28,6 +26,8 @@ public class EditorResources : BaseResources
     {
 #if UNITY_EDITOR
         return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+#else
+        return null;
 #endif
     }
 

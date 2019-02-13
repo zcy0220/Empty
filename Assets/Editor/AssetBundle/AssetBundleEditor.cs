@@ -263,7 +263,6 @@ public class AssetBundleEditor
         sw.Close();
         fileStream.Close();
 
-        assetBundleConfig.AssetBundleList.ForEach(abBase => abBase.Path = "");
         var fs = new FileStream(ASSETBUNDLECONFIGBYTESPATH, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         var bf = new BinaryFormatter();
         bf.Serialize(fs, assetBundleConfig);
