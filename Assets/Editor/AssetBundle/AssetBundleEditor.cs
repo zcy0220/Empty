@@ -235,7 +235,6 @@ public class AssetBundleEditor
         foreach(var path in resPathDict.Keys)
         {
             var abBase = new AssetBundleBase();
-            abBase.MD5 = Base.Utils.FileUtil.GetMD5HashFromFile(path);
             abBase.Path = path;
             abBase.ABName = resPathDict[path];
             abBase.AssetName = path.Remove(0, path.LastIndexOf("/") + 1);
@@ -267,6 +266,7 @@ public class AssetBundleEditor
         var bf = new BinaryFormatter();
         bf.Serialize(fs, assetBundleConfig);
         fs.Close();
+        AssetDatabase.Refresh();
     }
 
     /// <summary>

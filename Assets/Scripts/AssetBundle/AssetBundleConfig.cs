@@ -15,8 +15,6 @@ public class AssetBundleConfig
 [System.Serializable]
 public class AssetBundleBase
 {
-    [XmlAttribute("MD5")]
-    public string MD5;
     [XmlAttribute("Path")]
     public string Path;
     [XmlAttribute("ABName")]

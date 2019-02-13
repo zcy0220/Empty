@@ -48,6 +48,7 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
         var formatter = new BinaryFormatter();
         var assetBundleConfig = (AssetBundleConfig)formatter.Deserialize(stream);
         stream.Close();
+        Debug.Log(assetBundleConfig.AssetBundleList.Count);
         for (var i = 0; i < assetBundleConfig.AssetBundleList.Count; i++)
         {
             var abBase = assetBundleConfig.AssetBundleList[i];
