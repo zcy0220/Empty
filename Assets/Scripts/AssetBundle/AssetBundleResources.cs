@@ -2,7 +2,6 @@
  * AB资源控制
  */
 
-using Base.Utils;
 using Base.Debug;
 
 public class AssetBundleResources : BaseResources
@@ -29,7 +28,7 @@ public class AssetBundleResources : BaseResources
         var abBase = AssetBundleManager.Instance.GetAssetBundleBase(path);
         if (abBase != null)
         {
-            var ab = AssetBundleManager.Instance.LoadAssetBundle(abBase);
+            var ab = AssetBundleManager.Instance.SyncLoadAssetBundle(abBase);
             if (ab != null)
             {
                 return ab.LoadAsset<T>(abBase.AssetName);

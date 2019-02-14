@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Base.Utils;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class AssetBundleManager : Singleton<AssetBundleManager>
+public class AssetBundleManager : MonoSingleton<AssetBundleManager>
 {
     /// <summary>
     /// 配置文件路径
@@ -78,9 +78,9 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 根据AB包名加载AssetBundle
+    /// 根据AB包名同步加载AssetBundle
     /// </summary>
-    public AssetBundle LoadAssetBundle(string name)
+    private AssetBundle SyncLoadAssetBundle(string name)
     {
         AssetBundleItem item = null;
         if (!mAssetBundleItemDict.TryGetValue(name, out item))
@@ -104,15 +104,15 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
     /// <summary>
     /// 加载AssetBundleBase所依赖的所有AB包
     /// </summary>
-    public AssetBundle LoadAssetBundle(AssetBundleBase abBase)
+    public AssetBundle SyncLoadAssetBundle(AssetBundleBase abBase)
     {
         if (abBase == null) return null;
-        var ab = LoadAssetBundle(abBase.ABName);
+        var ab = SyncLoadAssetBundle(abBase.ABName);
         if (abBase.ABDependList != null)
         {
             for (var i = 0; i < abBase.ABDependList.Count; i++)
             {
-                LoadAssetBundle(abBase.ABDependList[i]);
+                SyncLoadAssetBundle(abBase.ABDependList[i]);
             }
         }
         return ab;
@@ -152,5 +152,36 @@ public class AssetBundleManager : Singleton<AssetBundleManager>
             }
         }
         UnloadAssetBundle(abBase.ABName);
+    }
+
+    /// <summary>
+    /// 异步加载AB包
+    /// </summary>
+    public void AsyncLoadAssetBundle()
+    {
+
+    }
+
+    /// <summary>
+    /// 处理Load列表里的资源
+    /// </summary>
+    //private void ProcessLoadAsset()
+    //{
+    //    foreach (var loader in _currentLoadQueue)
+    //    {
+    //        if (loader.CanAsyncLoadAsset())
+    //        {
+    //            loader.isBeenLoad = true;
+    //            StartCoroutine(loader.AysncLoadAsset());
+    //        }
+    //    }
+    //}
+
+    /// <summary>
+    /// 检测
+    /// </summary>
+    private void Update()
+    {
+        
     }
 }

@@ -2,6 +2,8 @@
  * 资源控制基类
  */
 
+using UnityEngine;
+
 public abstract class BaseResources
 {
     /// <summary>
@@ -12,11 +14,15 @@ public abstract class BaseResources
     /// <summary>
     /// 同步加载资源
     /// </summary>
-    public virtual T SyncLoad<T>(string path) where T : UnityEngine.Object { return null; }
+    public virtual T SyncLoad<T>(string path) where T : Object { return null; }
+    
+    /// <summary>
+    /// 异步加载资源
+    /// </summary>
+    public virtual void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object { }
 
     /// <summary>
     /// 卸载资源
     /// </summary>
     public virtual void UnloadResource(ResourceItem item) {}
-  
 }

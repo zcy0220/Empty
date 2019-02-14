@@ -8,4 +8,7 @@
     - 第三行：关键字
     - 第四行：注释
 * 一键转表: Tools->Sheet->Protobuf
+
+### 转表流程
+* Excel转CS，同时生成SheetManager，然后动态编译，再生成二进制文件
     

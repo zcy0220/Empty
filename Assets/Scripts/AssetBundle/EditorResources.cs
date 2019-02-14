@@ -3,7 +3,7 @@
  * 使用AssetDataBase加载
  */
 
-using Base.Utils;
+using System;
 using UnityEngine;
 
 public class EditorResources : BaseResources
@@ -18,7 +18,6 @@ public class EditorResources : BaseResources
         return item;
 	}
 
-
     /// <summary>
     /// 同步加载资源
     /// </summary>
@@ -29,6 +28,15 @@ public class EditorResources : BaseResources
 #else
         return null;
 #endif
+    }
+
+    /// <summary>
+    /// 编辑器模式下的异步加载就是同步加载
+    /// </summary>
+    public override void AsyncLoad<T>(string path, Action<UnityEngine.Object> callback)
+    {
+        var obj = SyncLoad<T>(path);
+        callback(obj);
     }
 
     /// <summary>

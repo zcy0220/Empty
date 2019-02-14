@@ -43,7 +43,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
 	/// <summary>
 	/// 同步加载
 	/// </summary>
-	public T SyncLoad<T>(string path) where T : UnityEngine.Object
+	public T SyncLoad<T>(string path) where T : Object
     {
         if (string.IsNullOrEmpty(path)) return null;
         var item = GetCacheResourceItem(path);
@@ -52,6 +52,28 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         var obj = mResources.SyncLoad<T>(path);
         CacheResourceItem(path, obj, item);
         return obj;
+    }
+
+    /// <summary>
+    /// 异步加载
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="callback"></param>
+    public void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object
+    {
+        if (string.IsNullOrEmpty(path)) return;
+        var item = GetCacheResourceItem(path);
+        if (item != null)
+        {
+            if (callback != null) callback(item.Obj as T);
+            return;
+        }
+        mResources.AsyncLoad<T>(path, (obj) =>
+        {
+            item = mResources.CreateResourceItem(path);
+            CacheResourceItem(path, obj, item);
+            if (callback != null) callback(obj as T);
+        });
     }
 
     /// <summary>
@@ -136,5 +158,16 @@ public class ResourceManager : MonoSingleton<ResourceManager>
             item.LastUseTime = Time.realtimeSinceStartup;
         }
         return item;
+    }
+
+    /// <summary>
+    /// 应用退出清除下资源
+    /// 主要是编辑器模式下，退出清除资源，查看Profiler不会残留上次的资源
+    /// </summary>
+    private void OnApplicationQuit()
+    {
+#if UNITY_EDITOR
+        Resources.UnloadUnusedAssets();
+#endif
     }
 }
