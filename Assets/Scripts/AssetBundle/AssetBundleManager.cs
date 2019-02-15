@@ -29,12 +29,30 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// AssetBundleItem对应的类对象池
     /// </summary>
     private ClassObjectPool<AssetBundleItem> mAssetBundleItemPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleItem>();
+    /// <summary>
+    /// 异步加载资源请求队列
+    /// </summary>
+    private List<AssetLoader> mAssetRequestQueue = new List<AssetLoader>();
+    /// <summary>
+    /// 正在异步加载的队列
+    /// </summary>
+    private HashSet<AssetLoader> mAssetLoadingQueue = new HashSet<AssetLoader>();
+    /// <summary>
+    /// AssetLoader类对象池
+    /// </summary>
+    private ClassObjectPool<AssetLoader> mAssetLoaderPool = ObjectManager.Instance.GetOrCreateClassPool<AssetLoader>();
+    /// <summary>
+    /// 同时在异步加载的资源上限
+    /// </summary>
+    private const int MAXLOADNUM = 5;
 
     /// <summary>
     /// 加载AssetBundle配置文件
     /// </summary>
     public bool LoadAssetBundleConfig()
     {
+        mAssetRequestQueue.Clear();
+        mAssetLoadingQueue.Clear();
         mAssetBundleBaseDict.Clear();
         mAssetBundleItemDict.Clear();
         var assetBundle = AssetBundle.LoadFromFile(ASSETBUNDLECONFIGPATH);
@@ -163,25 +181,47 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 处理Load列表里的资源
+    /// 检测资源是否已经在加载队列中了
     /// </summary>
-    //private void ProcessLoadAsset()
-    //{
-    //    foreach (var loader in _currentLoadQueue)
-    //    {
-    //        if (loader.CanAsyncLoadAsset())
-    //        {
-    //            loader.isBeenLoad = true;
-    //            StartCoroutine(loader.AysncLoadAsset());
-    //        }
-    //    }
-    //}
+    private bool AssetInLoading(string path)
+    {
+        foreach(var loader in mAssetLoadingQueue)
+        {
+            if (string.Compare(path, loader.Path) == 0) return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 检测请求队列中的资源，并加入到要加载的队列中
+    /// </summary>
+    private void CheckAssetRequestQueue()
+    {
+        if (mAssetRequestQueue.Count == 0) return;
+        // 正在加载的资源达到上限
+        if (mAssetLoadingQueue.Count >= MAXLOADNUM) return;
+        // 按优先级排序
+        mAssetRequestQueue.Sort();
+
+        while (mAssetLoadingQueue.Count < MAXLOADNUM)
+        {
+            if (mAssetRequestQueue.Count == 0) break;
+
+            // 从请求队列中拿一个加入到加载队列中
+            var loader = mAssetRequestQueue[0];
+            mAssetRequestQueue.RemoveAt(0);
+            if (!AssetInLoading(loader.Path))
+            {
+                mAssetLoadingQueue.Add(loader);
+            }
+        }
+    }
 
     /// <summary>
     /// 检测
     /// </summary>
     private void Update()
     {
-        
+        CheckAssetRequestQueue();
     }
 }
