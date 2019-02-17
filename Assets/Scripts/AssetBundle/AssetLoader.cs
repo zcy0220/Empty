@@ -6,22 +6,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class AssetLoader : IDisposable, IComparable<AssetLoader>
+public class AssetLoader : IDisposable
 {
-    /// <summary>
-    /// 唯一id
-    /// </summary>
-    private static int mId;
     /// <summary>
     /// 加载成功后的回调列表
     /// </summary>
-    private List<Action<UnityEngine.Object>> mCallbackList;
+    private List<Action<UnityEngine.Object>> mCallbackList = new List<Action<UnityEngine.Object>>();
     //------------------------------------------------
-    public int Id { get; private set; }
-    /// <summary>
-    /// 优先级
-    /// </summary>
-    public int Priority { set; get; }
     /// <summary>
     /// 加载的资源路径
     /// </summary>
@@ -30,15 +21,6 @@ public class AssetLoader : IDisposable, IComparable<AssetLoader>
     /// 是否正在加载
     /// </summary>
     public bool IsLoading { get; private set; }
-    
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    public AssetLoader()
-    {
-        mId++;
-        Id = mId;
-    }
 
     /// <summary>
     /// 异步加载
@@ -48,17 +30,17 @@ public class AssetLoader : IDisposable, IComparable<AssetLoader>
     {
         IsLoading = true;
         if (string.IsNullOrEmpty(Path)) yield return null;
-        var ab = 
         yield return null;
         
     }
 
     /// <summary>
-    /// 优先级相同的情况下，id小的为先请求
+    /// 当请求相同资源时，添加对应回调到回调列表
     /// </summary>
-    public int CompareTo(AssetLoader other)
+    public void AddCallback(Action<UnityEngine.Object> callback)
     {
-        return other.Priority == Priority ? Id.CompareTo(other.Id) : other.Priority.CompareTo(Priority);
+        if (mCallbackList.Contains(callback)) return;
+        mCallbackList.Add(callback);
     }
 
     /// <summary>
@@ -66,6 +48,6 @@ public class AssetLoader : IDisposable, IComparable<AssetLoader>
     /// </summary>
     public void Dispose()
     {
-        Priority = 0;
+        mCallbackList.Clear();
     }
 }

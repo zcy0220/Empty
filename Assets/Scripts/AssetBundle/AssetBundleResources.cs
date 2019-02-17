@@ -2,7 +2,9 @@
  * AB资源控制
  */
 
+using System;
 using Base.Debug;
+using UnityEngine;
 
 public class AssetBundleResources : BaseResources
 {
@@ -39,6 +41,14 @@ public class AssetBundleResources : BaseResources
             Debugger.LogError("No AssetBundleBase is found for the {0}", path);
         }
         return null;
+    }
+
+    /// <summary>
+    /// AssetBundle的异步加载
+    /// </summary>
+    public override void AsyncLoad<T>(string path, Action<UnityEngine.Object> callback)
+    {
+
     }
 
     /// <summary>
