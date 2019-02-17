@@ -70,8 +70,12 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         }
         mResources.AsyncLoad<T>(path, (obj) =>
         {
-            item = mResources.CreateResourceItem(path);
-            CacheResourceItem(path, obj, item);
+            item = GetCacheResourceItem(path);
+            if (item == null)
+            {
+                item = mResources.CreateResourceItem(path);
+                CacheResourceItem(path, obj, item);
+            }
             if (callback != null) callback(obj as T);
         });
     }

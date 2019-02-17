@@ -102,19 +102,19 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     /// 根据AB包名同步加载AssetBundle
     /// </summary>
-    private AssetBundle SyncLoadAssetBundle(string name)
+    private AssetBundle SyncLoadAssetBundle(string abName)
     {
         AssetBundleItem item = null;
-        if (!mAssetBundleItemDict.TryGetValue(name, out item))
+        if (!mAssetBundleItemDict.TryGetValue(abName, out item))
         {
             AssetBundle assetBundle = null;
-            var path = StringUtil.Concat(Application.streamingAssetsPath, "/", name);
+            var path = StringUtil.Concat(Application.streamingAssetsPath, "/", abName);
             if (File.Exists(path)) assetBundle = AssetBundle.LoadFromFile(path);
-            if (assetBundle == null) Debugger.LogError("Load AssetBundle Error: " + name);
+            if (assetBundle == null) Debugger.LogError("Load AssetBundle Error: " + abName);
             item = mAssetBundleItemPool.Spawn();
             item.AssetBundle = assetBundle;
             item.RefCount++;
-            mAssetBundleItemDict.Add(name, item);
+            mAssetBundleItemDict.Add(abName, item);
         }
         else
         {
