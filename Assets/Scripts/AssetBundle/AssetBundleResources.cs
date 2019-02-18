@@ -4,7 +4,6 @@
 
 using System;
 using Base.Debug;
-using UnityEngine;
 
 public class AssetBundleResources : BaseResources
 {
