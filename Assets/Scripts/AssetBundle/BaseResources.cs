@@ -19,7 +19,7 @@ public abstract class BaseResources
     /// <summary>
     /// 异步加载资源
     /// </summary>
-    public virtual void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object { }
+    public virtual void AsyncLoad(string path, System.Action<Object> callback) { }
 
     /// <summary>
     /// 卸载资源

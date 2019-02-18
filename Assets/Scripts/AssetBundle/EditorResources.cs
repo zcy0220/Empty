@@ -33,11 +33,20 @@ public class EditorResources : BaseResources
     /// <summary>
     /// 编辑器模式下的异步加载就是同步加载
     /// </summary>
-    public override void AsyncLoad<T>(string path, Action<UnityEngine.Object> callback)
+    public override void AsyncLoad(string path, Action<UnityEngine.Object> callback)
     {
-        var obj = SyncLoad<T>(path);
+        UnityEngine.Object obj = IsSprite(path) ? SyncLoad<Sprite>(path) : SyncLoad<UnityEngine.Object>(path);
         callback(obj);
     }
+
+    /// <summary>
+    /// 判断是否Sprite
+    /// </summary>
+    private bool IsSprite(string path)
+    {
+        return path.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) || path.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase);
+    }
+
 
     /// <summary>
     /// 卸载资源

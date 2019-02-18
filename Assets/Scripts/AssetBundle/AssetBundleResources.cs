@@ -44,11 +44,11 @@ public class AssetBundleResources : BaseResources
     }
 
     /// <summary>
-    /// AssetBundle的异步加载
+    /// AssetBundle的异步加载，添加异步加载请求
     /// </summary>
-    public override void AsyncLoad<T>(string path, Action<UnityEngine.Object> callback)
+    public override void AsyncLoad(string path, Action<UnityEngine.Object> callback)
     {
-
+        AssetBundleManager.Instance.AddAssetLoadRequest(path, callback);
     }
 
     /// <summary>

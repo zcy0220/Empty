@@ -40,7 +40,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     /// 资源加载请求AssetLoadRequest类对象池
     /// </summary>
-    private ClassObjectPool<AssetLoadRequest> mAssetLoadRequest = ObjectManager.Instance.GetOrCreateClassPool<AssetLoadRequest>();
+    private ClassObjectPool<AssetLoadRequest> mAssetLoadRequestPool = ObjectManager.Instance.GetOrCreateClassPool<AssetLoadRequest>();
     /// <summary>
     /// AssetLoader类对象池
     /// </summary>
@@ -95,6 +95,18 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
         if (mAssetBundleBaseDict.ContainsKey(path))
         {
             return mAssetBundleBaseDict[path];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 获取AssetBundle缓存
+    /// </summary>
+    public AssetBundleItem GetCacheAssetBundle(string abName)
+    {
+        if (mAssetBundleItemDict.ContainsKey(abName))
+        {
+            return mAssetBundleItemDict[abName];
         }
         return null;
     }
@@ -177,11 +189,16 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 异步加载AB包
+    /// 添加异步加载请求
     /// </summary>
-    public void AsyncLoadAssetBundle()
+    public void AddAssetLoadRequest(string path, System.Action<Object> callback, int priority = 0)
     {
-
+        var request = mAssetLoadRequestPool.Spawn();
+        request.Init();
+        request.Path = path;
+        request.Callback = callback;
+        request.Priority = priority;
+        mAssetRequestQueue.Add(request);
     }
 
     /// <summary>
@@ -225,6 +242,8 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
                 loader.Path = request.Path;
                 mAssetLoadingQueue.Add(loader);
             }
+            request.Dispose();
+            mAssetLoadRequestPool.Recycle(request);
         }
     }
 
@@ -233,7 +252,26 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     public void DealAssetLoadingQueue()
     {
-        //foreach(var loader )
+        foreach(var loader in mAssetLoadingQueue)
+        {
+            if (loader.CanLoadAssetAsync())
+            {
+                StartCoroutine(loader.LoadAssetAsync());
+            }
+        }
+    }
+
+    /// <summary>
+    ///  资源加载器完成
+    /// </summary>
+    public void AssetLoaderFinished(AssetLoader loader)
+    {
+        if (mAssetLoadingQueue.Contains(loader))
+        {
+            mAssetLoadingQueue.Remove(loader);
+        }
+        loader.Dispose();
+        mAssetLoaderPool.Recycle(loader);
     }
 
     /// <summary>

@@ -3,6 +3,8 @@
  */
 
 using System;
+using Base.Debug;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -23,15 +25,56 @@ public class AssetLoader : IDisposable
     public bool IsLoading { get; private set; }
 
     /// <summary>
-    /// 异步加载
+    /// 异步加载资源
     /// </summary>
     /// <returns></returns>
-    IEnumerator AsyncLoad()
+    public IEnumerator LoadAssetAsync()
     {
         IsLoading = true;
-        if (string.IsNullOrEmpty(Path)) yield return null;
-        yield return null;
-        
+        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(Path);
+        if (abBase == null)
+        {
+            Debugger.LogError("No AssetBundleBase is found for the {0}", Path);
+        }
+        else
+        {
+            var abItem = AssetBundleManager.Instance.GetCacheAssetBundle(abBase.ABName);
+            if (abItem == null)
+            {
+                Debugger.LogError("{0} Cache Error!", abBase.ABName);
+            }
+            else
+            {
+                var ab = abItem.AssetBundle;
+                var abRequest = IsSprite() ? ab.LoadAssetAsync<Sprite>(abBase.AssetName) : ab.LoadAssetAsync(abBase.AssetName);
+                yield return abRequest;
+                for(var i = 0; i < mCallbackList.Count; i++)
+                {
+                    mCallbackList[i](abRequest.asset);
+                }
+                AssetBundleManager.Instance.AssetLoaderFinished(this);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 判断是否Sprite
+    /// </summary>
+    private bool IsSprite()
+    {
+        return Path.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) || Path.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    /// <summary>
+    /// 判断是否能开始异步加载了，取决于AssetBundle是否完成
+    /// 这里先同步加载下AssetBundle
+    /// </summary>
+    public bool CanLoadAssetAsync()
+    {
+        if (IsLoading) return false;
+        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(Path);
+        AssetBundleManager.Instance.SyncLoadAssetBundle(abBase);
+        return true;
     }
 
     /// <summary>
@@ -48,6 +91,8 @@ public class AssetLoader : IDisposable
     /// </summary>
     public void Dispose()
     {
+        IsLoading = false;
+        Path = string.Empty;
         mCallbackList.Clear();
     }
 }

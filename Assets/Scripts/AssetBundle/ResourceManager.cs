@@ -68,7 +68,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
             if (callback != null) callback(item.Obj as T);
             return;
         }
-        mResources.AsyncLoad<T>(path, (obj) =>
+        mResources.AsyncLoad(path, (obj) =>
         {
             item = GetCacheResourceItem(path);
             if (item == null)
