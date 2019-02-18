@@ -16,7 +16,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     /// 配置文件路径
     /// </summary>
-    private readonly string ASSETBUNDLECONFIGPATH = Application.streamingAssetsPath + "/assetbundleconfig";
+    private string ASSETBUNDLECONFIGPATH;
     /// <summary>
     /// 以path为key存储一份AssetBundleBase
     /// </summary>
@@ -51,6 +51,14 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     private const int MAXLOADNUM = 5;
 
     /// <summary>
+    /// MonoBehaviour单例，streamingAssetsPath相关配置路径要在Awake或Start初始化
+    /// </summary>
+    public void Awake()
+    {
+        ASSETBUNDLECONFIGPATH = Application.streamingAssetsPath + "/assetbundleconfig";
+    }
+
+    /// <summary>
     /// 加载AssetBundle配置文件
     /// </summary>
     public bool LoadAssetBundleConfig()
@@ -70,7 +78,6 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
         var formatter = new BinaryFormatter();
         var assetBundleConfig = (AssetBundleConfig)formatter.Deserialize(stream);
         stream.Close();
-        Debug.Log(assetBundleConfig.AssetBundleList.Count);
         for (var i = 0; i < assetBundleConfig.AssetBundleList.Count; i++)
         {
             var abBase = assetBundleConfig.AssetBundleList[i];
@@ -240,6 +247,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
             {
                 loader = mAssetLoaderPool.Spawn();
                 loader.Path = request.Path;
+                loader.AddCallback(request.Callback);
                 mAssetLoadingQueue.Add(loader);
             }
             request.Dispose();
