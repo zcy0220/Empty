@@ -63,7 +63,7 @@ public class SheetEditor
             sheetDict.Add(name, table);
             var cols = table.Columns.Count;
             var count = 0;
-            for(var j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 var row0 = table.Rows[0][j].ToString();
                 if (!row0.Equals("ignore"))

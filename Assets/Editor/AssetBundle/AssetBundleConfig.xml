@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<AssetBundleConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <AssetBundleList Path="Assets/GameAssets/Config/AssetBundleConfig.bytes" ABName="assetbundleconfig" AssetName="AssetBundleConfig.bytes" ABDependList="" />
-  <AssetBundleList Path="Assets/GameAssets/Prefabs/ExamplePrefab1.prefab" ABName="assets_gameassets_prefabs_exampleprefab1" AssetName="ExamplePrefab1.prefab" ABDependList="sounds shaders" />
-  <AssetBundleList Path="Assets/GameAssets/Prefabs/ExamplePrefab2.prefab" ABName="assets_gameassets_prefabs_exampleprefab2" AssetName="ExamplePrefab2.prefab" ABDependList="shaders" />
-  <AssetBundleList Path="Assets/GameAssets/Shaders/ShaderExample.shader" ABName="shaders" AssetName="ShaderExample.shader" ABDependList="" />
-  <AssetBundleList Path="Assets/GameAssets/Sheets/Example.bytes" ABName="sheets" AssetName="Example.bytes" ABDependList="" />
-  <AssetBundleList Path="Assets/GameAssets/Sounds/SoundExample.wav" ABName="sounds" AssetName="SoundExample.wav" ABDependList="" />
-</AssetBundleConfig>
