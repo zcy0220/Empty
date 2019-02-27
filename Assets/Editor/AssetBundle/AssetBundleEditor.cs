@@ -42,7 +42,6 @@ public class AssetBundleEditor
     /// </summary>
     private static Dictionary<string, AssetItemInfo> mAssetItemInfoDict = new Dictionary<string, AssetItemInfo>();
 
-    [MenuItem("Tools/AssetBundle/Build")]
     public static void Build()
     {
         TraverseGameAssets();
@@ -324,7 +323,6 @@ public class AssetBundleEditor
     /// <summary>
     /// 生成AssetBundles
     /// </summary>
-    [MenuItem("Tools/AssetBundle/Test")]
     private static void CreateAssetBundles()
     {
         if (!Directory.Exists(ASSETBUNDLESPATH)) Directory.CreateDirectory(ASSETBUNDLESPATH);
