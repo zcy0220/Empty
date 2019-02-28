@@ -21,9 +21,9 @@ public class AppMain : MonoBehaviour
         //{
         //    GameObject.Instantiate(obj);
         //});
-        AssetBundle manifestBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/StreamingAssets");
+        AssetBundle manifestBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/AssetBundles");
         var manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
-        var dependencies = manifest.GetAllDependencies("aaa");
-        var a = 1;
+        var dependencies = manifest.GetAllDependencies("assets/gameassets/prefabs/exampleprefab1.prefab");
+        //foreach(var path in )
     }
 }

@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1823081191
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fd759c4a727179c7b1b247b0dd79a4e7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 51a16e16d5113854a16091e54ae5bb0d
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/Materials/ExampleMaterial.mat
+- Assets/GameAssets/Shaders/ShaderExample.shader
+Dependencies: []

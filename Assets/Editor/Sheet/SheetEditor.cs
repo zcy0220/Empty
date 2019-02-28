@@ -51,6 +51,7 @@ public class SheetEditor
         for (var i = 0; i < files.Length; i++)
         {
             var file = files[i];
+            EditorUtility.DisplayProgressBar("Excel -> CS", file.FullName, 1.0f * (i + 1) / files.Length);
             if (file.Extension != SHEETEXT) continue;
             var name = file.Name.Replace(SHEETEXT, "");
             sheetCSSB.Append(LineText("[ProtoContract]", 1));
@@ -208,6 +209,7 @@ public class SheetEditor
             Debugger.LogError("SheetProtobuf Build Failed!");
         }
         AssetDatabase.Refresh();
+        EditorUtility.ClearProgressBar();
     }
 
     /// <summary>

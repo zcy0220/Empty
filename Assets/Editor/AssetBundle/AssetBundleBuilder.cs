@@ -20,6 +20,11 @@ namespace Assets.Editor.AssetBundle
         {
             CreateAssetDependsMap();
             GroupAssetBundles();
+            SetAssetBundleNames();
+            BuildAssetBundles();
+            ClearAssetBundleNames();
+            AssetDatabase.Refresh();
+            EditorUtility.ClearProgressBar();
         }
 
         /// <summary>
@@ -42,8 +47,10 @@ namespace Assets.Editor.AssetBundle
                     }
                 }
                 var files = dirInfo.GetFiles();
-                foreach(var fileInfo in files)
+                for (var i = 0; i < files.Length; i++)
                 {
+                    var fileInfo = files[i];
+                    EditorUtility.DisplayProgressBar("CreateAssetDependsMap", fileInfo.FullName, 1.0f * (i + 1) / files.Length);
                     if (AssetUtils.ValidAsset(fileInfo.FullName))
                     {
                         // 处理依赖相关
@@ -74,6 +81,7 @@ namespace Assets.Editor.AssetBundle
             if (!mAssetItemDict.TryGetValue(path, out item))
             {
                 item = new AssetItem();
+                item.AssetBundleName = path;
                 mAssetItemDict.Add(path, item);
             }
             return item;
@@ -122,18 +130,61 @@ namespace Assets.Editor.AssetBundle
              *      / | \ /                          
              *     c  h  d      
              */
+            foreach(var item in mAssetItemDict)
+            {
+                var path = item.Key;
+                var assetItem = item.Value;
+                while(assetItem.BeDepends.Count == 1)
+                {
+                    assetItem = GetAssetItem(assetItem.BeDepends[0]);
+                    if (assetItem.BeDepends.Count != 1)
+                    {
+                        item.Value.AssetBundleName = assetItem.AssetBundleName;
+                    }
+                }
+            }
         }
 
+        /// <summary>
+        /// 设置所有的ABName
+        /// </summary>
+        private static void SetAssetBundleNames()
+        {
+            foreach (var item in mAssetItemDict)
+            {
+                var path = item.Key;
+                var assetItem = item.Value;
+                var assetImport = AssetImporter.GetAtPath(path);
+                if (assetImport != null)
+                {
+                    assetImport.assetBundleName = assetItem.AssetBundleName.ToLower();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 清除所有ABName
+        /// </summary>
+        private static void ClearAssetBundleNames()
+        {
+            var abNames = AssetDatabase.GetAllAssetBundleNames();
+            for (var i = 0; i < abNames.Length; i++)
+            {
+                AssetDatabase.RemoveAssetBundleName(abNames[i], true);
+            }
+        }
 
         /// <summary>
         /// 生成AssetBundles
         /// </summary>
         private static void BuildAssetBundles()
         {
-            if (!Directory.Exists(BuilderConfig.AssetBundleExportPath))
+            EditorUtility.DisplayProgressBar("BuildAssetBundles", "", 0);
+            if (Directory.Exists(BuilderConfig.AssetBundleExportPath))
             {
-                Directory.CreateDirectory(BuilderConfig.AssetBundleExportPath);
+                FileUtil.DeleteFileOrDirectory(BuilderConfig.AssetBundleExportPath);
             }
+            Directory.CreateDirectory(BuilderConfig.AssetBundleExportPath);
             BuildPipeline.BuildAssetBundles(BuilderConfig.AssetBundleExportPath, BuilderConfig.Options, BuilderConfig.Target);
         }
     }

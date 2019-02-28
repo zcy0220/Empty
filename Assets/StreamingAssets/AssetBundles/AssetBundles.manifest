@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 1634241289
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: assets/gameassets/prefabs/exampleprefab1.prefab
+      Dependencies:
+        Dependency_0: assets/gameassets/materials/examplematerial.mat
+    Info_1:
+      Name: assets/gameassets/sheets/example.bytes
+      Dependencies: {}
+    Info_2:
+      Name: assets/gameassets/materials/examplematerial.mat
+      Dependencies: {}
+    Info_3:
+      Name: assets/gameassets/prefabs/exampleprefab2.prefab
+      Dependencies:
+        Dependency_0: assets/gameassets/materials/examplematerial.mat
