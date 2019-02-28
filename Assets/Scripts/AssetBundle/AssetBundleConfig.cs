@@ -4,13 +4,30 @@
 
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using ProtoBuf;
+using UnityEngine;
 
-[System.Serializable]
 public class AssetBundleConfig
 {
-    [XmlElement("AssetBundleList")]
-    public List<AssetBundleBase> AssetBundleList;
+    public static readonly string AssetBundlesPath = Application.streamingAssetsPath + "/AssetBundles";
 }
+
+[ProtoContract]
+public class PathBundleInfoList
+{
+    [ProtoMember(1)]
+    public List<PathBundleInfo> List = new List<PathBundleInfo>();
+}
+
+[ProtoContract]
+public class PathBundleInfo
+{
+    [ProtoMember(1)]
+    public string Path;
+    [ProtoMember(2)]
+    public string AssetBundleName;
+}
+
 
 [System.Serializable]
 public class AssetBundleBase

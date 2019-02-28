@@ -14,10 +14,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 public class AssetBundleManager : MonoSingleton<AssetBundleManager>
 {
     /// <summary>
-    /// 配置文件路径
-    /// </summary>
-    private string ASSETBUNDLECONFIGPATH;
-    /// <summary>
     /// 以path为key存储一份AssetBundleBase
     /// </summary>
     private Dictionary<string, AssetBundleBase> mAssetBundleBaseDict = new Dictionary<string, AssetBundleBase>();
@@ -51,46 +47,38 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     private const int MAXLOADNUM = 5;
 
     /// <summary>
-    /// MonoBehaviour单例，streamingAssetsPath相关配置路径要在Awake或Start初始化
-    /// </summary>
-    public void Awake()
-    {
-        ASSETBUNDLECONFIGPATH = Application.streamingAssetsPath + "/assetbundleconfig";
-    }
-
-    /// <summary>
     /// 加载AssetBundle配置文件
     /// </summary>
     public bool LoadAssetBundleConfig()
     {
-        mAssetRequestQueue.Clear();
-        mAssetLoadingQueue.Clear();
-        mAssetBundleBaseDict.Clear();
-        mAssetBundleItemDict.Clear();
-        var assetBundle = AssetBundle.LoadFromFile(ASSETBUNDLECONFIGPATH);
-        var textAsset = assetBundle.LoadAsset<TextAsset>("assetbundleconfig");
-        if (textAsset == null)
-        {
-            Debugger.LogError("AssetBundleConfig is not exist!");
-            return false;
-        }
-        var stream = new MemoryStream(textAsset.bytes);
-        var formatter = new BinaryFormatter();
-        var assetBundleConfig = (AssetBundleConfig)formatter.Deserialize(stream);
-        stream.Close();
-        for (var i = 0; i < assetBundleConfig.AssetBundleList.Count; i++)
-        {
-            var abBase = assetBundleConfig.AssetBundleList[i];
-            var path = abBase.Path;
-            if (mAssetBundleBaseDict.ContainsKey(path))
-            {
-                Debugger.LogError("Duplicate path! AssetName:{0}, ABName:{1}", abBase.AssetName, abBase.ABName);
-            }
-            else
-            {
-                mAssetBundleBaseDict.Add(path, abBase);
-            }
-        }
+        //mAssetRequestQueue.Clear();
+        //mAssetLoadingQueue.Clear();
+        //mAssetBundleBaseDict.Clear();
+        //mAssetBundleItemDict.Clear();
+        //var assetBundle = AssetBundle.LoadFromFile(ASSETBUNDLECONFIGPATH);
+        //var textAsset = assetBundle.LoadAsset<TextAsset>("assetbundleconfig");
+        //if (textAsset == null)
+        //{
+        //    Debugger.LogError("AssetBundleConfig is not exist!");
+        //    return false;
+        //}
+        //var stream = new MemoryStream(textAsset.bytes);
+        //var formatter = new BinaryFormatter();
+        //var assetBundleConfig = (AssetBundleConfig)formatter.Deserialize(stream);
+        //stream.Close();
+        //for (var i = 0; i < assetBundleConfig.AssetBundleList.Count; i++)
+        //{
+        //    var abBase = assetBundleConfig.AssetBundleList[i];
+        //    var path = abBase.Path;
+        //    if (mAssetBundleBaseDict.ContainsKey(path))
+        //    {
+        //        Debugger.LogError("Duplicate path! AssetName:{0}, ABName:{1}", abBase.AssetName, abBase.ABName);
+        //    }
+        //    else
+        //    {
+        //        mAssetBundleBaseDict.Add(path, abBase);
+        //    }
+        //}
         return true;
     }
 

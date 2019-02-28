@@ -20,6 +20,7 @@ namespace Assets.Editor.AssetBundle
         {
             CreateAssetDependsMap();
             GroupAssetBundles();
+            CreateAssetBundleConfig();
             SetAssetBundleNames();
             BuildAssetBundles();
             ClearAssetBundleNames();
@@ -143,6 +144,31 @@ namespace Assets.Editor.AssetBundle
                     }
                 }
             }
+        }
+       
+        /// <summary>
+        /// 生成AssetBundleConfig配置文件
+        /// </summary>
+        private static void CreateAssetBundleConfig()
+        {
+            var configPath = BuilderConfig.AssetRootPath + "/Config/AssetBundleConfig.bytes";
+            var config = new PathBundleInfoList();
+            config.List.Add(new PathBundleInfo() { Path = configPath, AssetBundleName = configPath });
+            foreach (var item in mAssetItemDict)
+            {
+                if (item.Key != configPath)
+                {
+                    var pathBundleInfo = new PathBundleInfo();
+                    pathBundleInfo.Path = item.Key;
+                    pathBundleInfo.AssetBundleName = item.Value.AssetBundleName;
+                    config.List.Add(pathBundleInfo);
+                }
+            }
+            var buffer = Base.Utils.ProtobufUtil.NSerialize(config);
+            Base.Utils.FileUtil.WriteAllBytes(configPath, buffer);
+            var assetItem = GetAssetItem(configPath);
+            assetItem.AssetBundleName = configPath;
+            AssetDatabase.Refresh();
         }
 
         /// <summary>

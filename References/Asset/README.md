@@ -1,6 +1,7 @@
 # 资源管理
 * AssetBundle打包管理
 * Resource管理
+* 热更新
 
 ## Unity资源加载方式
 * Resources：[官方不推荐](https://unity3d.com/cn/learn/tutorials/topics/best-practices/resources-folder)
@@ -25,7 +26,10 @@
      */
 ~~~
     
-
 ### Resource管理
 * 类对象池：
+* 资源对象池：
+* 对象池：
+
+### 热更新
     

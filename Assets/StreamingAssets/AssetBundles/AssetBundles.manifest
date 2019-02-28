@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1634241289
+CRC: 2047661664
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -16,3 +16,6 @@ AssetBundleManifest:
       Name: assets/gameassets/prefabs/exampleprefab2.prefab
       Dependencies:
         Dependency_0: assets/gameassets/materials/examplematerial.mat
+    Info_4:
+      Name: assets/gameassets/config/assetbundleconfig.bytes
+      Dependencies: {}
