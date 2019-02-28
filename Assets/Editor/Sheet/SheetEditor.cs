@@ -51,7 +51,7 @@ public class SheetEditor
         for (var i = 0; i < files.Length; i++)
         {
             var file = files[i];
-            EditorUtility.DisplayProgressBar("Excel -> CS", file.FullName, 1.0f * (i + 1) / files.Length);
+            EditorUtility.DisplayProgressBar("Generate Protobuf CS", file.FullName, 1.0f * (i + 1) / files.Length);
             if (file.Extension != SHEETEXT) continue;
             var name = file.Name.Replace(SHEETEXT, "");
             sheetCSSB.Append(LineText("[ProtoContract]", 1));
@@ -107,9 +107,12 @@ public class SheetEditor
         sheetManagerSB.Append(LineText("public partial class SheetManager : Singleton<SheetManager>"));
         sheetManagerSB.Append(LineText("{"));
 
+        var sheetCount = 0;
         foreach (var table in sheetDict)
         {
+            sheetCount++;
             var sheetName = table.Key;
+            EditorUtility.DisplayProgressBar("Generate SheetManager", sheetName, 1.0f * sheetCount / sheetDict.Count);
             SheetExportBase sheetExportBase;
             if (!sheetExportConst.TryGetValue(sheetName, out sheetExportBase))
             {
@@ -139,10 +142,13 @@ public class SheetEditor
         {
             Debugger.Log("SheetProtobuf Build Success!");
             var ass = result.CompiledAssembly;
+            sheetCount = 0;
             foreach(var table in sheetDict)
             {
+                sheetCount++;
                 var name = table.Key;
                 var data = table.Value;
+                EditorUtility.DisplayProgressBar("Generate Bytes", name, 1.0f * sheetCount / sheetDict.Count);
                 var listObj = ass.CreateInstance("Sheet." + name + "List");
                 var list = listObj.GetType().GetField("Items").GetValue(listObj);
                 var addMethod = list.GetType().GetMethod("Add");
