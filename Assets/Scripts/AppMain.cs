@@ -15,19 +15,22 @@ public class AppMain : MonoBehaviour
     {
         //AppConfig.UseAssetBundle = true;
         //AssetBundleManager.Instance.LoadAssetBundleConfig();
-        //var prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        //GameObject.Instantiate(prefab);
+        var prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
+        for (var i = 0; i < 100; i++)
+        {
+            GameObject.Instantiate(prefab);
+        }
         //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
         //{
         //    GameObject.Instantiate(obj);
         //});
         AssetBundle manifestBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/AssetBundles/AssetBundles");
         var manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
-        var dependencies = manifest.GetAllDependencies("assets/gameassets/prefabs/exampleprefab1.prefab");
-        foreach(var path in dependencies)
-        {
-            Debug.Log(path);
-        }
+        //var dependencies = manifest.GetAllDependencies("assets/gameassets/prefabs/exampleprefab1.prefab");
+        //foreach(var path in dependencies)
+        //{
+        //    Debug.Log(path);
+        //}
         //foreach(var path in )
     }
 }

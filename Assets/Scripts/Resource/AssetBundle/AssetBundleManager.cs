@@ -9,10 +9,14 @@ using Base.Pool;
 using System.IO;
 using System.Collections.Generic;
 using Base.Utils;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public class AssetBundleManager : MonoSingleton<AssetBundleManager>
 {
+    private AssetBundleManifest mAssetBundleManifest;
+    private Dictionary<string, string> mPathBundleDict = new Dictionary<string, string>();
+    private Dictionary<string, AssetBundleUnit> mAssetBundleUnitDict = new Dictionary<string, AssetBundleUnit>();
+    private ClassObjectPool<AssetBundleUnit> mAssetBundleUnitPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleUnit>();
+
     /// <summary>
     /// 以path为key存储一份AssetBundleBase
     /// </summary>
@@ -47,39 +51,51 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     private const int MAXLOADNUM = 5;
 
     /// <summary>
+    /// 获得AssetBundleManifest
+    /// </summary>
+    private AssetBundleManifest GetAssetBundleManifest()
+    {
+        if (mAssetBundleManifest == null)
+        {
+            LoadAssetBundleConfig();
+        }
+        return mAssetBundleManifest;
+    }
+
+    /// <summary>
     /// 加载AssetBundle配置文件
     /// </summary>
-    public bool LoadAssetBundleConfig()
+    private void LoadAssetBundleConfig()
     {
-        //mAssetRequestQueue.Clear();
-        //mAssetLoadingQueue.Clear();
-        //mAssetBundleBaseDict.Clear();
-        //mAssetBundleItemDict.Clear();
-        //var assetBundle = AssetBundle.LoadFromFile(ASSETBUNDLECONFIGPATH);
-        //var textAsset = assetBundle.LoadAsset<TextAsset>("assetbundleconfig");
-        //if (textAsset == null)
+        var manifestBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/AssetBundles/AssetBundles");
+        mAssetBundleManifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+    }
+
+    /// <summary>
+    /// 同步加载
+    /// </summary>
+    public T SyncLoad<T>(string path) where T : Object
+    {
+        var mainfest = GetAssetBundleManifest();
+        
+        var dependencies = manifest.GetAllDependencies("assets/gameassets/prefabs/exampleprefab1.prefab");
+        return null;
+    }
+
+    public T SyncLoadAsset<T>(string assetBundleName) where T : Object
+    {
+        //AssetBundleUnit unit;
+        //if (mAssetBundleUnitDict.TryGetValue(assetBundleName, out unit))
         //{
-        //    Debugger.LogError("AssetBundleConfig is not exist!");
-        //    return false;
+        //    unit.RefCount++;
         //}
-        //var stream = new MemoryStream(textAsset.bytes);
-        //var formatter = new BinaryFormatter();
-        //var assetBundleConfig = (AssetBundleConfig)formatter.Deserialize(stream);
-        //stream.Close();
-        //for (var i = 0; i < assetBundleConfig.AssetBundleList.Count; i++)
+        //else
         //{
-        //    var abBase = assetBundleConfig.AssetBundleList[i];
-        //    var path = abBase.Path;
-        //    if (mAssetBundleBaseDict.ContainsKey(path))
-        //    {
-        //        Debugger.LogError("Duplicate path! AssetName:{0}, ABName:{1}", abBase.AssetName, abBase.ABName);
-        //    }
-        //    else
-        //    {
-        //        mAssetBundleBaseDict.Add(path, abBase);
-        //    }
+            
         //}
-        return true;
+        //if (mAssetBundleUnitDict)
+        //var assetBundle = AssetBundle.LoadFromFile(StringUtil.Concat(AssetBundleConfig.AssetBundlesPath, "/", assetBundleName));
+        //var manifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
     }
 
     /// <summary>
@@ -111,23 +127,27 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     private AssetBundle SyncLoadAssetBundle(string abName)
     {
-        AssetBundleItem item = null;
-        if (!mAssetBundleItemDict.TryGetValue(abName, out item))
+        AssetBundleUnit unit = null;
+        if (!mAssetBundleUnitDict.TryGetValue(abName, out unit))
         {
             AssetBundle assetBundle = null;
-            var path = StringUtil.Concat(Application.streamingAssetsPath, "/", abName);
-            if (File.Exists(path)) assetBundle = AssetBundle.LoadFromFile(path);
-            if (assetBundle == null) Debugger.LogError("Load AssetBundle Error: " + abName);
-            item = mAssetBundleItemPool.Spawn();
-            item.AssetBundle = assetBundle;
-            item.RefCount++;
-            mAssetBundleItemDict.Add(abName, item);
+            var path = StringUtil.Concat(AssetBundleConfig.AssetBundlesPath, "/", abName);
+            assetBundle = AssetBundle.LoadFromFile(path);
+            if (assetBundle == null)
+            {
+                Debugger.LogError("Load AssetBundle Error: " + abName);
+                return null;
+            }
+            unit = mAssetBundleUnitPool.Spawn();
+            unit.AssetBundle = assetBundle;
+            unit.RefCount++;
+            mAssetBundleUnitDict.Add(abName, unit);
         }
         else
         {
-            item.RefCount++;
+            unit.RefCount++;
         }
-        return item.AssetBundle;
+        return unit.AssetBundle;
     }
 
     /// <summary>
@@ -278,4 +298,17 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
         CheckAssetRequestQueue();
         DealAssetLoadingQueue();
     }
+}
+
+
+public class AssetBundleUnit
+{
+    /// <summary>
+    /// 对应的AssetBundle引用
+    /// </summary>
+    public AssetBundle AssetBundle;
+    /// <summary>
+    /// 引用计数
+    /// </summary>
+    public int RefCount;
 }

@@ -5,22 +5,8 @@
 using System;
 using Base.Debug;
 
-public class AssetBundleResources : BaseResources
+public class AssetBundleResourceLoader : BaseResourceLoader
 {
-    /// <summary>
-    /// 创建ResourceItem
-    /// </summary>
-    public override ResourceItem CreateResourceItem(string path)
-    {
-        ResourceItem item = new ResourceItem();
-        var abBase = AssetBundleManager.Instance.GetAssetBundleBase(path);
-        item.Path = path;
-        item.ABName = abBase.ABName;
-        item.AssetName = abBase.AssetName;
-        item.ABDependList = abBase.ABDependList;
-        return item;
-    }
-
     /// <summary>
     /// 同步加载资源
     /// </summary>
@@ -48,15 +34,5 @@ public class AssetBundleResources : BaseResources
     public override void AsyncLoad(string path, Action<UnityEngine.Object> callback)
     {
         AssetBundleManager.Instance.AddAssetLoadRequest(path, callback);
-    }
-
-    /// <summary>
-    /// 卸载资源
-    /// </summary>
-    public override void UnloadResource(ResourceItem item)
-    {
-        if (item == null) return;
-        item.Obj = null;
-        AssetBundleManager.Instance.UnloadAssetBundleByPath(item.Path);
     }
 }
