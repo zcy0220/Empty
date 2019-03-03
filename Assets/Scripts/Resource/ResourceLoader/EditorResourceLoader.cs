@@ -35,4 +35,13 @@ public class EditorResourceLoader : BaseResourceLoader
     {
         return path.EndsWith(".png", System.StringComparison.OrdinalIgnoreCase) || path.EndsWith(".jpg", System.StringComparison.OrdinalIgnoreCase);
     }
+
+    /// <summary>
+    /// 编辑器下的卸载
+    /// </summary>
+    /// <param name="path">Path.</param>
+    public override void Unload(string path)
+    {
+        Resources.UnloadUnusedAssets();
+    }
 }

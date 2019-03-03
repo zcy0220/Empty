@@ -12,20 +12,6 @@ public class AssetBundleResourceLoader : BaseResourceLoader
     /// </summary>
     public override T SyncLoad<T>(string path)
     {
-        //var abBase = AssetBundleManager.Instance.GetAssetBundleBase(path);
-        //if (abBase != null)
-        //{
-        //    var ab = AssetBundleManager.Instance.SyncLoadAssetBundle(abBase);
-        //    if (ab != null)
-        //    {
-        //        return ab.LoadAsset<T>(abBase.AssetName);
-        //    }
-        //}
-        //else
-        //{
-        //    Debugger.LogError("No AssetBundleBase is found for the {0}", path);
-        //}
-        //return null;
         return AssetBundleManager.Instance.SyncLoad<T>(path);
     }
 
@@ -34,6 +20,14 @@ public class AssetBundleResourceLoader : BaseResourceLoader
     /// </summary>
     public override void AsyncLoad(string path, Action<UnityEngine.Object> callback)
     {
-        //AssetBundleManager.Instance.AddAssetLoadRequest(path, callback);
+        AssetBundleManager.Instance.AddAssetLoadRequest(path, callback);
+    }
+
+    /// <summary>
+    /// 卸载对应的AB资源
+    /// </summary>
+    public override void Unload(string path)
+    {
+        AssetBundleManager.Instance.Unload(path);
     }
 }

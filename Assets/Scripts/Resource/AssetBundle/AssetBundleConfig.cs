@@ -2,7 +2,6 @@
  * AssetBundle配置
  */
 
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using ProtoBuf;
 using UnityEngine;
@@ -27,18 +26,4 @@ public class PathBundleInfo
     public string Path;
     [ProtoMember(2)]
     public string AssetBundleName;
-}
-
-
-[System.Serializable]
-public class AssetBundleBase
-{
-    [XmlAttribute("Path")]
-    public string Path;
-    [XmlAttribute("ABName")]
-    public string ABName;
-    [XmlAttribute("AssetName")]
-    public string AssetName;
-    [XmlAttribute("ABDependList")]
-    public List<string> ABDependList;
 }

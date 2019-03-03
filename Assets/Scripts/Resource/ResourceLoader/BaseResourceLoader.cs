@@ -15,4 +15,9 @@ public abstract class BaseResourceLoader
     /// 异步加载资源
     /// </summary>
     public virtual void AsyncLoad(string path, System.Action<Object> callback) { }
+
+    /// <summary>
+    /// 卸载资源
+    /// </summary>
+    public virtual void Unload(string path) { }
 }

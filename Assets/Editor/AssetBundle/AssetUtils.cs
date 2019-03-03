@@ -16,7 +16,8 @@ namespace Assets.Editor.AssetBundle
         {
             ".meta",
             ".cs",
-            ".zip"
+            ".zip",
+            ".DS_Store"
         };
 
         /// <summary>

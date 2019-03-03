@@ -151,7 +151,7 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         private static void CreateAssetBundleConfig()
         {
-            var configPath = BuilderConfig.AssetRootPath + "/Config/PathBundleConfig.bytes";
+            var configPath = BuilderConfig.PathBundleConfig;
             var config = new PathBundleInfoList();
             config.List.Add(new PathBundleInfo() { Path = configPath, AssetBundleName = configPath });
             foreach (var item in mAssetItemDict)

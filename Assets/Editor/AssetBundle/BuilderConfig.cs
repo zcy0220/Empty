@@ -18,6 +18,10 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         public static readonly string AssetBundleExportPath = Application.streamingAssetsPath + "/AssetBundles";
         /// <summary>
+        /// 路径和AB包名对应配置表的路径
+        /// </summary>
+        public static readonly string PathBundleConfig = AssetRootPath + "/Config/PathBundleConfig.bytes";
+        /// <summary>
         /// 构建参数
         /// </summary>
         public static readonly BuildAssetBundleOptions Options = BuildAssetBundleOptions.ChunkBasedCompression;

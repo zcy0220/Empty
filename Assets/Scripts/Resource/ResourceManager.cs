@@ -3,12 +3,9 @@
  */
 
 using Base.Common;
-using Base.Pool;
 using UnityEngine;
-using Base.Utils;
 using Base.Debug;
 using System.Collections.Generic;
-using System.Collections;
 using Base.Collections;
 
 public class ResourceManager : MonoSingleton<ResourceManager>
@@ -49,124 +46,95 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         var cache = GetResourceUnitCache(path);
         if (cache != null)
         {
-            if (cache.Asset == null)
-            {
-                cache.Asset = mResourcesLoader.SyncLoad<T>(path);
-            }
-            cache.RefCount++;
             return cache.Asset as T;
         }
         var obj = mResourcesLoader.SyncLoad<T>(path);
-        mResourceUnitDict.Add(path, new ResourceUnit() { Path = path, Asset = obj, RefCount = 1 });
+        CacheResourceUnit(path, obj);
         return obj;
     }
-
-    //public bool Unload()
 
     /// <summary>
     /// 异步加载
     /// </summary>
     /// <param name="path"></param>
     /// <param name="callback"></param>
-    //public void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object
-    //{
-    //    if (string.IsNullOrEmpty(path)) return;
-    //    var item = GetCacheResourceItem(path);
-    //    if (item != null)
-    //    {
-    //        if (callback != null) callback(item.Obj as T);
-    //        return;
-    //    }
-    //    mResources.AsyncLoad(path, (obj) =>
-    //    {
-    //        item = GetCacheResourceItem(path);
-    //        if (item == null)
-    //        {
-    //            item = mResources.CreateResourceItem(path);
-    //            CacheResourceItem(path, obj, item);
-    //        }
-    //        if (callback != null) callback(obj as T);
-    //    });
-    //}
+    public void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object
+    {
+        var cache = GetResourceUnitCache(path);
+        if (cache != null)
+        {
+            if (callback != null) callback(cache.Asset as T);
+            return;
+        }
+        mResourcesLoader.AsyncLoad(path, (asset) =>
+        {
+            // 同时多个异步加载同时请求时，就都会跳过第一步的缓存判断，这时第一个加载完的就缓存资源
+            cache = GetResourceUnitCache(path);
+            if (cache == null)
+            {
+                CacheResourceUnit(path, asset);
+            }
+            if (callback != null) callback(asset as T);
+        });
+    }
 
-    ///// <summary>
-    ///// 不需要实例化的资源卸载
-    ///// </summary>
-    //public bool ReleaseResource(Object obj, bool destroy = false)
-    //{
-    //    if (obj == null) return false;
-    //    ResourceItem item = null;
-    //    foreach(var res in ResourceDict.Values)
-    //    {
-    //        if (res.Guid == obj.GetInstanceID())
-    //        {
-    //            item = res;
-    //        }
-    //    }
-    //    if (item == null)
-    //    {
-    //        Debugger.LogError("ResourceDict not exist ResourceItem: {0}", obj.name);
-    //        return false;
-    //    }
-    //    item.RefCount--;
-    //    RecycleResourceItem(item, destroy);
-    //    return true;
-    //}
+    /// <summary>
+    /// 清缓存
+    /// </summary>
+    private void ClearCache()
+    {
+    }
 
-    ///// <summary>
-    ///// 缓存资源项
-    ///// </summary>
-    //private void CacheResourceItem(string path, Object obj, ResourceItem item)
-    //{
-    //    ClearCache();
-
-    //    if (item == null)
-    //    {
-    //        Debugger.LogError("{0} ResourceItem is null!", path);
-    //        return;
-    //    }
-    //    if (obj == null)
-    //    {
-    //        Debugger.LogError("Resource load fail: {0}", path);
-    //        return;
-    //    }
-    //    item.Obj = obj;
-    //    item.Guid = obj.GetInstanceID();
-    //    item.LastUseTime = Time.realtimeSinceStartup;
-    //    item.RefCount++;
-    //    if (!ResourceDict.ContainsKey(path)) ResourceDict.Add(path, item);
-    //}
-
-    ///// <summary>
-    ///// 清缓存
-    ///// </summary>
-    //private void ClearCache()
-    //{
-    //}
-
-    ///// <summary>
-    ///// 回收资源
-    ///// </summary>
-    //private void RecycleResourceItem(ResourceItem item, bool destroy = false)
-    //{
-    //    if (item == null || item.RefCount > 0) return;
-    //    if (!destroy)
-    //    {
-    //        mNoRefResourceMapList.AddToHead(item);
-    //        return;
-    //    }
-    //    if (!ResourceDict.Remove(item.Path)) return;
-    //    mResources.UnloadResource(item);
-    //}
+    /// <summary>
+    /// 卸载资源
+    /// </summary>
+    public void Unload(string path, bool destroy = false)
+    {
+        var unit = GetResourceUnitCache(path, 0);
+        if (unit == null || unit.RefCount <= 0) return;
+        unit.RefCount--;
+        if (unit.RefCount <=0)
+        {
+            if (destroy)
+            {
+                mResourceUnitDict.Remove(path);
+                mResourcesLoader.Unload(path);
+            }
+            else
+            {
+                // 如果不是要马上销毁的先存入没引用列表中
+                mNoRefResourceUnitDList.AddToHead(unit);
+            }
+        }
+    }
 
     /// <summary>
     /// 获取缓存里的资源项
     /// </summary>
-    private ResourceUnit GetResourceUnitCache(string path)
+    private ResourceUnit GetResourceUnitCache(string path, int refCount = 1)
     {
         ResourceUnit unit;
-        mResourceUnitDict.TryGetValue(path, out unit);
+        if (mResourceUnitDict.TryGetValue(path, out unit))
+        {
+            unit.RefCount += refCount;
+        }
         return unit;
+    }
+
+    /// <summary>
+    /// 缓存资源
+    /// </summary>
+    private void CacheResourceUnit(string path, Object asset)
+    {
+        if (asset == null) return;
+        if (mResourceUnitDict.ContainsKey(path))
+        {
+            Debugger.LogError("Duplicate cache asset {0}", path);
+        }
+        else
+        {
+            mResourceUnitDict.Add(path, new ResourceUnit() { Path = path, Asset = asset, RefCount = 1 });
+        }
     }
 
     /// <summary>
