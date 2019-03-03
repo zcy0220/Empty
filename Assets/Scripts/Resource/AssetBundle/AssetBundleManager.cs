@@ -6,7 +6,6 @@ using Base.Common;
 using UnityEngine;
 using Base.Debug;
 using Base.Pool;
-using System.IO;
 using System.Collections.Generic;
 using Base.Utils;
 
@@ -21,7 +20,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     private Dictionary<string, string> mPathBundleDict = new Dictionary<string, string>();
     /// <summary>
-    /// path为key
+    /// AssetBundleName为key
     /// </summary>
     private Dictionary<string, AssetBundleUnit> mAssetBundleUnitDict = new Dictionary<string, AssetBundleUnit>();
     /// <summary>
@@ -29,13 +28,17 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     private ClassObjectPool<AssetBundleUnit> mAssetBundleUnitPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleUnit>();
     /// <summary>
+    /// AssetBundle异步加载队列
+    /// </summary>
+    private Dictionary<string, AssetBundleLoader> mAssetBundleLoaderQueue = new Dictionary<string, AssetBundleLoader>();
+    /// <summary>
     /// 异步加载资源请求队列
     /// </summary>
     private List<AssetLoadRequest> mAssetRequestQueue = new List<AssetLoadRequest>();
     /// <summary>
     /// 正在异步加载的队列
     /// </summary>
-    private HashSet<AssetLoader> mAssetLoadingQueue = new HashSet<AssetLoader>();
+    private Dictionary<string, AssetLoader> mAssetLoadingQueue = new Dictionary<string, AssetLoader>();
     /// <summary>
     /// 资源加载请求AssetLoadRequest类对象池
     /// </summary>
@@ -44,6 +47,10 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// AssetLoader类对象池
     /// </summary>
     private ClassObjectPool<AssetLoader> mAssetLoaderPool = ObjectManager.Instance.GetOrCreateClassPool<AssetLoader>();
+    /// <summary>
+    /// AssetBundleLoader类对象
+    /// </summary>
+    private ClassObjectPool<AssetBundleLoader> mAssetBundleLoaderPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleLoader>();
     /// <summary>
     /// 同时在异步加载的资源上限
     /// </summary>
@@ -156,6 +163,27 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
+    /// 引用所有依赖的AssetBundle
+    /// </summary>
+    public void RefAllAssetBundles(string path)
+    {
+        var manifest = GetAssetBundleManifest();
+        var assetBundleName = PathToBundle(path);
+        if (mAssetBundleUnitDict.ContainsKey(assetBundleName))
+        {
+            mAssetBundleUnitDict[assetBundleName].RefCount++;
+        }
+        var dependencies = manifest.GetAllDependencies(assetBundleName);
+        foreach (var depend in dependencies)
+        {
+            if (mAssetBundleUnitDict.ContainsKey(depend))
+            {
+                mAssetBundleUnitDict[depend].RefCount++;
+            }
+        }
+    }
+
+    /// <summary>
     /// 卸载AssetBundle
     /// </summary>
     private void UnloadAssetBundle(string abName)
@@ -190,7 +218,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 添加异步加载请求
+    /// 添加异步加载资源请求
     /// </summary>
     public void AddAssetLoadRequest(string path, System.Action<Object> callback, int priority = 0)
     {
@@ -203,15 +231,40 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 检测资源是否已经在加载队列中了
+    /// 添加异步加载AssetBundle请求到队列
     /// </summary>
-    private AssetLoader AssetInLoading(string path)
+    public void AddAssetBundleLoadRequest(string assetBundleName)
     {
-        foreach(var loader in mAssetLoadingQueue)
+        if (!mAssetBundleUnitDict.ContainsKey(assetBundleName) && !mAssetBundleLoaderQueue.ContainsKey(assetBundleName))
         {
-            if (string.Compare(path, loader.Path) == 0) return loader;
+            var loader = mAssetBundleLoaderPool.Spawn();
+            loader.AssetBundleName = assetBundleName;
+            mAssetBundleLoaderQueue.Add(assetBundleName, loader);
         }
-        return null;
+    }
+
+    /// <summary>
+    /// 检查对应资源路径对应的所有依赖包是否都加载完了
+    /// </summary>
+    public bool CheckAllAssetBundleLoaded(string path)
+    {
+        var manifest = GetAssetBundleManifest();
+        var assetBundleName = PathToBundle(path);
+        if (!mAssetBundleUnitDict.ContainsKey(assetBundleName))
+        {
+            AddAssetBundleLoadRequest(assetBundleName);
+            return false;
+        }
+        var dependencies = manifest.GetAllDependencies(assetBundleName);
+        foreach (var depend in dependencies)
+        {
+            if (!mAssetBundleUnitDict.ContainsKey(depend))
+            {
+                AddAssetBundleLoadRequest(depend);
+                return false;
+            }
+        }
+        return true;
     }
 
     /// <summary>
@@ -231,8 +284,8 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
             // 从请求队列中拿一个加入到加载队列中
             var request = mAssetRequestQueue[0];
             mAssetRequestQueue.RemoveAt(0);
-            var loader = AssetInLoading(request.Path);
-            if (loader != null)
+            AssetLoader loader;
+            if (mAssetLoadingQueue.TryGetValue(request.Path, out loader))
             {
                 // 如果请求加载的资源在请求队列中，就增加回调
                 loader.AddCallback(request.Callback);
@@ -242,7 +295,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
                 loader = mAssetLoaderPool.Spawn();
                 loader.Path = request.Path;
                 loader.AddCallback(request.Callback);
-                mAssetLoadingQueue.Add(loader);
+                mAssetLoadingQueue.Add(request.Path, loader);
             }
             request.Dispose();
             mAssetLoadRequestPool.Recycle(request);
@@ -254,11 +307,11 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     public void DealAssetLoadingQueue()
     {
-        foreach(var loader in mAssetLoadingQueue)
+        foreach(var loader in mAssetLoadingQueue.Values)
         {
             if (loader.CanLoadAssetAsync())
             {
-                StartCoroutine(loader.LoadAssetAsync());
+                StartCoroutine(loader.AsyncLoadAsset());
             }
         }
     }
@@ -266,14 +319,44 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     ///  资源加载器完成
     /// </summary>
-    public void AssetLoaderFinished(AssetLoader loader)
+    public void LoadAssetFinished(AssetLoader loader)
     {
-        if (mAssetLoadingQueue.Contains(loader))
+        if (mAssetLoadingQueue.ContainsKey(loader.Path))
         {
-            mAssetLoadingQueue.Remove(loader);
+            mAssetLoadingQueue.Remove(loader.Path);
         }
         loader.Dispose();
         mAssetLoaderPool.Recycle(loader);
+    }
+
+    /// <summary>
+    /// 处理AssetBundl异步加载队列
+    /// </summary>
+    private void DealAssetBundleLoadQueue()
+    {
+        foreach(var loader in mAssetBundleLoaderQueue.Values)
+        {
+            if (!loader.IsLoading)
+            {
+                StartCoroutine(loader.AsyncLoadAssetBundle());
+            }
+        }
+    }
+
+    /// <summary>
+    /// AssetBundle异步加载完成
+    /// </summary>
+    public void LoadAssetBundleFinished(AssetBundleLoader loader, AssetBundle assetBundle)
+    {
+        if (assetBundle != null)
+        {
+            var unit = mAssetBundleUnitPool.Spawn();
+            unit.AssetBundle = assetBundle;
+            mAssetBundleUnitDict.Add(loader.AssetBundleName, unit);
+        }
+        mAssetBundleLoaderQueue.Remove(loader.AssetBundleName);
+        loader.Dispose();
+        mAssetBundleLoaderPool.Recycle(loader);
     }
 
     /// <summary>
@@ -281,6 +364,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     private void Update()
     {
+        DealAssetBundleLoadQueue();
         CheckAssetRequestQueue();
         DealAssetLoadingQueue();
     }

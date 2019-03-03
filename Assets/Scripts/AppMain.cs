@@ -20,6 +20,10 @@ public class AppMain : MonoBehaviour
         {
             mExampleGo = GameObject.Instantiate(obj) as GameObject;
         });
+        ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
+        {
+            mExampleGo = GameObject.Instantiate(obj) as GameObject;
+        });
     }
 
     private void Update()

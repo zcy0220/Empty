@@ -1,9 +1,8 @@
 ﻿/**
- * 资源加载器
+ * 资源异步加载器
  */
 
 using System;
-using Base.Debug;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,10 +27,11 @@ public class AssetLoader : IDisposable
     /// 异步加载资源
     /// </summary>
     /// <returns></returns>
-    public IEnumerator LoadAssetAsync()
+    public IEnumerator AsyncLoadAsset()
     {
         IsLoading = true;
         var unit = AssetBundleManager.Instance.GetAssetBundleUnit(Path);
+        AssetBundleManager.Instance.RefAllAssetBundles(Path);
         var assetBundle = unit.AssetBundle;
         var abRequest = IsSprite() ? assetBundle.LoadAssetAsync<Sprite>(Path) : assetBundle.LoadAssetAsync(Path);
         yield return abRequest;
@@ -39,7 +39,7 @@ public class AssetLoader : IDisposable
         {
             mCallbackList[i](abRequest.asset);
         }
-        AssetBundleManager.Instance.AssetLoaderFinished(this);
+        AssetBundleManager.Instance.LoadAssetFinished(this);
     }
 
     /// <summary>
@@ -57,8 +57,7 @@ public class AssetLoader : IDisposable
     public bool CanLoadAssetAsync()
     {
         if (IsLoading) return false;
-        AssetBundleManager.Instance.SyncLoadAllAssetBundle(Path);
-        return true;
+        return AssetBundleManager.Instance.CheckAllAssetBundleLoaded(Path);
     }
 
     /// <summary>
