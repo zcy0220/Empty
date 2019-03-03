@@ -10,6 +10,7 @@ using UnityEngine;
 public class AssetBundleConfig
 {
     public static readonly string AssetBundlesPath = Application.streamingAssetsPath + "/AssetBundles";
+    public static readonly string PathBundleConfig = "Assets/GameAssets/Config/PathBundleConfig.bytes";
 }
 
 [ProtoContract]

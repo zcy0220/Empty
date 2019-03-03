@@ -33,6 +33,6 @@ public class EditorResourceLoader : BaseResourceLoader
     /// </summary>
     private bool IsSprite(string path)
     {
-        return path.EndsWith(".png") || path.EndsWith(".jpg");
+        return path.EndsWith(".png", System.StringComparison.OrdinalIgnoreCase) || path.EndsWith(".jpg", System.StringComparison.OrdinalIgnoreCase);
     }
 }

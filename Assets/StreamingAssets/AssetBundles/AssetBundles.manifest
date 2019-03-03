@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2047661664
+CRC: 652399178
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -17,5 +17,5 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: assets/gameassets/materials/examplematerial.mat
     Info_4:
-      Name: assets/gameassets/config/assetbundleconfig.bytes
+      Name: assets/gameassets/config/pathbundleconfig.bytes
       Dependencies: {}

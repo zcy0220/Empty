@@ -1,6 +1,8 @@
 
-d
-0Assets/GameAssets/Config/AssetBundleConfig.bytes0Assets/GameAssets/Config/AssetBundleConfig.bytes
+b
+/Assets/GameAssets/Config/PathBundleConfig.bytes/Assets/GameAssets/Config/PathBundleConfig.bytes
+:
+Assets/GameAssets/.DS_StoreAssets/GameAssets/.DS_Store
 \
 )Assets/GameAssets/Sounds/SoundExample.wav/Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
 P
