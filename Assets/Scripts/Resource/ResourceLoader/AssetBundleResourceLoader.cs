@@ -3,7 +3,6 @@
  */
 
 using System;
-using Base.Debug;
 
 public class AssetBundleResourceLoader : BaseResourceLoader
 {

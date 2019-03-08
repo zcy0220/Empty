@@ -8,7 +8,8 @@ using UnityEngine;
 
 public class AssetBundleConfig
 {
-    public static readonly string AssetBundlesPath = Application.streamingAssetsPath + "/AssetBundles";
+    public const string AssetBundlesFolder = "AssetBundles";
+    public static readonly string AssetBundlesPath = Application.streamingAssetsPath + "/" + AssetBundlesFolder;
     public static readonly string PathBundleConfig = "Assets/GameAssets/Config/PathBundleConfig.bytes";
 }
 
