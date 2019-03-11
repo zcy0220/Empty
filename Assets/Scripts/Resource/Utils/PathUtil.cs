@@ -41,4 +41,12 @@ public class PathUtil
         var path = GetPresistentDataFilePath(filePath);
         return FileUtil.Exists(path);
     }
+
+    /// <summary>
+    /// 获取下载资源路径
+    /// </summary>
+    public static string GetServerFileURL(string filePath)
+    {
+        return StringUtil.Concat(AppConfig.ServerResourceURL, filePath); 
+    }
 }

@@ -13,4 +13,8 @@ public static class AppConfig
     /// 是否检测版本更新
     /// </summary>
     public static bool CheckVersionUpdate = true;
+    /// <summary>
+    /// 服务器资源下载地址
+    /// </summary>
+    public static readonly string ServerResourceURL = "";
 }

@@ -7,6 +7,7 @@ using System.Collections;
 
 public class ResourceUpdater : MonoBehaviour
 {
+    private const string VERSIONCONFIGFILE = "VersionConfig.json";
     /// <summary>
     /// 本地版本配置信息
     /// </summary>
@@ -37,6 +38,7 @@ public class ResourceUpdater : MonoBehaviour
         }
         // 加载并初始化版本信息文件
         yield return InitVersion();
+        
     }
 
     /// <summary>
@@ -44,12 +46,19 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     IEnumerator InitVersion()
     {
-        var localVersionConfigPath = PathUtil.GetLocalFilePath("VersionConfig.json");
+        var localVersionConfigPath = PathUtil.GetLocalFilePath(VERSIONCONFIGFILE);
         var www = new WWW(localVersionConfigPath);
         yield return www;
         mLocalVersionConfig = JsonUtility.FromJson<VersionConfig>(www.text);
-        Debug.Log(mLocalVersionConfig.Version);
+        www.Dispose();
+        var serverVersionConfigPath = PathUtil.GetServerFileURL(VERSIONCONFIGFILE);
+        www = new WWW(serverVersionConfigPath);
+        yield return www;
+        mServerVersionConfig = JsonUtility.FromJson<VersionConfig>(www.text);
+        www.Dispose();
     }
+
+    //private bool Check
 
     /// <summary>
     /// 正式开始游戏
