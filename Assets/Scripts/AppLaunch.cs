@@ -13,6 +13,6 @@ public class AppLaunch : MonoBehaviour
     private void Awake()
     {
         AppConfig.UseAssetBundle = true;
-        gameObject.GetOrAddComponent<AssetBundleUpdater>();
+        gameObject.GetOrAddComponent<ResourceUpdater>();
     }
 }

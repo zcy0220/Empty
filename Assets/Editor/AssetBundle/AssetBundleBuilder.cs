@@ -11,6 +11,10 @@ namespace Assets.Editor.AssetBundle
     public class AssetBundleBuilder
     {
         /// <summary>
+        /// AssetBundle文件后缀
+        /// </summary>
+        public const string ASSETBUNDLEEX = ".assetbundle";
+        /// <summary>
         /// 资源依赖映射
         /// </summary>
         private static Dictionary<string, AssetItem> mAssetItemDict = new Dictionary<string, AssetItem>();
@@ -82,7 +86,7 @@ namespace Assets.Editor.AssetBundle
             if (!mAssetItemDict.TryGetValue(path, out item))
             {
                 item = new AssetItem();
-                item.AssetBundleName = path;
+                item.AssetBundleName = GetAssetBundleName(path);
                 mAssetItemDict.Add(path, item);
             }
             return item;
@@ -167,7 +171,7 @@ namespace Assets.Editor.AssetBundle
             var buffer = Base.Utils.ProtobufUtil.NSerialize(config);
             Base.Utils.FileUtil.WriteAllBytes(configPath, buffer);
             var assetItem = GetAssetItem(configPath);
-            assetItem.AssetBundleName = configPath;
+            assetItem.AssetBundleName = GetAssetBundleName(configPath);
             AssetDatabase.Refresh();
         }
 
@@ -186,6 +190,14 @@ namespace Assets.Editor.AssetBundle
                     assetImport.assetBundleName = assetItem.AssetBundleName.ToLower();
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取完整AssetBundle包名
+        /// </summary>
+        private static string GetAssetBundleName(string path)
+        {
+            return path + ASSETBUNDLEEX;
         }
 
         /// <summary>

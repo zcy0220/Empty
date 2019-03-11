@@ -1,15 +1,15 @@
 
 b
 /Assets/GameAssets/Config/PathBundleConfig.bytes/Assets/GameAssets/Config/PathBundleConfig.bytes
+h
+)Assets/GameAssets/Sounds/SoundExample.wav;Assets/GameAssets/Prefabs/ExamplePrefab1.prefab.assetbundle
 \
-)Assets/GameAssets/Sounds/SoundExample.wav/Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
-P
-&Assets/GameAssets/Sheets/Example.bytes&Assets/GameAssets/Sheets/Example.bytes
-a
-.Assets/GameAssets/Shaders/ShaderExample.shader/Assets/GameAssets/Materials/ExampleMaterial.mat
-b
-/Assets/GameAssets/Prefabs/ExamplePrefab1.prefab/Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
-b
-/Assets/GameAssets/Materials/ExampleMaterial.mat/Assets/GameAssets/Materials/ExampleMaterial.mat
-b
-/Assets/GameAssets/Prefabs/ExamplePrefab2.prefab/Assets/GameAssets/Prefabs/ExamplePrefab2.prefab
+&Assets/GameAssets/Sheets/Example.bytes2Assets/GameAssets/Sheets/Example.bytes.assetbundle
+m
+.Assets/GameAssets/Shaders/ShaderExample.shader;Assets/GameAssets/Materials/ExampleMaterial.mat.assetbundle
+n
+/Assets/GameAssets/Prefabs/ExamplePrefab1.prefab;Assets/GameAssets/Prefabs/ExamplePrefab1.prefab.assetbundle
+n
+/Assets/GameAssets/Materials/ExampleMaterial.mat;Assets/GameAssets/Materials/ExampleMaterial.mat.assetbundle
+n
+/Assets/GameAssets/Prefabs/ExamplePrefab2.prefab;Assets/GameAssets/Prefabs/ExamplePrefab2.prefab.assetbundle

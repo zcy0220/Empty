@@ -85,5 +85,13 @@ namespace Base.Utils
                 return false;
             }
         }
+        
+        /// <summary>
+        /// 检测文件路径
+        /// </summary>
+        public static bool Exists(string path)
+        {
+            return File.Exists(path);
+        }
     }
 }

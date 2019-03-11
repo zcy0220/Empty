@@ -14,19 +14,19 @@ public class AppMain : MonoBehaviour
     private void Awake()
     {
         AppConfig.UseAssetBundle = true;
-        //var prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        //mExampleGo = GameObject.Instantiate(prefab);
-        //prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        //mExampleGo = GameObject.Instantiate(prefab);
-        ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
-        {
-            mExampleGo = GameObject.Instantiate(obj) as GameObject;
-        });
-        ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
-        {
-            mExampleGo = GameObject.Instantiate(obj) as GameObject;
-            mExampleGo.transform.position = new Vector3(1, 0, 0);
-        });
+        var prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
+        mExampleGo = GameObject.Instantiate(prefab);
+        prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
+        mExampleGo = GameObject.Instantiate(prefab);
+        //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
+        //{
+        //    mExampleGo = GameObject.Instantiate(obj) as GameObject;
+        //});
+        //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
+        //{
+        //    mExampleGo = GameObject.Instantiate(obj) as GameObject;
+        //    mExampleGo.transform.position = new Vector3(1, 0, 0);
+        //});
     }
 
     private void Update()
