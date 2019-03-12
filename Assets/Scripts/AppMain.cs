@@ -16,6 +16,8 @@ public class AppMain : MonoBehaviour
         //GameObject.Instantiate(prefab1);
         //var prefab2 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab");
         //GameObject.Instantiate(prefab2);
+        //var prefab3 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab3.prefab");
+        //GameObject.Instantiate(prefab3);
         //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
         //{
         //    GameObject.Instantiate(obj);

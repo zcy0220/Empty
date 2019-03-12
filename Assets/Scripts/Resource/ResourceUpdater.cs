@@ -23,6 +23,10 @@ public class ResourceUpdater : MonoBehaviour
     /// 需要热更新下载的AssetBundle列表
     /// </summary>
     private List<string> mNeedDownLoadList = new List<string>();
+    /// <summary>
+    /// 服务器上的ManifestAssetBundle数据，等所有资源下载好后写入本地
+    /// </summary>
+    private byte[] mServerManifestData;
 
     /// <summary>
     /// 开始更新
@@ -51,7 +55,14 @@ public class ResourceUpdater : MonoBehaviour
             // 对比版本资源
             yield return CompareVersion();
         }
-        DownLoadResource();
+        if (mNeedDownLoadList.Count == 0)
+        {
+            StartGame();
+        }
+        else
+        {
+            DownLoadResource();
+        }
     }
 
     /// <summary>
@@ -140,6 +151,7 @@ public class ResourceUpdater : MonoBehaviour
         yield return www;
         if (www.assetBundle != null)
         {
+            mServerManifestData = www.bytes;
             var serverManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
             var serverAllAssetBundles = serverManifest.GetAllAssetBundles();
             foreach(var name in serverAllAssetBundles)
@@ -175,17 +187,37 @@ public class ResourceUpdater : MonoBehaviour
         if (mNeedDownLoadList.Count == 0)
         {
             UpdateVersionConfig();
+            ReplaceLocalResource(AssetBundleConfig.AssetBundlesFolder, mServerManifestData);
             StartGame();
             return;
         }
         var abName = mNeedDownLoadList[0];
         mNeedDownLoadList.RemoveAt(0);
-        var abPath = StringUtil.Concat(AssetBundleConfig.AssetBundlesFolder, abName);
+        var abPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, abName);
         var url = PathUtil.GetServerFileURL(abPath);
         StartCoroutine(DownLoad(url, (www) =>
         {
-
+            ReplaceLocalResource(abName, www.bytes);
+            DownLoadResource();
         }));
+    }
+
+    /// <summary>
+    /// 替换本地的资源
+    /// </summary>
+    private void ReplaceLocalResource(string abName, byte[] data)
+    {
+        if (data == null) return;
+        try
+        {
+            var abPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, abName);
+            var path = PathUtil.GetPresistentDataFilePath(abPath);
+            FileUtil.WriteAllBytes(path, data);
+        }
+        catch (System.Exception e)
+        {
+            Debugger.LogError(e.Message);
+        }
     }
 
     /// <summary>
@@ -193,6 +225,12 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     IEnumerator DownLoad(string url, System.Action<WWW> callback)
     {
-        yield return null;
+        var www = new WWW(url);
+        yield return www;
+        if (string.IsNullOrEmpty(www.error) && callback != null)
+        {
+            callback(www);
+        }
+        www.Dispose();
     }
 }
