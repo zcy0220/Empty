@@ -35,5 +35,5 @@
     - AssetBundle异步加载：![result](Images/RequestAndLoader.png)
 
 ### 热更新
-* [构建本地服务器](Server/README.md)
+* [构建本地服务器](../../Server/README.md)
     

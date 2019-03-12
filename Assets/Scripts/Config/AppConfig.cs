@@ -16,5 +16,5 @@ public static class AppConfig
     /// <summary>
     /// 服务器资源下载地址
     /// </summary>
-    public static readonly string ServerResourceURL = "";
+    public static readonly string ServerResourceURL = "http://127.0.0.1:8000/";
 }

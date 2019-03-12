@@ -1,0 +1,34 @@
+ManifestFileVersion: 0
+CRC: 3770283121
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2e564a2e33efff4ae893ae427412d807
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 0e716f2836d23d42adfe8e92472bc21d
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
+- Assets/GameAssets/Sounds/SoundExample.wav
+Dependencies:
+- I:/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle

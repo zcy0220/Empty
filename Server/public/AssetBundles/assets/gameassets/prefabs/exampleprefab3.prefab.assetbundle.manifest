@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 3835022944
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fd86d1f553d8f03224ec60bdd5bf4d09
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2ffe0311e20cd2b6b8ac4af1f92e0b2f
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9b77cea4fcaa23e4db5d8f0a949e68c5, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/Prefabs/ExamplePrefab3.prefab
+Dependencies:
+- I:/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle

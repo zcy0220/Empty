@@ -22,7 +22,7 @@ public class PathUtil
     /// </summary>
     public static string GetStreamingAssetsFilePath(string filePath)
     {
-        return StringUtil.Concat("file://", StringUtil.PathConcat(Application.streamingAssetsPath, filePath));
+        return StringUtil.PathConcat(Application.streamingAssetsPath, filePath);
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ public class PathUtil
     /// </summary>
     public static string GetPresistentDataFilePath(string filePath)
     {
-        return StringUtil.Concat("file://", StringUtil.PathConcat(Application.persistentDataPath, filePath)); 
+        return StringUtil.PathConcat(Application.persistentDataPath, filePath); 
     }
 
     /// <summary>
