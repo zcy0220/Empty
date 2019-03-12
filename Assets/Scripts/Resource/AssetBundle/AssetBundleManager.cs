@@ -73,9 +73,9 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// </summary>
     private void LoadAssetBundleManifest()
     {
-        var manifestBundle = AssetBundle.LoadFromFile(AssetBundleConfig.AssetBundlesPath + "/AssetBundles");
+        var manifestBundle = AssetBundle.LoadFromFile(PathUtil.GetLocalAssetBundleFilePath("AssetBundles"));
         mAssetBundleManifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
-        var configAssetBundle = AssetBundle.LoadFromFile(StringUtil.Concat(AssetBundleConfig.AssetBundlesPath, "/", AssetBundleConfig.PathBundleConfigAssetBundle));
+        var configAssetBundle = AssetBundle.LoadFromFile(PathUtil.GetLocalAssetBundleFilePath(AssetBundleConfig.PathBundleConfigAssetBundle));
         var configTextAsset = configAssetBundle.LoadAsset<TextAsset>(AssetBundleConfig.PathBundleConfigAssetName);
         var pathBundleConfigList = ProtobufUtil.NDeserialize<PathBundleInfoList>(configTextAsset.bytes);
         foreach(var info in pathBundleConfigList.List)
@@ -131,7 +131,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     public AssetBundleUnit GetAssetBundleUnit(string path)
     {
         AssetBundleUnit unit;
-        mAssetBundleUnitDict.TryGetValue(path, out unit);
+        mAssetBundleUnitDict.TryGetValue(PathToBundle(path), out unit);
         return unit;                
     }
 
@@ -143,7 +143,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
         AssetBundleUnit unit = null;
         if (!mAssetBundleUnitDict.TryGetValue(assetBundleName, out unit))
         {
-            var path = StringUtil.Concat(AssetBundleConfig.AssetBundlesPath, "/", assetBundleName);
+            var path = PathUtil.GetLocalAssetBundleFilePath(assetBundleName);
             var assetBundle = AssetBundle.LoadFromFile(path);
             if (assetBundle == null)
             {

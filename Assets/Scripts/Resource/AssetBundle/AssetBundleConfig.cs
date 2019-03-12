@@ -9,7 +9,6 @@ using UnityEngine;
 public class AssetBundleConfig
 {
     public const string AssetBundlesFolder = "AssetBundles";
-    public static readonly string AssetBundlesPath = Application.streamingAssetsPath + "/" + AssetBundlesFolder;
     public static readonly string PathBundleConfigAssetName = "Assets/GameAssets/Config/PathBundleConfig.bytes";
     public static readonly string PathBundleConfigAssetBundle = PathBundleConfigAssetName.ToLower() + ".assetbundle";
 }

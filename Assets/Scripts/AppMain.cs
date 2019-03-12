@@ -6,35 +6,24 @@ using UnityEngine;
 
 public class AppMain : MonoBehaviour
 {
-    private GameObject mExampleGo;
-
     /// <summary>
     /// 开始游戏，初始化配置文件
     /// </summary>
     private void Awake()
     {
         AppConfig.UseAssetBundle = true;
-        var prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        mExampleGo = GameObject.Instantiate(prefab);
-        prefab = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        mExampleGo = GameObject.Instantiate(prefab);
+        //var prefab1 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
+        //GameObject.Instantiate(prefab1);
+        //var prefab2 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab");
+        //GameObject.Instantiate(prefab2);
         //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
         //{
-        //    mExampleGo = GameObject.Instantiate(obj) as GameObject;
+        //    GameObject.Instantiate(obj);
         //});
         //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
         //{
-        //    mExampleGo = GameObject.Instantiate(obj) as GameObject;
-        //    mExampleGo.transform.position = new Vector3(1, 0, 0);
+        //    GameObject.Instantiate(obj);
         //});
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            GameObject.Destroy(mExampleGo);
-            ResourceManager.Instance.Unload("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", true);
-        }
+        SheetManager.Instance.Test();
     }
 }

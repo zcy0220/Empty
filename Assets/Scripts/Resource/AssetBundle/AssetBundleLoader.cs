@@ -25,7 +25,7 @@ public class AssetBundleLoader : IDisposable
     public IEnumerator AsyncLoadAssetBundle()
     {
         IsLoading = true;
-        var path = StringUtil.Concat(AssetBundleConfig.AssetBundlesPath, "/", AssetBundleName);
+        var path = PathUtil.GetLocalAssetBundleFilePath(AssetBundleName);
         var abCreateRequest = AssetBundle.LoadFromFileAsync(path);
         yield return abCreateRequest;
         AssetBundleManager.Instance.LoadAssetBundleFinished(this, abCreateRequest.assetBundle);

@@ -6,6 +6,7 @@ using UnityEngine;
 using Base.Debug;
 using Base.Utils;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ResourceUpdater : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class ResourceUpdater : MonoBehaviour
     /// 服务器版本配置信息
     /// </summary>
     private VersionConfig mServerVersionConfig;
+    /// <summary>
+    /// 需要热更新下载的AssetBundle列表
+    /// </summary>
+    private List<string> mNeedDownLoadList = new List<string>();
 
     /// <summary>
     /// 开始更新
@@ -43,12 +48,10 @@ public class ResourceUpdater : MonoBehaviour
         // 检测版本配置文件
         if (CheckVersion(mLocalVersionConfig.Version, mServerVersionConfig.Version))
         {
-            // 需要热更新时，对比版本资源
-            //UpdateVersionConfig();
+            // 对比版本资源
             yield return CompareVersion();
-            yield break;
         }
-        StartGame();
+        DownLoadResource();
     }
 
     /// <summary>
@@ -123,12 +126,36 @@ public class ResourceUpdater : MonoBehaviour
         var www = new WWW(localManifestPath);
         yield return www;
         var localManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+        var localAllAssetBundles = new List<string>(localManifest.GetAllAssetBundles());
+        var localAllAssetBundlesDict = new Dictionary<string, Hash128>();
+        foreach(var name in localAllAssetBundles)
+        {
+            localAllAssetBundlesDict.Add(name, localManifest.GetAssetBundleHash(name));
+        }
+        www.assetBundle.Unload(true);
         www.Dispose();
-        //var localAllAssetBundles = localManifest.GetAllAssetBundles();
+        // 服务器上的AssetBundleManifest
         var serverManifestPath = PathUtil.GetServerFileURL(manifestAssetBundlePath);
         www = new WWW(serverManifestPath);
         yield return www;
-        var serverManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+        if (www.assetBundle != null)
+        {
+            var serverManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            var serverAllAssetBundles = serverManifest.GetAllAssetBundles();
+            foreach(var name in serverAllAssetBundles)
+            {
+                if (localAllAssetBundlesDict.ContainsKey(name))
+                {
+                    var serverAssetBundleHash = serverManifest.GetAssetBundleHash(name);
+                    if (localAllAssetBundlesDict[name] != serverAssetBundleHash) mNeedDownLoadList.Add(name);
+                }
+                else
+                {
+                    mNeedDownLoadList.Add(name);
+                }
+            }
+            www.assetBundle.Unload(true);
+        }
         www.Dispose();
     }
 
@@ -140,8 +167,25 @@ public class ResourceUpdater : MonoBehaviour
         ScenesManager.Instance.LoadSceneSync("Main");
     }
 
+    /// <summary>
+    /// 下载资源
+    /// </summary>
     private void DownLoadResource()
     {
+        if (mNeedDownLoadList.Count == 0)
+        {
+            UpdateVersionConfig();
+            StartGame();
+            return;
+        }
+        var abName = mNeedDownLoadList[0];
+        mNeedDownLoadList.RemoveAt(0);
+        var abPath = StringUtil.Concat(AssetBundleConfig.AssetBundlesFolder, abName);
+        var url = PathUtil.GetServerFileURL(abPath);
+        StartCoroutine(DownLoad(url, (www) =>
+        {
+
+        }));
     }
 
     /// <summary>

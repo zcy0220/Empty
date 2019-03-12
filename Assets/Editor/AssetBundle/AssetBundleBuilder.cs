@@ -197,7 +197,7 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         private static string GetAssetBundleName(string path)
         {
-            return path + ASSETBUNDLEEX;
+            return (path + ASSETBUNDLEEX).ToLower();
         }
 
         /// <summary>

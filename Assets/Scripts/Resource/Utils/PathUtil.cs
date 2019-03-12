@@ -49,4 +49,13 @@ public class PathUtil
     {
         return StringUtil.Concat(AppConfig.ServerResourceURL, filePath); 
     }
+
+    /// <summary>
+    /// 获得本地AssetBundle路径
+    /// </summary>
+    public static string GetLocalAssetBundleFilePath(string assetBundleName)
+    {
+        var assetBundlesPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, assetBundleName);
+        return GetLocalFilePath(assetBundlesPath);
+    }
 }
