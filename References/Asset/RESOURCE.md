@@ -9,7 +9,7 @@
 * 编辑器模式下：UnityEditor.AssetDatabase.LoadAssetAtPath
 * AssetBundle同步加载：1.根据AssetBundleManifest，同步加载自身及所有依赖的AssetBundle(LoadFromFile) 2.根据加载出来的AssetBundle同步加载对应资源(LoadAsset)
 
-#### 同步加载AssetBundle核心代码
+### 同步加载AssetBundle核心代码
 ~~~C#
     /// <summary>
     /// 同步加载所有依赖Bundle
