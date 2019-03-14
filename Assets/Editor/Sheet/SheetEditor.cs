@@ -18,22 +18,23 @@ using System.CodeDom.Compiler;
 
 public class SheetEditor
 {
-    private const string SHEETROOTPATH = "Excels";
+    private const string SHEETROOTPATH = "Excels/xlsx";
     private const string SHEETEXT = ".xlsx";
     private static string OUTSHEETCSPATH = "Assets/Scripts/Sheet/SheetProtobuf.cs";
     private static string OUTSHEETMANAGERPATH = "Assets/Scripts/Sheet/SheetManager.cs";
     private static string OUTSHEETBYTES = "Assets/GameAssets/Sheets/{0}.bytes";
+    private static string OUTSHEETLUA = "Excels/lua/{0}.lua";
 
     /// <summary>
     /// 默认情况下，表格只需导出以id为key的字典。特殊情况下，要在下面自定义key和导出数据的类型
     /// </summary>
-    private static readonly Dictionary<string, SheetExportBase> sheetExportConst = new Dictionary<string, SheetExportBase>
+    private static readonly Dictionary<string, SheetExportBase> mSheetExportConst = new Dictionary<string, SheetExportBase>
     {
         { "Example", new SheetExportBase("Example").SetKey("exampleInt").SetExportDataType(EExportDataType.BOTH)}
     };
 
-    [MenuItem("Tools/Sheet/Protobuf")]
-    private static void Sheet2Protobuf()
+    [MenuItem("Tools/Sheet/ExportBytes")]
+    private static void ExportBytes()
     {
         var sheetDir = new DirectoryInfo(SHEETROOTPATH);
         var files = sheetDir.GetFiles();
@@ -57,9 +58,7 @@ public class SheetEditor
             sheetCSSB.Append(LineText("[ProtoContract]", 1));
             sheetCSSB.Append(LineText("public class " + name, 1));
             sheetCSSB.Append(LineText("{", 1));
-            var stream = File.Open(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-            var dataSet = excelReader.AsDataSet();
+            var dataSet = GetDataSet(file.FullName);
             var table = dataSet.Tables[0];
             sheetDict.Add(name, table);
             var cols = table.Columns.Count;
@@ -67,7 +66,7 @@ public class SheetEditor
             for (var j = 0; j < cols; j++)
             {
                 var row0 = table.Rows[0][j].ToString();
-                if (!row0.Equals("ignore"))
+                if (FilterKey(row0, "client"))
                 {
                     count++;
                     var row1 = table.Rows[1][j].ToString();
@@ -114,7 +113,7 @@ public class SheetEditor
             var sheetName = table.Key;
             EditorUtility.DisplayProgressBar("Generate SheetManager", sheetName, 1.0f * sheetCount / sheetDict.Count);
             SheetExportBase sheetExportBase;
-            if (!sheetExportConst.TryGetValue(sheetName, out sheetExportBase))
+            if (!mSheetExportConst.TryGetValue(sheetName, out sheetExportBase))
             {
                 sheetExportBase = new SheetExportBase(sheetName);
             }
@@ -161,7 +160,7 @@ public class SheetEditor
                     for (var j = 0; j < cols; j++)
                     {
                         var row0 = data.Rows[0][j].ToString();
-                        if (row0.Equals("ignore")) continue;
+                        if (!FilterKey(row0, "client")) continue;
                         var row1 = data.Rows[1][j].ToString();
                         var row2 = data.Rows[2][j].ToString();
                         var value = data.Rows[i][j];
@@ -195,7 +194,7 @@ public class SheetEditor
                         }
                         else
                         {
-                            SetValue(type, row1, row2, obj, value);
+                            SetValue(type, row1, row2, obj, value, i, j, name);
                         }  
                     }
 
@@ -219,24 +218,48 @@ public class SheetEditor
     }
 
     /// <summary>
+    /// 过滤列
+    /// </summary>
+    /// <param name="key">列标志</param>
+    /// <param name="target">导出目标</param>
+    private static bool FilterKey(string key, string target)
+    {
+        return (!string.IsNullOrEmpty(key)) && (key.Equals("-") || key.Equals(target, StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
     /// Sets the value.
     /// </summary>
-    private static void SetValue(Type type, string key1, string key2, object obj, object value)
+    private static void SetValue(Type type, string key1, string key2, object obj, object value, int row, int col, string name)
     {
-        switch(key1)
+        try
         {
-            case "int":
-                type.GetField(key2).SetValue(obj, Convert.ToInt32(value));
-                break;
-            case "float":
-                type.GetField(key2).SetValue(obj, Convert.ToSingle(value));
-                break;
-            case "string":
-                type.GetField(key2).SetValue(obj, Convert.ToString(value));
-                break;
-            case "bool":
-                type.GetField(key2).SetValue(obj, Convert.ToBoolean(value));
-                break;
+            switch (key1)
+            {
+                case "int":
+                    type.GetField(key2).SetValue(obj, Convert.ToInt32(value));
+                    break;
+                case "float":
+                    type.GetField(key2).SetValue(obj, Convert.ToSingle(value));
+                    break;
+                case "string":
+                    type.GetField(key2).SetValue(obj, Convert.ToString(value));
+                    break;
+                case "bool":
+                    if (value.ToString().Equals("true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        type.GetField(key2).SetValue(obj, true);
+                    }
+                    else
+                    {
+                        type.GetField(key2).SetValue(obj, false);
+                    }
+                    break;
+            }
+        }
+        catch(Exception e)
+        {
+            Debugger.LogError("[{0}] [{1}] [ROW]:{2} [COL]:{3}", name, key1, row + 1, Convert.ToChar(col + 'A'));
         }
     }
 
@@ -276,5 +299,138 @@ public class SheetEditor
         }
     }
     ";
+    }
+
+    /// <summary>
+    /// excelReader.AsDataSet() 会因为表内有空值而报错
+    /// </summary>
+    public static DataSet GetDataSet(string path)
+    {
+        var stream = File.Open(path, FileMode.Open, FileAccess.Read);
+        var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+        var ds = new DataSet();
+        do
+        {
+            DataTable dt = GetTable(excelReader);
+            ds.Merge(dt);
+        } while (excelReader.NextResult());
+        excelReader.Close();
+        excelReader.Dispose();
+        stream.Close();
+        stream.Dispose();
+        return ds;
+    }
+
+    /// <summary>
+    /// 获得表格数据
+    /// </summary>
+    private static DataTable GetTable(IExcelDataReader excelReader)
+    {
+        DataTable dt = new DataTable();
+        dt.TableName = excelReader.Name;
+
+        bool isInit = false;
+        string[] ItemArray = null;
+        while (excelReader.Read())
+        {
+            if (!isInit)
+            {
+                isInit = true;
+                for (int i = 0; i < excelReader.FieldCount; i++)
+                {
+                    dt.Columns.Add("", typeof(string));
+                }
+                ItemArray = new string[excelReader.FieldCount];
+            }
+
+            if (excelReader.IsDBNull(0))
+            {
+                continue;
+            }
+            for (int i = 0; i < excelReader.FieldCount; i++)
+            {
+                string value = excelReader.IsDBNull(i) ? "" : excelReader.GetString(i);
+                ItemArray[i] = value;
+            }
+            dt.Rows.Add(ItemArray);
+        }
+        return dt;
+    }
+
+    /// <summary>
+    /// 转lua
+    /// </summary>
+    [MenuItem("Tools/Sheet/ExportLua")]
+    public static void ExportLua()
+    {
+        var sheetDir = new DirectoryInfo(SHEETROOTPATH);
+        var files = sheetDir.GetFiles();
+        for (var i = 0; i < files.Length; i++)
+        {
+            var file = files[i];
+            EditorUtility.DisplayProgressBar("Generate Lua", file.FullName, 1.0f * (i + 1) / files.Length);
+            var name = file.Name.Replace(file.Extension, "");
+
+            var dataSet = GetDataSet(file.FullName);
+            var table = dataSet.Tables[0];
+            var rows = table.Rows.Count;
+            var cols = table.Columns.Count;
+
+            // 如果表格(0,0)是client 表示该表只为客户端用
+            var tag = table.Rows[0][0].ToString();
+            if (tag.Equals("client", StringComparison.OrdinalIgnoreCase)) continue;
+            var luaSB = new StringBuilder();
+            luaSB.Append(LineText(StringUtil.Concat("local ", name, " = {")));
+            for (var j = 4; j < rows; j++)
+            {
+                luaSB.Append(StringUtil.Concat("    [", table.Rows[j][0].ToString(), "]={"));
+                var rowStr = "";
+                for (var k = 0; k < cols; k++)
+                {
+                    var row0 = table.Rows[0][k].ToString();
+                    if (FilterKey(row0, "server"))
+                    {
+                        var type = table.Rows[1][k].ToString();
+                        var key = table.Rows[2][k].ToString();
+                        var value = table.Rows[j][k].ToString();
+                        switch(type)
+                        {
+                            case "bool":
+                                value = value.ToLower();
+                                break;
+                            case "string":
+                                value = value.Equals("-") ? value = "\"\"" : "\"" + value + "\"";
+                                break;
+                        }
+                        if (type.StartsWith("array") && !value.Equals("{}"))
+                        {
+                            var reg = new Regex("<(.*)>");
+                            var match = reg.Match(type);
+                            var valueType = match.Groups[1].Value;
+                            if (valueType.Equals("string"))
+                            {
+
+                                var valueStr = value.Substring(1, value.Length - 2);
+                                var valueList = valueStr.Split(',');
+                                value = "{";
+                                for (var n = 0; n < valueList.Length; n++)
+                                {
+                                    value += "\"" + valueList[n] + "\",";
+                                }
+                                value = value.Substring(0, value.Length - 1) + "}";
+                            }
+                        }
+                        rowStr += string.Format("{0}={1},", key, value);
+                    }
+                }
+                luaSB.Append(rowStr.Substring(0, rowStr.Length - 1));
+                luaSB.Append(LineText("},"));
+            }
+            luaSB.Append(LineText("}"));
+            luaSB.Append(string.Format("return {0}", name));
+            Base.Utils.FileUtil.WriteAllText(string.Format(OUTSHEETLUA, name), luaSB.ToString());
+        }
+        Debugger.Log("Generate Lua Done!");
+        EditorUtility.ClearProgressBar();
     }
 }

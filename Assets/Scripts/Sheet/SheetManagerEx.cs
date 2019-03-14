@@ -30,6 +30,7 @@ public partial class SheetManager : Singleton<SheetManager>
         Debugger.Log(item.exampleFloat);
         Debugger.Log(item.exampleString);
         Debugger.Log(item.exampleBool);
+        Debugger.Log(item.test1);
         var str = "exampleArray1: ";
         foreach (var value in item.exampleArray1)
         {

@@ -42,9 +42,7 @@ namespace Sheet
 		[ProtoMember(7)]
 		public List<string> exampleArray3 = new List<string>();
 		[ProtoMember(8)]
-		public int test1;
-		[ProtoMember(9)]
-		public int test2;
+		public string test1;
 	}
 
 	[ProtoContract]

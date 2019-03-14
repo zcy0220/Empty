@@ -15,40 +15,40 @@ public enum EExportDataType
 
 public class SheetExportBase
 {
-    private string sheetName;
+    private string mSheetName;
     /// <summary>
     /// 默认key为"id"
     /// </summary>
-    private string key = "id";
+    private string mKey = "id";
     /// <summary>
     /// 默认keyType为int
     /// </summary>
-    private string keyType = "int";
+    private string mKeyType = "int";
     /// <summary>
     /// 默认只导出字典数据
     /// </summary>
-    private EExportDataType exportDataType = EExportDataType.ONLY_DICT;
+    private EExportDataType mExportDataType = EExportDataType.ONLY_DICT;
     
     public SheetExportBase(string sheetName)
     {
-        this.sheetName = sheetName;
+        mSheetName = sheetName;
     }
 
     public SheetExportBase SetKey(string key)
     {
-        this.key = key;
+        mKey = key;
         return this;
     }
 
     public SheetExportBase SetExportDataType(EExportDataType exportDataType)
     {
-        this.exportDataType = exportDataType;
+        mExportDataType = exportDataType;
         return this;
     }
 
     public SheetExportBase SetKeyType(string keyType)
     {
-        this.keyType = keyType;
+        mKeyType = keyType;
         return this;
     }
 
@@ -58,18 +58,18 @@ public class SheetExportBase
     public string ExportScript()
     {
         var sb = new StringBuilder();
-        sb.Append(SheetEditor.LineText(string.Format("//{0}", sheetName), 1));
-        string initFuncName = StringUtil.Concat("Init", sheetName);
-        string ListParamName = StringUtil.Concat(sheetName, "List");
-        string dictParamName = StringUtil.Concat("m" + sheetName, "Dict");
-        bool exportList = (exportDataType == EExportDataType.ONLY_ARRAY || exportDataType == EExportDataType.BOTH);
-        bool exportDict = (exportDataType == EExportDataType.ONLY_DICT || exportDataType == EExportDataType.BOTH);
+        sb.Append(SheetEditor.LineText(string.Format("//{0}", mSheetName), 1));
+        string initFuncName = StringUtil.Concat("Init", mSheetName);
+        string ListParamName = StringUtil.Concat(mSheetName, "List");
+        string dictParamName = StringUtil.Concat("m" + mSheetName, "Dict");
+        bool exportList = (mExportDataType == EExportDataType.ONLY_ARRAY || mExportDataType == EExportDataType.BOTH);
+        bool exportDict = (mExportDataType == EExportDataType.ONLY_DICT || mExportDataType == EExportDataType.BOTH);
 
         // List
         if (exportList)
         {
-            sb.Append(SheetEditor.LineText(string.Format("private List<{0}> m{1};", sheetName, ListParamName), 1));
-            sb.Append(SheetEditor.LineText(string.Format("public List<{0}> Get{1}()", sheetName, ListParamName), 1));
+            sb.Append(SheetEditor.LineText(string.Format("private List<{0}> m{1};", mSheetName, ListParamName), 1));
+            sb.Append(SheetEditor.LineText(string.Format("public List<{0}> Get{1}()", mSheetName, ListParamName), 1));
             sb.Append(SheetEditor.LineText("{", 1));
             sb.Append(SheetEditor.LineText(string.Format("if (m{0} == null)", ListParamName), 2));
             sb.Append(SheetEditor.LineText("{", 2));
@@ -82,8 +82,8 @@ public class SheetExportBase
         // Dictionary
         if (exportDict)
         {
-            sb.Append(SheetEditor.LineText(string.Format("private Dictionary<{0}, {1}> {2};", keyType, sheetName, dictParamName), 1));
-            sb.Append(SheetEditor.LineText(string.Format("public {0} Get{0}({1} key)", sheetName, keyType), 1));
+            sb.Append(SheetEditor.LineText(string.Format("private Dictionary<{0}, {1}> {2};", mKeyType, mSheetName, dictParamName), 1));
+            sb.Append(SheetEditor.LineText(string.Format("public {0} Get{0}({1} key)", mSheetName, mKeyType), 1));
             sb.Append(SheetEditor.LineText("{", 1));
             sb.Append(SheetEditor.LineText(string.Format("if ({0} == null)", dictParamName), 2));
             sb.Append(SheetEditor.LineText("{", 2));
@@ -98,15 +98,15 @@ public class SheetExportBase
         sb.Append(SheetEditor.LineText("{", 1));
         if (exportList || exportDict)
         {
-            sb.Append(SheetEditor.LineText(string.Format("var items = GetSheetInfo<{0}List>(\"{0}\").Items;", sheetName), 2));
+            sb.Append(SheetEditor.LineText(string.Format("var items = GetSheetInfo<{0}List>(\"{0}\").Items;", mSheetName), 2));
             if (exportList)
             {
                 sb.Append(SheetEditor.LineText(string.Format("m{0} = items;", ListParamName), 2));
             }
             if (exportDict)
             {
-                sb.Append(SheetEditor.LineText(string.Format("{0} = new Dictionary<{1}, {2}>();", dictParamName, keyType, sheetName), 2));
-                sb.Append(SheetEditor.LineText(string.Format("items.ForEach(item => {0}[item.{1}] = item);", dictParamName, key), 2));
+                sb.Append(SheetEditor.LineText(string.Format("{0} = new Dictionary<{1}, {2}>();", dictParamName, mKeyType, mSheetName), 2));
+                sb.Append(SheetEditor.LineText(string.Format("items.ForEach(item => {0}[item.{1}] = item);", dictParamName, mKey), 2));
             }
         }
         sb.Append(SheetEditor.LineText("}", 1));
