@@ -26,11 +26,11 @@ public partial class SheetManager : Singleton<SheetManager>
     public void Test()
     {
         var item = GetExample(1);
-        Debugger.Log(item.exampleInt);
-        Debugger.Log(item.exampleFloat);
-        Debugger.Log(item.exampleString);
-        Debugger.Log(item.exampleBool);
-        Debugger.Log(item.test1);
+        Debugger.Log("exampleInt: " + item.exampleInt);
+        Debugger.Log("exampleFloat: " + item.exampleFloat);
+        Debugger.Log("exampleString: " + item.exampleString);
+        Debugger.Log("exampleBool: " + item.exampleBool);
+        Debugger.Log("exampleClient: " + item.exampleClient);
         var str = "exampleArray1: ";
         foreach (var value in item.exampleArray1)
         {

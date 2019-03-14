@@ -400,7 +400,8 @@ public class SheetEditor
                                 value = value.ToLower();
                                 break;
                             case "string":
-                                value = value.Equals("-") ? value = "\"\"" : "\"" + value + "\"";
+                                //value = value.Equals("-") ? value = "\"\"" : "\"" + value + "\"";
+                                value = "\"" + value + "\"";
                                 break;
                         }
                         if (type.StartsWith("array") && !value.Equals("{}"))
