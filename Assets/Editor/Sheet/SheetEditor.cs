@@ -259,6 +259,7 @@ public class SheetEditor
         }
         catch(Exception e)
         {
+            Debugger.LogError(e.Message);
             Debugger.LogError("[{0}] [{1}] [ROW]:{2} [COL]:{3}", name, key1, row + 1, Convert.ToChar(col + 'A'));
         }
     }
