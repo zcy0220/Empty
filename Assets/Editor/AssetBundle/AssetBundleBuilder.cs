@@ -103,7 +103,8 @@ namespace Assets.Editor.AssetBundle
              *    b -> c         b
              *                  /
              *                 c 
-             *  例如：prefab上挂着mat, mat依赖shder。(prefab->mat, prefab->shader, mat->shader) ==> (prefab->mat->shader)
+             *  例如：prefab上挂着mat, mat依赖shder。特别注意，此时prefab同时依赖mat,和shader。可以点击右键查看
+             *  (prefab->mat, prefab->shader, mat->shader) ==> (prefab->mat->shader)
              */
             var removeList = new List<string>();
             foreach(var item in mAssetItemDict)

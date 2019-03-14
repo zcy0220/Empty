@@ -330,7 +330,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     }
 
     /// <summary>
-    /// 处理AssetBundl异步加载队列
+    /// 处理AssetBundle异步加载队列
     /// </summary>
     private void DealAssetBundleLoadQueue()
     {
