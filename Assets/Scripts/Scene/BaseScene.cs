@@ -5,17 +5,11 @@
 public abstract class BaseScene
 {
     /// <summary>
-    /// 场景ID
+    /// 场景进入
     /// </summary>
-    public int Id { get; private set; }
+    public virtual void Enter() { }
     /// <summary>
-    /// 场景名
+    /// 场景退出
     /// </summary>
-    public string Name { get; private set; }
-
-
-    public void Init(int id, string name)
-    {
-
-    }
+    public virtual void Exit() { }
 }

@@ -2,30 +2,25 @@
  * 程序主入口
  */
 
+using Base.Common;
 using UnityEngine;
 
-public class AppMain : MonoBehaviour
+public class AppMain : MonoSingleton<AppMain>
 {
     /// <summary>
-    /// 开始游戏，初始化配置文件
+    /// 启动
     /// </summary>
-    private void Awake()
+    public void Startup()
     {
-        AppConfig.UseAssetBundle = true;
-        //var prefab1 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        //GameObject.Instantiate(prefab1);
-        //var prefab2 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab");
-        //GameObject.Instantiate(prefab2);
-        //var prefab3 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab3.prefab");
-        //GameObject.Instantiate(prefab3);
-        //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab", (obj) =>
-        //{
-        //    GameObject.Instantiate(obj);
-        //});
-        //ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
-        //{
-        //    GameObject.Instantiate(obj);
-        //});
+        // 测试同步加载
+        var prefab1 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
+        GameObject.Instantiate(prefab1);
+        // 测试异步加载
+        ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
+        {
+            GameObject.Instantiate(obj);
+        });
+        // 测试表格数据
         SheetManager.Instance.Test();
     }
 }

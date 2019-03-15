@@ -176,7 +176,7 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     private void StartGame()
     {
-        ScenesManager.Instance.LoadSceneSync("Main");
+        ScenesManager.Instance.LoadScene("Main");
     }
 
     /// <summary>
