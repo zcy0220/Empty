@@ -192,6 +192,7 @@ public class ResourceUpdater : MonoBehaviour
             return;
         }
         var abName = mNeedDownLoadList[0];
+        Debugger.Log(StringUtil.Concat("DownLoad ", abName));
         mNeedDownLoadList.RemoveAt(0);
         var abPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, abName);
         var url = PathUtil.GetServerFileURL(abPath);
