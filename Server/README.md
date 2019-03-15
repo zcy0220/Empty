@@ -28,5 +28,5 @@ app.listen(8000)
 ```sh
 node app.js
 ```
-<!-- ### 访问结果
-![result](./images/001.png) -->
+### 访问结果
+![result](./images/001.png)
