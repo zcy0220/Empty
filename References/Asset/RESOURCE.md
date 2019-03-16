@@ -60,7 +60,7 @@
 * AssetBundle异步加载：1.发起异步加载请求，加入到异步加载请求队列中 2.实时处理请求队列和正在加载队列 3.每个资源要等自身所有的AssetBundle异步加载完成时，才开始异步加载资源
 
 ### 异步加载请求队列和正在加载队列
-![result](Images/RequestAndLoader.png)
+![result](images/RequestAndLoader.png)
 
 ### 异步加载核心代码
 ~~~C#
