@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 4022741466
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b6b59662299d6d750c840bec82ece7f2
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 51a16e16d5113854a16091e54ae5bb0d
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/Materials/NewExampleMaterial.mat
+Dependencies: []

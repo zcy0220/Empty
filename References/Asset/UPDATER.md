@@ -1,7 +1,6 @@
 # 热更新
 * [构建本地服务器](../../Server/README.md)
 * 加载本地和服务器上的版本配置文件进行对比。版本有差异，则加载本地和服务器上的AssetBundleManifest，对比资源Hash, 把差异和新增资源加入到下载列表中。加载完成后写入Application.persistentDataPath。
-* 资源加载，优先Application.persistentDataPath路径下的资源
 
 ### 热更新核心代码
 ~~~C#
@@ -67,4 +66,17 @@ private void DownLoadResource()
 }
 ~~~
 
-### 热更新结果
+### 热更新测试
+* 修改Example表格数据，新增材质NewExampleMaterial，同时修改ExamplePrefab1的关联材质为新材质
+
+### 热更新的下载资源
+![DownloadRes](./images/003.png)
+
+### 表格数据对比
+![OldBytes](../Excel/images/002.png)
+![NewBytes](./images/004.png)
+
+### ExamplePrefab加载对比
+![OldExamplePrefab](./images/001)
+![NewExamplePrefab](./images/002)
+

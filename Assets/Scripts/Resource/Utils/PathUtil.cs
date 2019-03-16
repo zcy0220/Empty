@@ -16,13 +16,18 @@ public class PathUtil
     {
         return CheckPresistentDataFileExsits(filePath) ? GetPresistentDataFilePath(filePath) : GetStreamingAssetsFilePath(filePath);
     }
-    
+
     /// <summary>
     /// 获得StreamingAssets下的资源文件路径
     /// </summary>
     public static string GetStreamingAssetsFilePath(string filePath)
     {
-        return StringUtil.PathConcat(Application.streamingAssetsPath, filePath);
+#if UNITY_EDITOR_OSX
+        var streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
+#else
+        var streamingAssetsPath = Application.streamingAssetsPath;
+#endif
+        return StringUtil.PathConcat(streamingAssetsPath, filePath);
     }
 
     /// <summary>
