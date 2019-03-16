@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 374512889
+CRC: 2178624703
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d5bbd0aa57b45129f77cae6e86a9a712
+    Hash: fa8b57c05363c507086fb5c8f975af48
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2ffe0311e20cd2b6b8ac4af1f92e0b2f
@@ -30,4 +30,4 @@ ClassTypes:
 Assets:
 - Assets/GameAssets/Prefabs/ExamplePrefab2.prefab
 Dependencies:
-- I:/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle
+- /Users/zhengchenyang/Documents/GitHub/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle

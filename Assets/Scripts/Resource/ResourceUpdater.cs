@@ -49,6 +49,14 @@ public class ResourceUpdater : MonoBehaviour
         }
         // 加载并初始化版本信息文件
         yield return InitVersion();
+
+        // 没有版本对比文件，直接进入游戏
+        if (mLocalVersionConfig == null || mServerVersionConfig == null)
+        {
+            StartGame();
+            yield break;
+        }
+
         // 检测版本配置文件
         if (CheckVersion(mLocalVersionConfig.Version, mServerVersionConfig.Version))
         {
