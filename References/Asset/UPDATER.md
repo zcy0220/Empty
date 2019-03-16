@@ -72,13 +72,13 @@ private void DownLoadResource()
 * 修改Example表格数据，新增材质NewExampleMaterial，同时修改ExamplePrefab1的关联材质为新材质
 
 ### 热更新的下载资源
-![DownloadRes](images/003.png)
+![DownloadRes](Images/003.png)
 
 ### 表格数据对比
 ![OldBytes](../Excel/images/002.png)
-![NewBytes](images/004.png)
+![NewBytes](Images/004.png)
 
 ### ExamplePrefab加载对比
-![OldExamplePrefab](images/001.png)
-![NewExamplePrefab](images/002.png)
+![OldExamplePrefab](Images/001.png)
+![NewExamplePrefab](Images/002.png)
 
