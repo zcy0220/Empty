@@ -78,7 +78,7 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     IEnumerator InitVersion()
     {
-        var localVersionConfigPath = PathUtil.GetLocalFilePath(VERSIONCONFIGFILE);
+        var localVersionConfigPath = PathUtil.GetLocalFilePath(VERSIONCONFIGFILE, true);
         var www = new WWW(localVersionConfigPath);
         yield return www;
         mLocalVersionConfig = JsonUtility.FromJson<VersionConfig>(www.text);
@@ -141,7 +141,7 @@ public class ResourceUpdater : MonoBehaviour
     {
         var manifestAssetBundlePath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, AssetBundleConfig.AssetBundlesFolder);
         // 本地的AssetBundleManifest
-        var localManifestPath = PathUtil.GetLocalFilePath(manifestAssetBundlePath);
+        var localManifestPath = PathUtil.GetLocalFilePath(manifestAssetBundlePath, true);
         var www = new WWW(localManifestPath);
         yield return www;
         var localManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");

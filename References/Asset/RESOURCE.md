@@ -1,4 +1,5 @@
 # 资源加载
+* IOS真机测试：Player Setting –> Other Setting -> Strip Engine Code 去掉
 
 ### Unity资源加载方式
 * Resources：[官方不推荐](https://unity3d.com/cn/learn/tutorials/topics/best-practices/resources-folder)

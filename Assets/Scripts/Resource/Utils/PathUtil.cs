@@ -12,20 +12,22 @@ public class PathUtil
     /// 热更新资源会写入到PresistentData目录下
     /// 本地资源先查询PresistentData目录，没有则返回StreamingAssets目录下路径
     /// </summary>
-    public static string GetLocalFilePath(string filePath)
+    public static string GetLocalFilePath(string filePath, bool www = false)
     {
-        return CheckPresistentDataFileExsits(filePath) ? GetPresistentDataFilePath(filePath) : GetStreamingAssetsFilePath(filePath);
+        return CheckPresistentDataFileExsits(filePath) ? GetPresistentDataFilePath(filePath) : GetStreamingAssetsFilePath(filePath, www);
     }
 
     /// <summary>
     /// 获得StreamingAssets下的资源文件路径
     /// </summary>
-    public static string GetStreamingAssetsFilePath(string filePath)
+    public static string GetStreamingAssetsFilePath(string filePath, bool www = false)
     {
-#if UNITY_EDITOR_OSX
-        var streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
-#else
         var streamingAssetsPath = Application.streamingAssetsPath;
+#if UNITY_EDITOR
+        if (www)
+        {
+            streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
+        }
 #endif
         return StringUtil.PathConcat(streamingAssetsPath, filePath);
     }
