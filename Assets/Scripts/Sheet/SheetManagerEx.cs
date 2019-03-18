@@ -25,7 +25,7 @@ public partial class SheetManager : Singleton<SheetManager>
     /// </summary>
     public void Test()
     {
-        var item = GetExample(1);
+        var item = SheetManager.Instance.GetExample(1);
         Debugger.Log("exampleInt: " + item.exampleInt);
         Debugger.Log("exampleFloat: " + item.exampleFloat);
         Debugger.Log("exampleString: " + item.exampleString);
