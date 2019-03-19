@@ -81,6 +81,15 @@ public class NetManager : Singleton<NetManager>
     }
 
     /// <summary>
+    /// 发送协议消息
+    /// </summary>
+    public void Send<T>(int msgId, T request)
+    {
+        if (mTcpClient == null) return;
+        //mTcpClient.Client.Send()
+    }
+
+    /// <summary>
     /// 测试用例
     /// </summary>
     public void Test()

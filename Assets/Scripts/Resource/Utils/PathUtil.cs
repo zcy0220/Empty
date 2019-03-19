@@ -26,6 +26,7 @@ public class PathUtil
 #if UNITY_EDITOR
         if (www)
         {
+            // Mac环境编辑模式下，用www加载StreamingAssets资源要加前缀
             streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
         }
 #endif

@@ -87,6 +87,25 @@ namespace Base.Utils
         }
         
         /// <summary>
+        /// 读取资源
+        /// </summary>
+        public static string ReadAllText(string inFile)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(inFile)) return null;
+                if (!File.Exists(inFile)) return null;
+                File.SetAttributes(inFile, FileAttributes.Normal);
+                return File.ReadAllText(inFile);
+            }
+            catch (System.Exception e)
+            {
+                Debugger.LogError("ReadAllText failed! path = {0} with err = {1}", inFile, e.Message);
+                return null;
+            }
+        }
+        
+        /// <summary>
         /// 检测文件路径
         /// </summary>
         public static bool Exists(string path)

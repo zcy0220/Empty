@@ -1,4 +1,8 @@
 # 资源加载
+
+## 注意事项
+* 资源发布到真机前，要构建对应平台的AssetBundles
+* Mac下的编辑模式，用WWW加载StreamingAssets下的资源路径："file://" + Application.streamingAssetsPath
 * IOS真机测试：Player Setting –> Other Setting -> Strip Engine Code 去掉
 
 ### Unity资源加载方式
