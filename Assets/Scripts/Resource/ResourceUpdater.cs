@@ -20,13 +20,9 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     private VersionConfig mServerVersionConfig;
     /// <summary>
-    /// 需要热更新下载的AssetBundle列表
+    /// 需要热更新下载的AssetBundle队列
     /// </summary>
-    private List<string> mNeedDownLoadList = new List<string>();
-    /// <summary>
-    /// 服务器上的ManifestAssetBundle数据，等所有资源下载好后写入本地
-    /// </summary>
-    private byte[] mServerManifestData;
+    private Queue<string> mNeedDownLoadQueue = new Queue<string>();
 
     /// <summary>
     /// 开始更新
@@ -63,7 +59,7 @@ public class ResourceUpdater : MonoBehaviour
             // 对比版本资源
             yield return CompareVersion();
         }
-        if (mNeedDownLoadList.Count == 0)
+        if (mNeedDownLoadQueue.Count == 0)
         {
             StartGame();
         }
@@ -147,9 +143,9 @@ public class ResourceUpdater : MonoBehaviour
         var localManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
         var localAllAssetBundles = new List<string>(localManifest.GetAllAssetBundles());
         var localAllAssetBundlesDict = new Dictionary<string, Hash128>();
-        foreach(var name in localAllAssetBundles)
+        foreach(var abName in localAllAssetBundles)
         {
-            localAllAssetBundlesDict.Add(name, localManifest.GetAssetBundleHash(name));
+            localAllAssetBundlesDict.Add(abName, localManifest.GetAssetBundleHash(abName));
         }
         www.assetBundle.Unload(true);
         www.Dispose();
@@ -159,21 +155,22 @@ public class ResourceUpdater : MonoBehaviour
         yield return www;
         if (www.assetBundle != null)
         {
-            mServerManifestData = www.bytes;
             var serverManifest = www.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
             var serverAllAssetBundles = serverManifest.GetAllAssetBundles();
-            foreach(var name in serverAllAssetBundles)
+            foreach(var abName in serverAllAssetBundles)
             {
-                if (localAllAssetBundlesDict.ContainsKey(name))
+                if (localAllAssetBundlesDict.ContainsKey(abName))
                 {
-                    var serverAssetBundleHash = serverManifest.GetAssetBundleHash(name);
-                    if (localAllAssetBundlesDict[name] != serverAssetBundleHash) mNeedDownLoadList.Add(name);
+                    var serverAssetBundleHash = serverManifest.GetAssetBundleHash(abName);
+                    if (localAllAssetBundlesDict[abName] != serverAssetBundleHash) mNeedDownLoadQueue.Enqueue(abName);
                 }
                 else
                 {
-                    mNeedDownLoadList.Add(name);
+                    mNeedDownLoadQueue.Enqueue(abName);
                 }
             }
+            // 可以直接记录下www.bytes,不用加到队列中又加载一次
+            if (mNeedDownLoadQueue.Count > 0) mNeedDownLoadQueue.Enqueue(AssetBundleConfig.AssetBundlesFolder);
             www.assetBundle.Unload(true);
         }
         www.Dispose();
@@ -192,23 +189,17 @@ public class ResourceUpdater : MonoBehaviour
     /// </summary>
     private void DownLoadResource()
     {
-        if (mNeedDownLoadList.Count == 0)
+        if (mNeedDownLoadQueue.Count == 0)
         {
             UpdateVersionConfig();
-            ReplaceLocalResource(AssetBundleConfig.AssetBundlesFolder, mServerManifestData);
             StartGame();
             return;
         }
-        var abName = mNeedDownLoadList[0];
+        var abName = mNeedDownLoadQueue.Dequeue();
         Debugger.Log(StringUtil.Concat("DownLoad ", abName));
-        mNeedDownLoadList.RemoveAt(0);
         var abPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, abName);
         var url = PathUtil.GetServerFileURL(abPath);
-        StartCoroutine(DownLoad(url, (www) =>
-        {
-            ReplaceLocalResource(abName, www.bytes);
-            DownLoadResource();
-        }));
+        StartCoroutine(DownLoad(url, abName));
     }
 
     /// <summary>
@@ -232,14 +223,15 @@ public class ResourceUpdater : MonoBehaviour
     /// <summary>
     /// 下载资源
     /// </summary>
-    IEnumerator DownLoad(string url, System.Action<WWW> callback)
+    IEnumerator DownLoad(string url, string abName)
     {
         var www = new WWW(url);
         yield return www;
-        if (string.IsNullOrEmpty(www.error) && callback != null)
+        if (string.IsNullOrEmpty(www.error))
         {
-            callback(www);
+            ReplaceLocalResource(abName, www.bytes);
         }
         www.Dispose();
+        DownLoadResource();
     }
 }

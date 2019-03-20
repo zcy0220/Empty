@@ -33,7 +33,7 @@ private IEnumerator CheckUpdate()
         // 对比版本资源
         yield return CompareVersion();
     }
-    if (mNeedDownLoadList.Count == 0)
+    if (mNeedDownLoadQueue.Count == 0)
     {
         StartGame();
     }
@@ -48,23 +48,32 @@ private IEnumerator CheckUpdate()
 /// </summary>
 private void DownLoadResource()
 {
-    if (mNeedDownLoadList.Count == 0)
+    if (mNeedDownLoadQueue.Count == 0)
     {
         UpdateVersionConfig();
-        ReplaceLocalResource(AssetBundleConfig.AssetBundlesFolder, mServerManifestData);
         StartGame();
         return;
     }
-    var abName = mNeedDownLoadList[0];
+    var abName = mNeedDownLoadQueue.Dequeue();
     Debugger.Log(StringUtil.Concat("DownLoad ", abName));
-    mNeedDownLoadList.RemoveAt(0);
     var abPath = StringUtil.PathConcat(AssetBundleConfig.AssetBundlesFolder, abName);
     var url = PathUtil.GetServerFileURL(abPath);
-    StartCoroutine(DownLoad(url, (www) =>
+    StartCoroutine(DownLoad(url, abName));
+}
+
+/// <summary>
+/// 下载资源
+/// </summary>
+IEnumerator DownLoad(string url, string abName)
+{
+    var www = new WWW(url);
+    yield return www;
+    if (string.IsNullOrEmpty(www.error))
     {
         ReplaceLocalResource(abName, www.bytes);
-        DownLoadResource();
-    }));
+    }
+    www.Dispose();
+    DownLoadResource();
 }
 ~~~
 
