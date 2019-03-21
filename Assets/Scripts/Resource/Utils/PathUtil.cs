@@ -29,6 +29,12 @@ public class PathUtil
             // Mac环境编辑模式下，用www加载StreamingAssets资源要加前缀
             streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
         }
+#elif UNITY_IOS
+        if (www)
+        {
+            // IOS用www加载StreamingAssets资源要加前缀
+            streamingAssetsPath = StringUtil.Concat("file://", Application.streamingAssetsPath);
+        }
 #endif
         return StringUtil.PathConcat(streamingAssetsPath, filePath);
     }
