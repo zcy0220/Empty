@@ -2,12 +2,15 @@
  * 网络管理
  */
 
+using Proto;
 using System;
 using Base.Common;
 using Base.Debug;
+using Base.Utils;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
-public class NetManager : Singleton<NetManager>
+public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceiver
 {
     /// <summary>
     /// 主机
@@ -61,6 +64,7 @@ public class NetManager : Singleton<NetManager>
         {
             mTcpClient.GetStream();
             Debugger.Log("Connect Success");
+            this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
         }
         catch (Exception e)
         {
@@ -86,14 +90,31 @@ public class NetManager : Singleton<NetManager>
     public void Send<T>(int msgId, T request)
     {
         if (mTcpClient == null) return;
-        //mTcpClient.Client.Send()
+        var buffer = ProtobufUtil.NSerialize<T>(request);
+        mTcpClient.Client.Send(buffer);
     }
 
+    #region TEST
     /// <summary>
     /// 测试用例
     /// </summary>
     public void Test()
     {
-        NetManager.Instance.Connect(AppConfig.ServerHost, AppConfig.ServerPort);
+        Connect(AppConfig.ServerHost, AppConfig.ServerPort);
+        this.AddEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
     }
+
+    /// <summary>
+    /// 连接成功后测试发送协议
+    /// </summary>
+    public void OnConnectSuccess(object[] param)
+    {
+        var request = new Example();
+        request.ExampleInt = 1;
+        request.ExampleFloat = 2.5f;
+        request.ExampleString = "abc";
+        request.ExampleArray = new List<Item>() { new Item() { ItemBool = true, ItemDouble = 3.5 }, new Item() { ItemBool = false, ItemDouble = 4.5 } };
+        Send(0, request);
+    }
+    #endregion
 }

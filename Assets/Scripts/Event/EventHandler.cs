@@ -11,7 +11,7 @@ public interface IEventReceiver { }
 /// <summary>
 /// 事件发送接口
 /// </summary>
-public interface IEventSender { }
+public interface IEventDispatcher { }
 
 /// <summary>
 /// 事件句柄

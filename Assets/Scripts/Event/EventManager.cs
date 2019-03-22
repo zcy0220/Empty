@@ -3,7 +3,6 @@
  */
 
 using System;
-using Base.Pool;
 using System.Collections.Generic;
 
 public static class EventManager
@@ -71,7 +70,7 @@ public static class EventManager
     /// <summary>
     /// 扩展事件消息派发
     /// </summary>
-    public static void DispatchEvent(this IEventSender self, string @event, params object[] args)
+    public static void DispatchEvent(this IEventDispatcher self, string @event, params object[] args)
     {
         DispatchEvent(@event, args);
     }
