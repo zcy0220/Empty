@@ -3,10 +3,10 @@
 
 ## 环境准备
 - node
-- yarn(或npm)
+- npm
 ```sh
-yarn add koa2
-yarn add koa-static
+npm install koa2
+npm install koa-static
 ```
 
 ## Server/app.js
@@ -31,3 +31,9 @@ node app.js
 ```
 ### 访问结果
 ![result](./images/001.png)
+
+### 以上的静态资源服务器已经可以用来测试热更新
+***
+***
+### Protobuf网络通信
+
