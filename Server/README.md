@@ -1,12 +1,13 @@
 # 构建本地服务器
 * [Node.js入门](https://github.com/wugui0220/BLOG)
+* 测试热更新只用搭建静态资源服务器
 
 ## 环境准备
 - node
-- npm
+- yarn(或npm)
 ```sh
-npm install koa2
-npm install koa-static
+yarn add koa2
+yarn add koa-static
 ```
 
 ## Server/app.js
@@ -32,8 +33,6 @@ node app.js
 ### 访问结果
 ![result](./images/001.png)
 
-### 以上的静态资源服务器已经可以用来测试热更新
 ***
-***
-### Protobuf网络通信
+## Protobuf网络通信
 
