@@ -58,13 +58,15 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// <summary>
     /// 连接上服务器
     /// </summary>
-    void OnConnect(IAsyncResult ar)
+    private byte[] receiveData = new byte[1024];
+    private void OnConnect(IAsyncResult ar)
     {
         try
         {
-            mTcpClient.GetStream();
             Debugger.Log("Connect Success");
+            var socket = mTcpClient.Client;
             this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
+            socket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
         }
         catch (Exception e)
         {
@@ -72,6 +74,15 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
         }
     }
 
+    /// <summary>
+    /// 接收服务器消息
+    /// </summary>
+    private void OnReceive(IAsyncResult ar)
+    {
+        //var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
+        //Debugger.Log(respond);
+        Debugger.Log(System.Text.Encoding.Default.GetString(receiveData));
+    }
 
     /// <summary>
     /// 断开连接
