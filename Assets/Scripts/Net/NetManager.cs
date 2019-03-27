@@ -90,7 +90,7 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     public void Send<T>(int msgId, T request)
     {
         if (mTcpClient == null) return;
-        var buffer = ProtobufUtil.NSerialize<T>(request);
+        var buffer = ProtobufUtil.NSerialize(request);
         mTcpClient.Client.Send(buffer);
     }
 

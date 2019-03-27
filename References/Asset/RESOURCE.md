@@ -5,16 +5,16 @@
 * IOS真机和Mac下的编辑模式，用WWW加载StreamingAssets下的资源路径："file://" + Application.streamingAssetsPath
 * IOS真机测试：Player Setting –> Other Setting -> Strip Engine Code 去掉
 
-### Unity资源加载方式
+## Unity资源加载方式
 * Resources：[官方不推荐](https://unity3d.com/cn/learn/tutorials/topics/best-practices/resources-folder)
 * AssetBundle：[官方介绍](https://docs.unity3d.com/Manual/AssetBundlesIntro.html)
 * AssetDataBase: 编辑模式下
     
-### 同步加载
+## 同步加载
 * 编辑器模式下：UnityEditor.AssetDatabase.LoadAssetAtPath
 * AssetBundle同步加载：1.根据AssetBundleManifest，同步加载自身及所有依赖的AssetBundle(LoadFromFile) 2.根据加载出来的AssetBundle同步加载对应资源(LoadAsset)
 
-### 同步加载AssetBundle核心代码
+## 同步加载AssetBundle核心代码
 ~~~C#
     /// <summary>
     /// 同步加载所有依赖Bundle
@@ -60,14 +60,14 @@
     }
 ~~~
 
-### 异步加载
+## 异步加载
 * 编辑器模式下：还是使用同步加载(可以加点延时模拟)
 * AssetBundle异步加载：1.发起异步加载请求，加入到异步加载请求队列中 2.实时处理请求队列和正在加载队列 3.每个资源要等自身所有的AssetBundle异步加载完成时，才开始异步加载资源
 
-### 异步加载请求队列和正在加载队列
+## 异步加载请求队列和正在加载队列
 ![result](Images/RequestAndLoader.png)
 
-### 异步加载核心代码
+## 异步加载核心代码
 ~~~C#
     /// <summary>
     /// 检测

@@ -24,5 +24,5 @@ public static class AppConfig
     /// <summary>
     /// 服务器port
     /// </summary>
-    public static readonly int ServerPort = 8000;
+    public static readonly int ServerPort = 3000;
 }

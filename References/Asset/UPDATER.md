@@ -1,10 +1,10 @@
 # 热更新
-* [构建本地服务器](../../Server/README.md)
+* [构建本地热更新静态资源服务器](../../Server/STATIC.md)
 * 将StreamingAssets目录下的资源上传服务器(示例中只用拷到Server/public下)
 * Tools->AssetBundle->Upload
 * 加载本地和服务器上的版本配置文件进行对比。版本有差异，则加载本地和服务器上的AssetBundleManifest，对比资源Hash, 把差异和新增资源加入到下载列表中。加载完成后写入Application.persistentDataPath。
 
-### 热更新核心代码
+## 热更新核心代码
 ~~~C#
 /// <summary>
 /// 检查更新，包括大版本换包和热更新
@@ -77,17 +77,9 @@ IEnumerator DownLoad(string url, string abName)
 }
 ~~~
 
-### 热更新测试
+## 热更新测试
 * 修改Example表格数据，新增材质NewExampleMaterial，同时修改ExamplePrefab1的关联材质为新材质
+* 预期的热更AssetBundle：1.Example表格AB 2.新增的NewExampleMaterial材质AB 3.ExamplePrefab1预制体AB 4 路径和AssetBundle对应的配置AB
 
-### 热更新的下载资源
+## 热更新结果
 ![DownloadRes](Images/003.png)
-
-### 表格数据对比
-![OldBytes](../Excel/images/002.png)
-![NewBytes](Images/004.png)
-
-### ExamplePrefab加载对比
-![OldExamplePrefab](Images/001.png)
-![NewExamplePrefab](Images/002.png)
-
