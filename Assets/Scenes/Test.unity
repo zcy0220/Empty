@@ -832,9 +832,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1962867607}
   - component: {fileID: 1962867611}
+  - component: {fileID: 1962867608}
   - component: {fileID: 1962867610}
   - component: {fileID: 1962867609}
-  - component: {fileID: 1962867608}
   m_Layer: 5
   m_Name: CustomScrollRect
   m_TagString: Untagged
