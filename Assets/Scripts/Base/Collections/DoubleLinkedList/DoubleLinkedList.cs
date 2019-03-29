@@ -122,5 +122,16 @@ namespace Base.Collections
             Head.Prev = node;
             Head = node;
         }
+        
+        /// <summary>
+        /// 清除所有节点
+        /// </summary>
+        public void Clear()
+        {
+            while(Tail != null)
+            {
+                RemoveNode(Tail);
+            }
+        }
     }
 }

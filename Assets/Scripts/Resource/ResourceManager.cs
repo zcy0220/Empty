@@ -22,6 +22,10 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// 缓存引用计数为0的资源, 达到缓存上限时情掉最早没用的资源(尾部资源)
     /// </summary>
     private DoubleLinkedList<ResourceUnit> mNoRefResourceUnitDList = new DoubleLinkedList<ResourceUnit>();
+    /// <summary>
+    /// 最大资源缓存数（视具体项目而定）
+    /// </summary>
+    private const int MAXCACHECOUNT = 100;
 
     /// <summary>
     /// 初始化
@@ -83,6 +87,38 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// </summary>
     private void ClearCache()
     {
+        var clearList = new List<string>();
+        foreach (var path in mResourceUnitDict.Keys)
+        {
+            var unit = mResourceUnitDict[path];
+            if (unit.Clear)
+            {
+                clearList.Add(path);
+            }
+        }
+        foreach (var path in clearList)
+        {
+            Unload(path, true);
+        }
+    }
+
+    /// <summary>
+    /// 清理未引用列表
+    /// </summary>
+    private void ClearNoRefCache()
+    {
+        // 缓存达到上限时，释放一半缓存
+        if (mNoRefResourceUnitDList.Count > MAXCACHECOUNT)
+        {
+            while(mNoRefResourceUnitDList.Count > MAXCACHECOUNT / 2)
+            {
+                var tail = mNoRefResourceUnitDList.Tail;
+                if (tail != null && tail.Current != null)
+                {
+                    Unload(tail.Current.Path, true);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -90,21 +126,27 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// </summary>
     public void Unload(string path, bool destroy = false)
     {
+        // 注意 这里ReCount传0
         var unit = GetResourceUnitCache(path, 0);
-        if (unit == null || unit.RefCount <= 0) return;
-        unit.RefCount--;
-        if (unit.RefCount <=0)
+        if (unit == null) return;
+        // 马上销毁的资源，不管引用计数
+        if (destroy)
         {
-            if (destroy)
+            if (unit.NoRefNode != null)
             {
-                mResourceUnitDict.Remove(path);
-                mResourcesLoader.Unload(path);
+                mNoRefResourceUnitDList.RemoveNode(unit.NoRefNode);
+                unit.NoRefNode = null;
             }
-            else
-            {
-                // 如果不是要马上销毁的先存入没引用列表中
-                mNoRefResourceUnitDList.AddToHead(unit);
-            }
+            mResourceUnitDict.Remove(path);
+            mResourcesLoader.Unload(path);
+            return;
+        }
+        if (unit.RefCount <= 0) return;
+        unit.RefCount--;
+        if (unit.RefCount <= 0)
+        {
+            // 不是马上销毁的资源存入未引用列表中
+            unit.NoRefNode = mNoRefResourceUnitDList.AddToHead(unit);
         }
     }
 
@@ -116,6 +158,12 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         ResourceUnit unit;
         if (mResourceUnitDict.TryGetValue(path, out unit))
         {
+            // 当资源重新被引用的时候，从未引用列表中删除
+            if (unit.RefCount <= 0 && unit.RefCount + refCount > 0 && unit.NoRefNode != null)
+            {
+                mNoRefResourceUnitDList.RemoveNode(unit.NoRefNode);
+                unit.NoRefNode = null;
+            }
             unit.RefCount += refCount;
         }
         return unit;
@@ -126,6 +174,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// </summary>
     private void CacheResourceUnit(string path, Object asset)
     {
+        ClearNoRefCache();
         if (asset == null) return;
         if (mResourceUnitDict.ContainsKey(path))
         {
@@ -178,4 +227,12 @@ public class ResourceUnit
     /// 引用次数
     /// </summary>
     public int RefCount;
+    /// <summary>
+    /// 是否要清理
+    /// </summary>
+    public bool Clear;
+    /// <summary>
+    /// 当计数减为0，移入到NoRefResourceUnitDList的节点
+    /// </summary>
+    public DoubleLinkedListNode<ResourceUnit> NoRefNode;
 }
