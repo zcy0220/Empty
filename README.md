@@ -9,6 +9,7 @@
 * [表格数据](References/Excel/README.md)
 * [资源打包](References/Asset/ASSETBUNDLE.md)
 * [资源加载](References/Asset/RESOURCE.md)
+* [图集打包](References/Atlas/README.md)
 * [热更新](References/Asset/UPDATER.md)
 * [网络层](References/Net/README.md)
 * [Lua](References/Lua/README.md)
