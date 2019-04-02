@@ -29,9 +29,8 @@ namespace Assets.Editor.AssetBundle
         private static BuildTarget mBuildTarget = BuildTarget.NoTarget;
 
         [MenuItem("Tools/AssetBundle/Build")]
-        public static void Build(BuildTarget buildTarget = BuildTarget.NoTarget)
+        public static void Build()
         {
-            mBuildTarget = buildTarget;
             mSpriteAtlasDict.Clear();
             mAssetItemDict.Clear();
             CreateSpriteAtlasMap();
@@ -43,6 +42,15 @@ namespace Assets.Editor.AssetBundle
             ClearAssetBundleNames();
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
+        }
+
+        /// <summary>
+        /// 根据平台构建AssetBundle
+        /// </summary>
+        public static void Build(BuildTarget buildTarget)
+        {
+            mBuildTarget = buildTarget;
+            Build();
         }
 
         /// <summary>
@@ -286,6 +294,7 @@ namespace Assets.Editor.AssetBundle
             }
             Directory.CreateDirectory(BuilderConfig.AssetBundleExportPath);
             BuildPipeline.BuildAssetBundles(BuilderConfig.AssetBundleExportPath, BuilderConfig.Options, mBuildTarget);
+            mBuildTarget = BuildTarget.NoTarget;
             Debugger.Log("AssetBundle Build Success!");
         }
     }
