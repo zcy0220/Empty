@@ -29,9 +29,5 @@ namespace Assets.Editor.AssetBundle
         /// 构建参数
         /// </summary>
         public static readonly BuildAssetBundleOptions Options = BuildAssetBundleOptions.ChunkBasedCompression;
-        /// <summary>
-        /// 构建平台
-        /// </summary>
-        public static BuildTarget Target = EditorUserBuildSettings.activeBuildTarget;
     }
 }

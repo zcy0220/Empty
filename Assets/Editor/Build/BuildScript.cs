@@ -45,8 +45,7 @@ public class BuildScript
     /// </summary>
     public static void BuildForAndroid()
     {
-        BuilderConfig.Target = BuildTarget.Android;
-        AssetBundleBuilder.Build();
+        AssetBundleBuilder.Build(BuildTarget.Android);
         var args = GetArgs();
         PlayerSettings.productName = args["name"];
         PlayerSettings.bundleVersion = args["version"];
