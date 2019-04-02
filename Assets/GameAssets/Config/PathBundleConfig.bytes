@@ -1,6 +1,24 @@
 
 b
 /Assets/GameAssets/Config/PathBundleConfig.bytes/Assets/GameAssets/Config/PathBundleConfig.bytes
+f
++Assets/GameAssets/UI/Atlas/Item.spriteatlas7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1003.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1005.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1006.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1004.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1002.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1007.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+]
+"Assets/GameAssets/UI/Item/1001.png7assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+b
+)Assets/GameAssets/UI/Alone/Background.png5assets/gameassets/ui/alone/background.png.assetbundle
 h
 )Assets/GameAssets/Sounds/SoundExample.wav;assets/gameassets/prefabs/exampleprefab1.prefab.assetbundle
 \
@@ -13,3 +31,9 @@ n
 /Assets/GameAssets/Materials/ExampleMaterial.mat;assets/gameassets/materials/examplematerial.mat.assetbundle
 n
 /Assets/GameAssets/Prefabs/ExamplePrefab2.prefab;assets/gameassets/prefabs/exampleprefab2.prefab.assetbundle
+j
+-Assets/GameAssets/Prefabs/UIItemPrefab.prefab9assets/gameassets/prefabs/uiitemprefab.prefab.assetbundle
+p
+0Assets/GameAssets/Prefabs/UISpritePrefab1.prefab<assets/gameassets/prefabs/uispriteprefab1.prefab.assetbundle
+p
+0Assets/GameAssets/Prefabs/UISpritePrefab2.prefab<assets/gameassets/prefabs/uispriteprefab2.prefab.assetbundle

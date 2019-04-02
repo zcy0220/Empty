@@ -1,21 +1,38 @@
 ManifestFileVersion: 0
-CRC: 3958605162
+CRC: 2711507906
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
+      Name: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+      Dependencies: {}
+    Info_1:
+      Name: assets/gameassets/ui/alone/background.png.assetbundle
+      Dependencies: {}
+    Info_2:
       Name: assets/gameassets/prefabs/exampleprefab1.prefab.assetbundle
       Dependencies:
         Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
-    Info_1:
+    Info_3:
       Name: assets/gameassets/sheets/example.bytes.assetbundle
       Dependencies: {}
-    Info_2:
+    Info_4:
       Name: assets/gameassets/materials/examplematerial.mat.assetbundle
       Dependencies: {}
-    Info_3:
+    Info_5:
       Name: assets/gameassets/prefabs/exampleprefab2.prefab.assetbundle
       Dependencies:
         Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
-    Info_4:
+    Info_6:
+      Name: assets/gameassets/prefabs/uiitemprefab.prefab.assetbundle
+      Dependencies: {}
+    Info_7:
+      Name: assets/gameassets/prefabs/uispriteprefab1.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+    Info_8:
+      Name: assets/gameassets/prefabs/uispriteprefab2.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+    Info_9:
       Name: assets/gameassets/config/pathbundleconfig.bytes.assetbundle
       Dependencies: {}

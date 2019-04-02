@@ -14,6 +14,10 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         public static readonly string AssetRootPath = "Assets/GameAssets";
         /// <summary>
+        /// 图集资源路径
+        /// </summary>
+        public static readonly string SpriteAtlasPath = AssetRootPath + "/UI/Atlas";
+        /// <summary>
         /// AssetBundle的导出目录
         /// </summary>
         public static readonly string AssetBundleExportPath = Application.streamingAssetsPath + "/AssetBundles";

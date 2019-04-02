@@ -47,6 +47,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
 	/// </summary>
 	public T SyncLoad<T>(string path) where T : Object
     {
+        path = PathUtil.GetFullAssetPath(path);
         var cache = GetResourceUnitCache(path);
         if (cache != null)
         {
@@ -64,6 +65,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <param name="callback"></param>
     public void AsyncLoad<T>(string path, System.Action<Object> callback) where T : Object
     {
+        path = PathUtil.GetFullAssetPath(path);
         var cache = GetResourceUnitCache(path);
         if (cache != null)
         {
@@ -195,21 +197,6 @@ public class ResourceManager : MonoSingleton<ResourceManager>
 #if UNITY_EDITOR
         Resources.UnloadUnusedAssets();
 #endif
-    }
-
-    /// <summary>
-    /// 测试用例
-    /// </summary>
-    public void Test()
-    {
-        // 测试同步加载
-        var prefab1 = ResourceManager.Instance.SyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab1.prefab");
-        GameObject.Instantiate(prefab1);
-        // 测试异步加载
-        // ResourceManager.Instance.AsyncLoad<GameObject>("Assets/GameAssets/Prefabs/ExamplePrefab2.prefab", (obj) =>
-        // {
-        //     GameObject.Instantiate(obj);
-        // });
     }
 }
 

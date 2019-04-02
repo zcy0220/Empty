@@ -9,7 +9,7 @@ using Base.Debug;
 
 public partial class SheetManager : Singleton<SheetManager>
 {
-    public const string PREFIX = "Assets/GameAssets/Sheets/";
+    public const string PREFIX = "Sheets/";
     public const string POSTFIX = ".bytes";
     /// <summary>
     /// 获得表格数据

@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using ProtoBuf;
-using UnityEngine;
 
 public class AssetBundleConfig
 {

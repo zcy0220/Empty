@@ -5,6 +5,7 @@
 using System.IO;
 using UnityEditor;
 using System.Collections.Generic;
+using Base.Debug;
 
 namespace Assets.Editor.AssetBundle
 {
@@ -18,10 +19,17 @@ namespace Assets.Editor.AssetBundle
         /// 资源依赖映射
         /// </summary>
         private static Dictionary<string, AssetItem> mAssetItemDict = new Dictionary<string, AssetItem>();
+        /// <summary>
+        /// SpriteAtlas依赖映射
+        /// </summary>
+        private static Dictionary<string, string> mSpriteAtlasDict = new Dictionary<string, string>();
 
         [MenuItem("Tools/AssetBundle/Build")]
         public static void Build()
         {
+            mSpriteAtlasDict.Clear();
+            mAssetItemDict.Clear();
+            CreateSpriteAtlasMap();
             CreateAssetDependsMap();
             GroupAssetBundles();
             CreateAssetBundleConfig();
@@ -33,11 +41,43 @@ namespace Assets.Editor.AssetBundle
         }
 
         /// <summary>
+        /// 遍历Atlas下所有的SpriteAtlas，建立图片资源依赖
+        /// </summary>
+        public static void CreateSpriteAtlasMap()
+        {
+            var dir = new DirectoryInfo(BuilderConfig.SpriteAtlasPath);
+            if (!dir.Exists) return;
+            var files = dir.GetFiles();
+            for (var i = 0; i < files.Length; i++)
+            {
+                var fileInfo = files[i];
+                EditorUtility.DisplayProgressBar("CreateSpriteAtlasMap", fileInfo.FullName, 1.0f * (i + 1) / files.Length);
+                if (AssetUtils.ValidAsset(fileInfo.FullName))
+                {
+                    var fullPath = fileInfo.FullName.Replace("\\", "/");
+                    var path = fullPath.Substring(fullPath.IndexOf(BuilderConfig.AssetRootPath));
+                    var assetItem = GetAssetItem(path);
+                    var depends = AssetDatabase.GetDependencies(path);
+                    foreach (var depend in depends)
+                    {
+                        if (AssetUtils.ValidAsset(depend) && depend != path)
+                        {
+                            mSpriteAtlasDict.Add(depend, path);
+                            assetItem.Depends.Add(depend);
+                            var dependAssetItem = GetAssetItem(depend);
+                            dependAssetItem.BeDepends.Add(path);
+                        }
+                    }
+                    mSpriteAtlasDict.Add(path, path);
+                }
+            }
+        }
+
+        /// <summary>
         /// 遍历资源，建立依赖映射
         /// </summary>
         public static void CreateAssetDependsMap()
         {
-            mAssetItemDict.Clear();
             var stack = new Stack<DirectoryInfo>();
             stack.Push(new DirectoryInfo(BuilderConfig.AssetRootPath));
             while (stack.Count > 0)
@@ -61,15 +101,23 @@ namespace Assets.Editor.AssetBundle
                         // 处理依赖相关
                         var fullPath = fileInfo.FullName.Replace("\\", "/");
                         var path = fullPath.Substring(fullPath.IndexOf(BuilderConfig.AssetRootPath));
-                        var assetItem = GetAssetItem(path);
-                        var depends = AssetDatabase.GetDependencies(path);
-                        foreach(var depend in depends)
+                        // 过滤掉在图集中的资源
+                        if (!mSpriteAtlasDict.ContainsKey(path))
                         {
-                            if (AssetUtils.ValidAsset(depend) && depend != path)
+                            var assetItem = GetAssetItem(path);
+                            var depends = AssetDatabase.GetDependencies(path);
+                            foreach (var depend in depends)
                             {
-                                assetItem.Depends.Add(depend);
-                                var dependAssetItem = GetAssetItem(depend);
-                                dependAssetItem.BeDepends.Add(path);
+                                if (AssetUtils.ValidAsset(depend) && depend != path)
+                                {
+                                    var dependPath = mSpriteAtlasDict.ContainsKey(depend) ? mSpriteAtlasDict[depend] : depend;
+                                    if (!assetItem.Depends.Contains(dependPath))
+                                    {
+                                        assetItem.Depends.Add(dependPath);
+                                        var dependAssetItem = GetAssetItem(dependPath);
+                                        dependAssetItem.BeDepends.Add(path);
+                                    }
+                                }
                             }
                         }
                     }
@@ -225,6 +273,7 @@ namespace Assets.Editor.AssetBundle
             }
             Directory.CreateDirectory(BuilderConfig.AssetBundleExportPath);
             BuildPipeline.BuildAssetBundles(BuilderConfig.AssetBundleExportPath, BuilderConfig.Options, BuilderConfig.Target);
+            Debugger.Log("AssetBundle Build Success!");
         }
     }
 }

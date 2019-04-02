@@ -20,11 +20,11 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// 端口
     /// </summary>
     private int mPort;
-
     /// <summary>
     /// socket
     /// </summary>
     private TcpClient mTcpClient;
+    private NetworkStream mStream;
 
     /// <summary>
     /// 连接
@@ -58,15 +58,16 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// <summary>
     /// 连接上服务器
     /// </summary>
-    private byte[] receiveData = new byte[1024];
+    private byte[] receiveData = new byte[34];
     private void OnConnect(IAsyncResult ar)
     {
         try
         {
             Debugger.Log("Connect Success");
-            var socket = mTcpClient.Client;
+            mStream = mTcpClient.GetStream();
+            //var socket = mTcpClient.Client;
             this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
-            socket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
+            //socket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
         }
         catch (Exception e)
         {
@@ -79,9 +80,14 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// </summary>
     private void OnReceive(IAsyncResult ar)
     {
-        //var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
+        var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
+        Debugger.Log(respond);
+        Debugger.Log("服务器接受:" + respond.ExampleInt);
+        //var test = new Example() { ExampleInt = -1, ExampleFloat = -2.5f, ExampleString = "cba", ExampleArray = new List<Item>() { new Item() { ItemDouble = 1.2, ItemBool = true } } };
+
+        //var buf = ProtobufUtil.NSerialize(test);
+        //var respond = ProtobufUtil.NDeserialize<Example>(buf);
         //Debugger.Log(respond);
-        Debugger.Log(System.Text.Encoding.Default.GetString(receiveData));
     }
 
     /// <summary>
@@ -102,7 +108,9 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     {
         if (mTcpClient == null) return;
         var buffer = ProtobufUtil.NSerialize(request);
-        mTcpClient.Client.Send(buffer);
+        //mTcpClient.Client.Send(buffer);
+        mStream.Write(buffer, 0, buffer.Length);
+        mStream.Flush();
     }
 
     #region TEST

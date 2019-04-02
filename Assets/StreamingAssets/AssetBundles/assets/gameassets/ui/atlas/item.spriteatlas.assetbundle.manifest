@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+CRC: 1168219281
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7f647a28a573d0d374c5810543a2e6b2
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 8f81471f4cfc7bf93c7fa752ebb4eb40
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/UI/Item/1003.png
+- Assets/GameAssets/UI/Item/1005.png
+- Assets/GameAssets/UI/Item/1006.png
+- Assets/GameAssets/UI/Atlas/Item.spriteatlas
+- Assets/GameAssets/UI/Item/1004.png
+- Assets/GameAssets/UI/Item/1002.png
+- Assets/GameAssets/UI/Item/1007.png
+- Assets/GameAssets/UI/Item/1001.png
+Dependencies: []

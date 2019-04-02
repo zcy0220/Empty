@@ -8,6 +8,19 @@ using Base.Utils;
 public class PathUtil
 {
     /// <summary>
+    /// 资源完整路径的前缀
+    /// </summary>
+    public const string ASSETPATHPREFIX = "Assets/GameAssets";
+
+    /// <summary>
+    /// 获得资源的完整路径
+    /// </summary>
+    public static string GetFullAssetPath(string assetPath)
+    {
+        return StringUtil.PathConcat(ASSETPATHPREFIX, assetPath);
+    }
+
+    /// <summary>
     /// 获得本地资源文件路径
     /// 热更新资源会写入到PresistentData目录下
     /// 本地资源先查询PresistentData目录，没有则返回StreamingAssets目录下路径

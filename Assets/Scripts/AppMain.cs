@@ -11,11 +11,7 @@ public class AppMain : MonoSingleton<AppMain>
     /// </summary>
     public void Startup()
     {
-        // 测试资源加载
-        ResourceManager.Instance.Test();
         // 测试表格数据
         SheetManager.Instance.Test();
-        // 测试网络通信
-        NetManager.Instance.Test();
     }
 }
