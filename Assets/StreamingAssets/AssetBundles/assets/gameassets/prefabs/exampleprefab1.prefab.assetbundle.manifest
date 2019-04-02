@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3770283121
+CRC: 1029391493
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f817d8569669b02042285c37a9a73399
+    Hash: 35a90c9e57f9c81227bbb7d97e48d4ef
   TypeTreeHash:
     serializedVersion: 2
     Hash: 0e716f2836d23d42adfe8e92472bc21d
@@ -31,4 +31,4 @@ Assets:
 - Assets/GameAssets/Prefabs/ExamplePrefab1.prefab
 - Assets/GameAssets/Sounds/SoundExample.wav
 Dependencies:
-- I:/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle
+- /Users/zhengchenyang/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/materials/examplematerial.mat.assetbundle

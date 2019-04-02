@@ -155,21 +155,21 @@ namespace Assets.Editor.AssetBundle
              *  (prefab->mat, prefab->shader, mat->shader) ==> (prefab->mat->shader)
              */
             var removeList = new List<string>();
-            foreach(var item in mAssetItemDict)
+            foreach (var item in mAssetItemDict)
             {
                 removeList.Clear();
                 var path = item.Key;
                 var assetItem = item.Value;
-                foreach(var depend in assetItem.Depends)
+                foreach (var depend in assetItem.Depends)
                 {
                     var dependAssetItem = GetAssetItem(depend);
-                    foreach(var beDepend in dependAssetItem.BeDepends)
+                    foreach (var beDepend in dependAssetItem.BeDepends)
                     {
                         if (assetItem.Depends.Contains(beDepend))
                             removeList.Add(depend);
                     }
                 }
-                foreach(var depend in removeList)
+                foreach (var depend in removeList)
                 {
                     assetItem.Depends.Remove(depend);
                     var dependAssetItem = GetAssetItem(depend);
@@ -184,11 +184,11 @@ namespace Assets.Editor.AssetBundle
              *      / | \ /                          
              *     c  h  d      
              */
-            foreach(var item in mAssetItemDict)
+            foreach (var item in mAssetItemDict)
             {
                 var path = item.Key;
                 var assetItem = item.Value;
-                while(assetItem.BeDepends.Count == 1)
+                while (assetItem.BeDepends.Count == 1)
                 {
                     assetItem = GetAssetItem(assetItem.BeDepends[0]);
                     if (assetItem.BeDepends.Count != 1)
@@ -198,7 +198,7 @@ namespace Assets.Editor.AssetBundle
                 }
             }
         }
-       
+
         /// <summary>
         /// 生成AssetBundleConfig配置文件
         /// </summary>
@@ -266,6 +266,11 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         private static void BuildAssetBundles()
         {
+#if UNITY_EDITOR_OSX
+            BuilderConfig.Target = BuildTarget.StandaloneOSX;
+#elif UNITY_EDITOR_WIN
+            BuilderConfig.Target = BuildTarget.StandaloneWindows;
+#endif
             EditorUtility.DisplayProgressBar("BuildAssetBundles", "", 0);
             if (Directory.Exists(BuilderConfig.AssetBundleExportPath))
             {
