@@ -4,6 +4,7 @@
 
 using UnityEditor;
 using System.Collections.Generic;
+using Assets.Editor.AssetBundle;
 
 public class BuildScript
 {
@@ -44,6 +45,8 @@ public class BuildScript
     /// </summary>
     public static void BuildForAndroid()
     {
+        BuilderConfig.Target = BuildTarget.Android;
+        AssetBundleBuilder.Build();
         var args = GetArgs();
         PlayerSettings.productName = args["name"];
         PlayerSettings.bundleVersion = args["version"];

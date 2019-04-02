@@ -32,6 +32,6 @@ namespace Assets.Editor.AssetBundle
         /// <summary>
         /// 构建平台
         /// </summary>
-        public static readonly BuildTarget Target = EditorUserBuildSettings.activeBuildTarget;
+        public static BuildTarget Target = EditorUserBuildSettings.activeBuildTarget;
     }
 }
