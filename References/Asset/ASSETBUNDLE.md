@@ -18,14 +18,14 @@
     public static void GroupAssetBundles()
     {
         /* 清除同层依赖 把同层之间被依赖的节点下移 (a->b, a->c, b->c) ==> (a->b->c)
-            *      a              a
-            *     /  \    ==>    /
-            *    b -> c         b
-            *                  /
-            *                 c 
-            *  例如：prefab上挂着mat, mat依赖shder。特别注意，此时prefab同时依赖mat,和shader。可以点击右键查看
-            *  (prefab->mat, prefab->shader, mat->shader) ==> (prefab->mat->shader)
-            */
+         *      a              a
+         *     /  \    ==>    /
+         *    b -> c         b
+         *                  /
+         *                 c 
+         *  例如：prefab上挂着mat, mat依赖shder。特别注意，此时prefab同时依赖mat,和shader。可以点击右键查看
+         *  (prefab->mat, prefab->shader, mat->shader) ==> (prefab->mat->shader)
+         */
         var removeList = new List<string>();
         foreach(var item in mAssetItemDict)
         {
@@ -50,12 +50,12 @@
         }
 
         /* 向上归并依赖
-            *      a        e                 
-            *       \      /                    
-            *        b    f     ==>  (a,b,c,h) -> (d) <- (e,f)
-            *      / | \ /                          
-            *     c  h  d      
-            */
+         *      a        e                 
+         *       \      /                    
+         *        b    f     ==>  (a,b,c,h) -> (d) <- (e,f)
+         *      / | \ /                          
+         *     c  h  d      
+         */
         foreach(var item in mAssetItemDict)
         {
             var path = item.Key;

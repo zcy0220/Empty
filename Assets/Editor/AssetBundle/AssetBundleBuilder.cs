@@ -123,6 +123,7 @@ namespace Assets.Editor.AssetBundle
                             {
                                 if (AssetUtils.ValidAsset(depend) && depend != path)
                                 {
+                                    // 如果依赖的Sprite有对应的图集，就改为依赖SpriteAtlas
                                     var dependPath = mSpriteAtlasDict.ContainsKey(depend) ? mSpriteAtlasDict[depend] : depend;
                                     if (!assetItem.Depends.Contains(dependPath))
                                     {
