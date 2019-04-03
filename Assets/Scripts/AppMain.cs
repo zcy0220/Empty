@@ -11,7 +11,6 @@ public class AppMain : MonoSingleton<AppMain>
     /// </summary>
     public void Startup()
     {
-        // 测试表格数据
-        SheetManager.Instance.Test();
+        // todo 
     }
 }
