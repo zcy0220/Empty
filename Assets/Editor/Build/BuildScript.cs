@@ -45,10 +45,11 @@ public class BuildScript
     /// </summary>
     public static void BuildForAndroid()
     {
-        AssetBundleBuilder.Build(BuildTarget.Android);
         var args = GetArgs();
         PlayerSettings.productName = args["name"];
         PlayerSettings.bundleVersion = args["version"];
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
+        AssetBundleBuilder.Build();
         BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.Android, BuildOptions.None);
     }
 }

@@ -23,10 +23,6 @@ namespace Assets.Editor.AssetBundle
         /// SpriteAtlas依赖映射
         /// </summary>
         private static Dictionary<string, string> mSpriteAtlasDict = new Dictionary<string, string>();
-        /// <summary>
-        /// 构建的目标平台
-        /// </summary>
-        private static BuildTarget mBuildTarget = BuildTarget.NoTarget;
 
         [MenuItem("Tools/AssetBundle/Build")]
         public static void Build()
@@ -42,15 +38,6 @@ namespace Assets.Editor.AssetBundle
             ClearAssetBundleNames();
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
-        }
-
-        /// <summary>
-        /// 根据平台构建AssetBundle
-        /// </summary>
-        public static void Build(BuildTarget buildTarget)
-        {
-            mBuildTarget = buildTarget;
-            Build();
         }
 
         /// <summary>
@@ -280,22 +267,13 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         private static void BuildAssetBundles()
         {
-            if (mBuildTarget == BuildTarget.NoTarget)
-            {
-#if UNITY_EDITOR_OSX
-                mBuildTarget = BuildTarget.StandaloneOSX;
-#elif UNITY_EDITOR_WIN
-                mBuildTarget = BuildTarget.StandaloneWindows;
-#endif              
-            }
             EditorUtility.DisplayProgressBar("BuildAssetBundles", "", 0);
             if (Directory.Exists(BuilderConfig.AssetBundleExportPath))
             {
                 FileUtil.DeleteFileOrDirectory(BuilderConfig.AssetBundleExportPath);
             }
             Directory.CreateDirectory(BuilderConfig.AssetBundleExportPath);
-            BuildPipeline.BuildAssetBundles(BuilderConfig.AssetBundleExportPath, BuilderConfig.Options, mBuildTarget);
-            mBuildTarget = BuildTarget.NoTarget;
+            BuildPipeline.BuildAssetBundles(BuilderConfig.AssetBundleExportPath, BuilderConfig.Options, EditorUserBuildSettings.activeBuildTarget);
             Debugger.Log("AssetBundle Build Success!");
         }
     }
