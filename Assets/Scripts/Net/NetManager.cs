@@ -7,11 +7,32 @@ using System;
 using Base.Common;
 using Base.Debug;
 using Base.Utils;
+using Base.Collections;
 using System.Net.Sockets;
+using System.Threading;
 using System.Collections.Generic;
 
-public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceiver
+/// <summary>
+/// 响应委托
+/// </summary>
+public delegate void OnResponse(object obj);
+
+/// <summary>
+/// 网络连接状态
+/// </summary>
+public enum ENetState
 {
+    NONE,
+    SUCCESS,
+    CONNECTING,
+}
+
+public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
+{
+    /// <summary>
+    /// 缓存池大小
+    /// </summary>
+    const int BUFFERSIZE = 1024;
     /// <summary>
     /// 主机
     /// </summary>
@@ -24,7 +45,44 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// socket
     /// </summary>
     private TcpClient mTcpClient;
+    /// <summary>
+    /// NetworkStream
+    /// </summary>
     private NetworkStream mStream;
+    ///// <summary>
+    ///// 发送线程
+    ///// </summary>
+    //private Thread mSendThread;
+    ///// <summary>
+    ///// 接受线程
+    ///// </summary>
+    //private Thread mRecvThread;
+    /// <summary>
+    /// 发送缓存
+    /// </summary>
+    private CircularQueue<int> mSendBuffer = new CircularQueue<int>(BUFFERSIZE);
+    /// <summary>
+    /// 接受缓存
+    /// </summary>
+    private CircularQueue<int> mRecvBuffer = new CircularQueue<int>(BUFFERSIZE);
+    /// <summary>
+    /// 网络连接状态
+    /// </summary>
+    public ENetState NetState { get; private set; }
+    /// <summary>
+    /// 协议回来的响应列表
+    /// </summary>
+    private Dictionary<int, List<OnResponse>> mResponseList = new Dictionary<int, List<OnResponse>>();
+
+    /// <summary>
+    /// 连接
+    /// </summary>
+    public bool Connect(string host, int port)
+    {
+        mHost = host;
+        mPort = port;
+        return Connect();
+    }
 
     /// <summary>
     /// 连接
@@ -40,39 +98,36 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
         }
         catch
         {
+            Debugger.LogError("Connect error host: {0}, port: {1}", mHost, mPort);
             return false;
         }
     }
 
     /// <summary>
-    /// 连接
-    /// </summary>
-    public bool Connect(string host, int port)
-    {
-        mHost = host;
-        mPort = port;
-        return Connect();
-    }
-
-
-    /// <summary>
     /// 连接上服务器
     /// </summary>
-    private byte[] receiveData = new byte[34];
     private void OnConnect(IAsyncResult ar)
     {
         try
         {
-            Debugger.Log("Connect Success");
             mStream = mTcpClient.GetStream();
-            //var socket = mTcpClient.Client;
-            this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
-            //socket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
+            NetState = ENetState.SUCCESS;
         }
-        catch (Exception e)
+        catch(Exception e)
         {
-            Debugger.LogError(e.Message);
+            Debugger.LogError("Connect {0} failed! error: {1}", mHost, e.Message);
+            this.DispatchEvent(EventMsg.NET_CONNECT_FAILED);
         }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public void OnConnectSuccess()
+    {
+        // 网络状态设为连接中
+        NetState = ENetState.CONNECTING;
+        //this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
     }
 
     /// <summary>
@@ -80,9 +135,9 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
     /// </summary>
     private void OnReceive(IAsyncResult ar)
     {
-        var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
-        Debugger.Log(respond);
-        Debugger.Log("服务器接受:" + respond.ExampleInt);
+        //var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
+        //Debugger.Log(respond);
+        //Debugger.Log("服务器接受:" + respond.ExampleInt);
         //var test = new Example() { ExampleInt = -1, ExampleFloat = -2.5f, ExampleString = "cba", ExampleArray = new List<Item>() { new Item() { ItemDouble = 1.2, ItemBool = true } } };
 
         //var buf = ProtobufUtil.NSerialize(test);
@@ -112,17 +167,15 @@ public class NetManager : Singleton<NetManager>, IEventDispatcher, IEventReceive
         mStream.Write(buffer, 0, buffer.Length);
         mStream.Flush();
     }
-
-    #region TEST
+    
     /// <summary>
-    /// 测试用例
+    /// 连接的回调并不在主线程中，要在Update中检测网络连接状态
     /// </summary>
-    public void Test()
+    private void Update()
     {
-        Connect(AppConfig.ServerHost, AppConfig.ServerPort);
-        this.AddEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
     }
 
+    #region TEST
     /// <summary>
     /// 连接成功后测试发送协议
     /// </summary>
