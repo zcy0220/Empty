@@ -48,10 +48,14 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// NetworkStream
     /// </summary>
     private NetworkStream mStream;
+    /// <summary>
+    /// 控制发送和接收线程状态的标志位
+    /// </summary>
+    private bool mThreadStateFlag = false;
     ///// <summary>
     ///// 发送线程
     ///// </summary>
-    //private Thread mSendThread;
+    private Thread mSendThread;
     ///// <summary>
     ///// 接受线程
     ///// </summary>
@@ -122,14 +126,35 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     }
     
     /// <summary>
-    /// 
+    /// 连接成功后 切换网络状态 同时开启发送和接收线程
     /// </summary>
     public void OnConnectSuccess()
     {
         // 网络状态设为连接中
         NetState = ENetState.CONNECTING;
+        StartNetThread();
         this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
-        mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
+    }
+    
+    /// <summary>
+    /// 开启发送和接收线程
+    /// </summary>
+    private void StartNetThread()
+    {
+        mThreadStateFlag = true;
+        mSendThread = new Thread(SendFunc);
+        mSendThread.Start();
+    }
+    
+    /// <summary>
+    /// 发送线程执行的发送方法
+    /// </summary>
+    private void SendFunc()
+    {
+        while(mThreadStateFlag)
+        {
+
+        }
     }
 
     /// <summary>
@@ -148,7 +173,7 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         var count = mTcpClient.Client.EndReceive(ar);
         var str = System.Text.Encoding.UTF8.GetString(mReadBuffer, 0, count);
         Debugger.Log(str);
-        mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
+        //mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
     }
 
     /// <summary>
@@ -156,10 +181,11 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// </summary>
     public void Disconnect()
     {
-        if (mTcpClient != null)
-        {
-            mTcpClient.Close();
-        }
+        if (!mThreadStateFlag) return;
+
+        if (mTcpClient != null) mTcpClient.Close();
+
+        mThreadStateFlag = false;
     }
 
     /// <summary>

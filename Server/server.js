@@ -1,7 +1,7 @@
 const net = require('net')
 const protobuf = require("protobufjs")
-const root = protobuf.loadSync("./proto/Example.proto")
-const message = root.lookupType("Proto.Example")
+const root = protobuf.loadSync("./proto/User.proto")
+const message = root.lookupType("User.LoginRequest")
 
 const server = net.createServer((socket) => {
     socket.on('data', (buffer) => {

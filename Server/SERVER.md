@@ -1,5 +1,6 @@
 # 本地服务器
 * [Node.js参考](https://github.com/wugui0220/BLOG)
+* 服务器只作为测试而用
 
 ## 环境准备
 - node
