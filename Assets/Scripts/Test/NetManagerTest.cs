@@ -7,16 +7,39 @@ using UnityEngine.UI;
 
 public class NetManagerTest : MonoBehaviour, IEventReceiver
 {
+    public InputField Host;
+    public InputField Port;
+    public InputField Send;
     public Text MessageText;
+    public Button ConnectBtn;
+    public Button SendBtn;
 
     /// <summary>
     /// 创建的时候添加监听
     /// </summary>
     private void Start()
     {
-        NetManager.Instance.Connect(AppConfig.ServerHost, AppConfig.ServerPort);
+        Host.text = AppConfig.ServerHost;
+        Port.text = AppConfig.ServerPort.ToString();
+        ConnectBtn.onClick.AddListener(OnConnectBtn);
+        SendBtn.onClick.AddListener(OnSendBtn);
         this.AddEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
-        this.AddEventListener(EventMsg.NET_CONNECT_FAILED, OnConnectFailed);
+    }
+    
+    /// <summary>
+    /// 连接服务器
+    /// </summary>
+    private void OnConnectBtn()
+    {
+        NetManager.Instance.Connect(Host.text, int.Parse(Port.text));
+    }
+    
+    /// <summary>
+    /// 发送数据
+    /// </summary>
+    private void OnSendBtn()
+    {
+        NetManager.Instance.Send(Send.text);
     }
 
     /// <summary>
@@ -25,7 +48,6 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     private void OnDestroy()
     {
         this.RemoveEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
-        this.RemoveEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectFailed);
     }
 
     /// <summary>
@@ -35,22 +57,5 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     {
         Debug.Log("连接成功");
         MessageText.text = "Connect Success!";
-    }
-    
-    /// <summary>
-    /// 连接失败
-    /// </summary>
-    private void OnConnectFailed(object obj)
-    {
-        MessageText.text = "Connect Failed!";
-    }
-
-    private void Update()
-    {
-        if (NetManager.Instance.NetState == ENetState.SUCCESS)
-        {
-            //NetManager.Instance.OnConnectSuccess();
-            MessageText.text = "Connect Success!";
-        }
     }
 }

@@ -10,9 +10,9 @@ yarn add protobufjs
 ## Server/server.js
 ``` js
 const net = require('net')
-var protobuf = require("protobufjs")
-var root = protobuf.loadSync("./proto/Example.proto")
-var message = root.lookupType("Proto.Example")
+const protobuf = require("protobufjs")
+const root = protobuf.loadSync("./proto/Example.proto")
+const message = root.lookupType("Proto.Example")
 
 const server = net.createServer((socket) => {
     socket.on('data', (buffer) => {

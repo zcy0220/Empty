@@ -2,7 +2,6 @@
  * 网络管理
  */
 
-using Proto;
 using System;
 using Base.Common;
 using Base.Debug;
@@ -74,6 +73,8 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// </summary>
     private Dictionary<int, List<OnResponse>> mResponseList = new Dictionary<int, List<OnResponse>>();
 
+    private byte[] mReadBuffer = new byte[BUFFERSIZE];
+
     /// <summary>
     /// 连接
     /// </summary>
@@ -115,7 +116,7 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         }
         catch(Exception e)
         {
-            Debugger.LogError("Connect {0} failed! error: {1}", mHost, e.Message);
+            Debugger.LogError("Connect {0}:{1} Failed! error: {2}", mHost, mPort, e.Message);
             this.DispatchEvent(EventMsg.NET_CONNECT_FAILED);
         }
     }
@@ -127,7 +128,8 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     {
         // 网络状态设为连接中
         NetState = ENetState.CONNECTING;
-        //this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
+        this.DispatchEvent(EventMsg.NET_CONNECT_SUCCESS);
+        mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
     }
 
     /// <summary>
@@ -143,6 +145,10 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         //var buf = ProtobufUtil.NSerialize(test);
         //var respond = ProtobufUtil.NDeserialize<Example>(buf);
         //Debugger.Log(respond);
+        var count = mTcpClient.Client.EndReceive(ar);
+        var str = System.Text.Encoding.UTF8.GetString(mReadBuffer, 0, count);
+        Debugger.Log(str);
+        mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
     }
 
     /// <summary>
@@ -161,11 +167,21 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// </summary>
     public void Send<T>(int msgId, T request)
     {
-        if (mTcpClient == null) return;
-        var buffer = ProtobufUtil.NSerialize(request);
-        //mTcpClient.Client.Send(buffer);
-        mStream.Write(buffer, 0, buffer.Length);
-        mStream.Flush();
+        //if (mTcpClient == null) return;
+        //var buffer = ProtobufUtil.NSerialize(request);
+        ////mTcpClient.Client.Send(buffer);
+        //mStream.Write(buffer, 0, buffer.Length);
+        //mStream.Flush();
+    }
+
+    /// <summary>
+    /// 发送String 测试
+    /// </summary>
+    /// <param name="text"></param>
+    public void Send(string text)
+    {
+        var bytes = System.Text.Encoding.Default.GetBytes(text);
+        mTcpClient.Client.Send(bytes);
     }
     
     /// <summary>
@@ -173,6 +189,10 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// </summary>
     private void Update()
     {
+        if (NetState == ENetState.SUCCESS)
+        {
+            OnConnectSuccess();
+        }
     }
 
     #region TEST
@@ -181,12 +201,12 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// </summary>
     public void OnConnectSuccess(object[] param)
     {
-        var request = new Example();
-        request.ExampleInt = 1;
-        request.ExampleFloat = 2.5f;
-        request.ExampleString = "abc";
-        request.ExampleArray = new List<Item>() { new Item() { ItemBool = true, ItemDouble = 3.5 }, new Item() { ItemBool = false, ItemDouble = 4.5 } };
-        Send(0, request);
+        //var request = new Example();
+        //request.ExampleInt = 1;
+        //request.ExampleFloat = 2.5f;
+        //request.ExampleString = "abc";
+        //request.ExampleArray = new List<Item>() { new Item() { ItemBool = true, ItemDouble = 3.5 }, new Item() { ItemBool = false, ItemDouble = 4.5 } };
+        //Send(0, request);
     }
     #endregion
 }
