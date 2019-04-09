@@ -89,6 +89,14 @@ public class BuildScript
         var args = GetArgs();
         PlayerSettings.productName = args["name"];
         PlayerSettings.bundleVersion = args["version"];
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
+        /**
+         * 这里打包AB有个坑，暂时没找到原因，也没看到对出包有什么影响
+         * BuildPipeline.BuildAssetBundles 打完AB包后调用 AssetDatabase.Refresh
+         * 报一个错：Unsupported image when converting from NSImage
+         * 手动调用没问题，shell外部调用时报的一个错
+         */
+        AssetBundleBuilder.Build();
         BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.Android, BuildOptions.None);
     }
 }
