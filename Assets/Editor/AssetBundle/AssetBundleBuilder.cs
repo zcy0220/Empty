@@ -36,7 +36,7 @@ namespace Assets.Editor.AssetBundle
             SetAssetBundleNames();
             BuildAssetBundles();
             ClearAssetBundleNames();
-            AssetDatabase.Refresh();
+            //AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
         }
 
