@@ -28,6 +28,6 @@ namespace Assets.Editor.AssetBundle
         /// <summary>
         /// 构建参数
         /// </summary>
-        public static readonly BuildAssetBundleOptions Options = BuildAssetBundleOptions.ChunkBasedCompression;
+        public static readonly BuildAssetBundleOptions Options = BuildAssetBundleOptions.None;
     }
 }
