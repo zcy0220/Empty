@@ -147,7 +147,7 @@ public class ProtoEditor
         sb.Append(SheetEditor.LineText("public class NetMsg\n{"));
         foreach (var msg in netMsg.list)
         {
-            sb.Append(SheetEditor.LineText("public const int " + (msg.MsgName + "_msg").ToUpper() + " = " + msg.MsgId + ";", 1));
+            sb.Append(SheetEditor.LineText("public const int " + msg.MsgName.ToUpper() + " = " + msg.MsgId + ";", 1));
         }
         sb.Append(SheetEditor.LineText("//=============================================================================", 1));
         sb.Append(SheetEditor.LineText("private static Dictionary<int, Type> MsgIdTypeDict = new Dictionary<int, Type>();\n", 1));
@@ -155,7 +155,7 @@ public class ProtoEditor
         sb.Append(SheetEditor.LineText("{", 1));
         foreach (var msg in netMsg.list)
         {
-            var msgName = (msg.MsgName + "_msg").ToUpper();
+            var msgName = msg.MsgName.ToUpper();
             var str = "MsgIdTypeDict.Add({0}, typeof({1}));";
             sb.Append(SheetEditor.LineText(string.Format(str, msgName, msg.Response), 2));
         }

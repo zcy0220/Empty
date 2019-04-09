@@ -61,13 +61,13 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     ///// </summary>
     //private Thread mRecvThread;
     /// <summary>
-    /// 发送缓存
+    /// 发送环形缓存队列
     /// </summary>
-    private CircularQueue<int> mSendBuffer = new CircularQueue<int>(BUFFERSIZE);
+    private CircularQueue<Protocol> mSendBuffer = new CircularQueue<Protocol>(BUFFERSIZE);
     /// <summary>
     /// 接受缓存
     /// </summary>
-    private CircularQueue<int> mRecvBuffer = new CircularQueue<int>(BUFFERSIZE);
+    //private CircularQueue<int> mRecvBuffer = new CircularQueue<int>(BUFFERSIZE);
     /// <summary>
     /// 网络连接状态
     /// </summary>
@@ -75,9 +75,9 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// <summary>
     /// 协议回来的响应列表
     /// </summary>
-    private Dictionary<int, List<OnResponse>> mResponseList = new Dictionary<int, List<OnResponse>>();
+    //private Dictionary<int, List<OnResponse>> mResponseList = new Dictionary<int, List<OnResponse>>();
 
-    private byte[] mReadBuffer = new byte[BUFFERSIZE];
+    //private byte[] mReadBuffer = new byte[BUFFERSIZE];
 
     /// <summary>
     /// 连接
@@ -153,8 +153,36 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     {
         while(mThreadStateFlag)
         {
-
+            if (!mSendBuffer.IsEmpty)
+            {
+                lock (mSendBuffer)
+                {
+                    var protocol = mSendBuffer.Dequeue();
+                    SendMsg(protocol.MsgId, protocol.Buffer);
+                }
+            }
         }
+    }
+
+    /// <summary>
+    /// 计算包大小，发送给服务器
+    /// </summary>
+    private void SendMsg(int msgId, byte[] buffer)
+    {
+        // 总长度 = 数据包长度所占字节 + 协议号长度 + 协议内容长度
+        var totalSize = 4 + 4 + buffer.Length;
+        // todo 优化
+        // 对象池缓存下ByteBuffer
+        var byteBuffer = new ByteBuffer(totalSize);
+        // 写入数据长度
+        byteBuffer.WriteInt(totalSize - 4);
+        // 写入协议号
+        byteBuffer.WriteInt(msgId);
+        // 写入协议内容
+        byteBuffer.WriteBytes(buffer);
+        // 发送
+        mStream.Write(byteBuffer.GetBytes(), 0, totalSize);
+        mStream.Flush();
     }
 
     /// <summary>
@@ -170,44 +198,31 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         //var buf = ProtobufUtil.NSerialize(test);
         //var respond = ProtobufUtil.NDeserialize<Example>(buf);
         //Debugger.Log(respond);
-        var count = mTcpClient.Client.EndReceive(ar);
-        var str = System.Text.Encoding.UTF8.GetString(mReadBuffer, 0, count);
-        Debugger.Log(str);
+        //var count = mTcpClient.Client.EndReceive(ar);
+        //var str = System.Text.Encoding.UTF8.GetString(mReadBuffer, 0, count);
+        //Debugger.Log(str);
         //mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
     }
-
+    
     /// <summary>
-    /// 断开连接
+    /// 字节流发送协议消息 Lua使用
     /// </summary>
-    public void Disconnect()
+    public void Send(int msgId, byte[] buffer)
     {
-        if (!mThreadStateFlag) return;
-
-        if (mTcpClient != null) mTcpClient.Close();
-
-        mThreadStateFlag = false;
+        var protocol = new Protocol(msgId, buffer);
+        lock (mSendBuffer)
+        {
+            mSendBuffer.Enqueue(protocol);
+        }
     }
 
     /// <summary>
-    /// 发送协议消息
+    /// 发送协议消息 C#使用
     /// </summary>
     public void Send<T>(int msgId, T request)
     {
-        //if (mTcpClient == null) return;
-        //var buffer = ProtobufUtil.NSerialize(request);
-        ////mTcpClient.Client.Send(buffer);
-        //mStream.Write(buffer, 0, buffer.Length);
-        //mStream.Flush();
-    }
-
-    /// <summary>
-    /// 发送String 测试
-    /// </summary>
-    /// <param name="text"></param>
-    public void Send(string text)
-    {
-        var bytes = System.Text.Encoding.Default.GetBytes(text);
-        mTcpClient.Client.Send(bytes);
+        var buffer = ProtobufUtil.NSerialize(request);
+        Send(msgId, buffer);
     }
     
     /// <summary>
@@ -221,18 +236,16 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         }
     }
 
-    #region TEST
     /// <summary>
-    /// 连接成功后测试发送协议
+    /// 断开连接
     /// </summary>
-    public void OnConnectSuccess(object[] param)
+    public void Disconnect()
     {
-        //var request = new Example();
-        //request.ExampleInt = 1;
-        //request.ExampleFloat = 2.5f;
-        //request.ExampleString = "abc";
-        //request.ExampleArray = new List<Item>() { new Item() { ItemBool = true, ItemDouble = 3.5 }, new Item() { ItemBool = false, ItemDouble = 4.5 } };
-        //Send(0, request);
+        if (!mThreadStateFlag) return;
+        mTcpClient.Close();
+        mStream.Close();
+        mThreadStateFlag = false;
+        NetState = ENetState.NONE;
+        mSendThread.Join(1000);
     }
-    #endregion
 }

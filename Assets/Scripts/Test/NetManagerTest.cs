@@ -39,7 +39,7 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     /// </summary>
     private void OnSendBtn()
     {
-        NetManager.Instance.Send(Send.text);
+        NetManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
     }
 
     /// <summary>

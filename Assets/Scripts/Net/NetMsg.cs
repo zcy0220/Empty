@@ -9,13 +9,13 @@ using System.Collections.Generic;
 
 public class NetMsg
 {
-	public const int LOGIN_MSG = 1001;
+	public const int LOGIN = 1001;
 	//=============================================================================
 	private static Dictionary<int, Type> MsgIdTypeDict = new Dictionary<int, Type>();
 
 	public static void Init()
 	{
-		MsgIdTypeDict.Add(LOGIN_MSG, typeof(User.LoginResponse));
+		MsgIdTypeDict.Add(LOGIN, typeof(User.LoginResponse));
 	}
 
 	public static Type GetTypeByMsgId(int msgId)
