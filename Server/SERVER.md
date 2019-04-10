@@ -10,18 +10,37 @@ yarn add protobufjs
 ```
 ## Server/server.js
 ``` js
-const net = require('net')
-const protobuf = require("protobufjs")
-const root = protobuf.loadSync("./proto/Example.proto")
-const message = root.lookupType("Proto.Example")
-
+/**
+ * 因为服务器只是用来测试，所以并没有做粘包分包的处理
+ * todo: 根据长度处理粘包分包，根据协议号处理对应协议内容
+ */
 const server = net.createServer((socket) => {
     socket.on('data', (buffer) => {
-        // 收到客户端消息
-        console.log(message.decode(buffer))
-        // 响应一条数据测试
-        var respond = message.create({ ExampleInt: -1, ExampleFloat: -2.5, ExampleString: 'cba', ExampleArray: [ { ItemDouble: 1.2, ItemBool: true } ] })
-        socket.write(message.encode(respond).finish())
+        //------------------------接收客户端数据测试--------------------------
+        console.log(buffer)
+        var length = buffer.readInt32BE(0);
+        console.log("Length: " + length);
+        var msgId = buffer.readInt32BE(4);
+        console.log("MsgId: " + msgId);
+        var data = buffer.slice(8, buffer.length);
+        console.log(request.decode(data));
+        //------------------------发送服务器数据测试--------------------------
+        var respondData = {
+            Result: 0,
+            User: {
+                Base: { UID: 123, Name: "zcy" },
+                Items: [ { Id: 1, Num: 100 }, { Id: 2, Num: 200 } ]
+            }
+        }
+        var respond = response.create(respondData)
+        var msgBuffer = response.encode(respond).finish()
+        var size = 4 + msgBuffer.length
+        var preBuffer = Buffer.alloc(8)
+        preBuffer.writeInt32BE(size)
+        preBuffer.writeInt32BE(msgId, 4)
+        var sendBuffer = Buffer.concat([preBuffer, msgBuffer])
+        console.log(sendBuffer)
+        socket.write(sendBuffer)
     })
 })
 

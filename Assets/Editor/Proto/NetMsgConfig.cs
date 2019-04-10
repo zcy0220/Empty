@@ -19,7 +19,7 @@ namespace Editor.Proto
         /// </summary>
         public int MsgId;
         /// <summary>
-        /// 协议名(最终是配置名 + "_Msg"后缀再大写)
+        /// 协议名
         /// </summary>
         public string MsgName;
         /// <summary>

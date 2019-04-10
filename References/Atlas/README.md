@@ -1,5 +1,5 @@
 # 图集打包
-* 测试场景：Scenes->Test->SpriteAtlas
+* 测试场景：Scenes->Test->SpriteAtlasTest
 * 打开Sprite Atlas: Edit > Project Setting > Editor > Sprite Packer > Mode > Always Enabled
 * SpriteAtlas和其关联的所有资源打成一个AssetBundle包
 * 建立AssetBundle依赖映射时，如果依赖的Sprite有对应的图集，就改为依赖SpriteAtlas
