@@ -33,7 +33,7 @@ namespace User {
 	[ProtoContract]
 	public class Base {
 		[ProtoMember(1)]
-		public long UID;
+		public int UID;
 		[ProtoMember(2)]
 		public string Name;
 	}
@@ -41,9 +41,9 @@ namespace User {
 	[ProtoContract]
 	public class Item {
 		[ProtoMember(1)]
-		public int id;
+		public int Id;
 		[ProtoMember(2)]
-		public int num;
+		public int Num;
 	}
 
 }

@@ -9,7 +9,7 @@ public class Protocol
     /// </summary>
     public int MsgId { get; private set; }
     /// <summary>
-    /// 协议内容
+    /// 协议内容字节buffer
     /// </summary>
     public byte[] Buffer { get; private set; }
 

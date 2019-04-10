@@ -12,11 +12,6 @@ using System.Threading;
 using System.Collections.Generic;
 
 /// <summary>
-/// 响应委托
-/// </summary>
-public delegate void OnResponse(object obj);
-
-/// <summary>
 /// 网络连接状态
 /// </summary>
 public enum ENetState
@@ -59,7 +54,7 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     ///// <summary>
     ///// 接受线程
     ///// </summary>
-    //private Thread mRecvThread;
+    private Thread mRecvThread;
     /// <summary>
     /// 发送环形缓存队列
     /// </summary>
@@ -67,17 +62,11 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     /// <summary>
     /// 接受缓存
     /// </summary>
-    //private CircularQueue<int> mRecvBuffer = new CircularQueue<int>(BUFFERSIZE);
+    private CircularQueue<Protocol> mRecvBuffer = new CircularQueue<Protocol>(BUFFERSIZE);
     /// <summary>
     /// 网络连接状态
     /// </summary>
     public ENetState NetState { get; private set; }
-    /// <summary>
-    /// 协议回来的响应列表
-    /// </summary>
-    //private Dictionary<int, List<OnResponse>> mResponseList = new Dictionary<int, List<OnResponse>>();
-
-    //private byte[] mReadBuffer = new byte[BUFFERSIZE];
 
     /// <summary>
     /// 连接
@@ -144,6 +133,8 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         mThreadStateFlag = true;
         mSendThread = new Thread(SendFunc);
         mSendThread.Start();
+        mRecvThread = new Thread(RecvFunc);
+        mRecvThread.Start();
     }
     
     /// <summary>
@@ -165,6 +156,41 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
     }
 
     /// <summary>
+    /// 接收线程执行的接收方法
+    /// </summary>
+    private void RecvFunc()
+    {
+        var byteBuffer = ByteBufferPool.Instance.Spawn(ByteConfig.MAX_RECV_SIZE);
+        var buf = byteBuffer.GetBytes();
+        while(mThreadStateFlag)
+        {
+            try
+            {
+                var socket = mTcpClient.Client;
+                var length = mStream.Read(buf, 0, byteBuffer.Capacity);
+                if (length > 8)
+                {
+                    var size = byteBuffer.ReadInt(0);
+                    var msgId = byteBuffer.ReadInt(4);
+                    // todo 优化接收buffer缓存
+                    var recvBuffer = new byte[size - 4];
+                    Buffer.BlockCopy(buf, 8, recvBuffer, 0, size - 4);
+                    var protocol = new Protocol(msgId, recvBuffer);
+                    lock (mRecvBuffer)
+                    {
+                        mRecvBuffer.Enqueue(protocol);
+                    }
+                }
+            }
+            catch
+            {
+                Debugger.LogError("Socket Close!");
+            }
+        }
+        ByteBufferPool.Instance.Recycle(byteBuffer);
+    }
+
+    /// <summary>
     /// 计算包大小，发送给服务器
     /// </summary>
     private void SendMsg(int msgId, byte[] buffer)
@@ -173,7 +199,7 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         var totalSize = 4 + 4 + buffer.Length;
         // todo 优化
         // 对象池缓存下ByteBuffer
-        var byteBuffer = new ByteBuffer(totalSize);
+        var byteBuffer = ByteBufferPool.Instance.Spawn(ByteConfig.MAX_SEND_SIZE);
         // 写入数据长度
         byteBuffer.WriteInt(totalSize - 4);
         // 写入协议号
@@ -183,25 +209,8 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         // 发送
         mStream.Write(byteBuffer.GetBytes(), 0, totalSize);
         mStream.Flush();
-    }
-
-    /// <summary>
-    /// 接收服务器消息
-    /// </summary>
-    private void OnReceive(IAsyncResult ar)
-    {
-        //var respond = ProtobufUtil.NDeserialize<Example>(receiveData);
-        //Debugger.Log(respond);
-        //Debugger.Log("服务器接受:" + respond.ExampleInt);
-        //var test = new Example() { ExampleInt = -1, ExampleFloat = -2.5f, ExampleString = "cba", ExampleArray = new List<Item>() { new Item() { ItemDouble = 1.2, ItemBool = true } } };
-
-        //var buf = ProtobufUtil.NSerialize(test);
-        //var respond = ProtobufUtil.NDeserialize<Example>(buf);
-        //Debugger.Log(respond);
-        //var count = mTcpClient.Client.EndReceive(ar);
-        //var str = System.Text.Encoding.UTF8.GetString(mReadBuffer, 0, count);
-        //Debugger.Log(str);
-        //mTcpClient.Client.BeginReceive(mReadBuffer, 0, BUFFERSIZE, SocketFlags.None, OnReceive, null);
+        // 回收ByteBuffer
+        ByteBufferPool.Instance.Recycle(byteBuffer);
     }
     
     /// <summary>
@@ -234,6 +243,25 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         {
             OnConnectSuccess();
         }
+        HandleRecvMsg();
+    }
+
+    /// <summary>
+    /// 处理接收的消息
+    /// </summary>
+    private void HandleRecvMsg()
+    {
+        if (mRecvBuffer.IsEmpty) return;
+        lock (mRecvBuffer)
+        {
+            var protocol = mRecvBuffer.Dequeue();
+            var msgId = protocol.MsgId;
+            var type = NetMsg.GetTypeByMsgId(msgId);
+            var response = ProtobufUtil.NDeserialize(type, protocol.Buffer);
+            Debugger.Log(msgId);
+            Debugger.Log(response);
+            HandlerEventListener(msgId, response);
+        }
     }
 
     /// <summary>
@@ -247,5 +275,59 @@ public class NetManager : MonoSingleton<NetManager>, IEventDispatcher
         mThreadStateFlag = false;
         NetState = ENetState.NONE;
         mSendThread.Join(1000);
+        mRecvThread.Join(1000);
     }
+
+    #region NetEvent
+    /// <summary>
+    /// 回调委托
+    /// </summary>
+    public delegate void OnResponse(object obj);
+    /// <summary>
+    /// 网络消息回调处理
+    /// 因为这里是监听协议号处理回调的，所以没用EventManager，有空统一归到EventManager管理
+    /// </summary>
+    private Dictionary<int, List<OnResponse>> mResponseListDict = new Dictionary<int, List<OnResponse>>();
+
+    /// <summary>
+    /// 添加协议监听
+    /// </summary>
+    public void AddEventListener(int msgId, OnResponse callback)
+    {
+        if (callback == null) return;
+        if (!mResponseListDict.ContainsKey(msgId))
+        {
+            mResponseListDict.Add(msgId, new List<OnResponse>());
+        }
+        var responseList = mResponseListDict[msgId];
+        if (!responseList.Contains(callback)) responseList.Add(callback);
+    }
+
+    /// <summary>
+    /// 删除协议监听
+    /// </summary>
+    public void RemoveEventListener(int msgId, OnResponse callback)
+    {
+        if (mResponseListDict.ContainsKey(msgId))
+        {
+            var responseList = mResponseListDict[msgId];
+            responseList.Remove(callback);
+        }
+    }
+
+    /// <summary>
+    /// 处理回调
+    /// </summary>
+    private void HandlerEventListener(int msgId, object arg)
+    {
+        if (mResponseListDict.ContainsKey(msgId))
+        {
+            var responseList = mResponseListDict[msgId];
+            foreach (var handler in responseList)
+            {
+                handler(arg);
+            }
+        }
+    }
+    #endregion
 }

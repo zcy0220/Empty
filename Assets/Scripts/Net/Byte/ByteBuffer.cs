@@ -32,9 +32,7 @@ public class ByteBuffer
         mBuffer = new byte[capacity];
     }
 
-    /// <summary>
-    /// 写入int
-    /// </summary>
+    #region Write
     public void WriteInt(int value)
     {
         var pos = UpdateLength(4);
@@ -44,14 +42,18 @@ public class ByteBuffer
         mBuffer[pos + 3] = (byte)(value >> 00 & 0xFF);
     }
 
-    /// <summary>
-    /// 写入字节数组
-    /// </summary>
     public void WriteBytes(byte[] value)
     {
         var pos = UpdateLength(value.Length);
         Buffer.BlockCopy(value, 0, mBuffer, pos, value.Length);
     }
+    #endregion
+    #region Read
+    public int ReadInt(int start)
+    {
+        return (mBuffer[start + 0] << 24 | mBuffer[start + 1] << 16 | mBuffer[start + 2] << 08 | mBuffer[start + 3] << 00);
+    }
+    #endregion
 
     /// <summary>
     /// 更新长度
@@ -73,5 +75,17 @@ public class ByteBuffer
     public byte[] GetBytes()
     {
         return mBuffer;
+    }
+
+    /// <summary>
+    /// 清除回收
+    /// </summary>
+    public void Clear()
+    {
+        mLength = 0;
+        for (var i = 0; i < mBuffer.Length; i++)
+        {
+            mBuffer[i] = 0;
+        }
     }
 }

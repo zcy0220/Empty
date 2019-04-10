@@ -25,13 +25,13 @@ message User
 // 用户基础数据
 message Base
 {
-    required int64 UID = 1;
+    required int32 UID = 1;
     required string Name = 2;
 }
 
 // 背包道具
 message Item
 {
-    required int32 id = 1;
-    required int32 num = 2;
+    required int32 Id = 1;
+    required int32 Num = 2;
 }

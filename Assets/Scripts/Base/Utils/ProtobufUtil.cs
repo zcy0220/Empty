@@ -3,6 +3,7 @@
  */
 
 using ProtoBuf;
+using System;
 using System.IO;
 
 namespace Base.Utils
@@ -37,6 +38,17 @@ namespace Base.Utils
                 t = Serializer.Deserialize<T>(m);
             }
             return t;
+        }
+
+        /// <summary>
+        /// 反序列化pb数据
+        /// </summary>
+        public static object NDeserialize(Type type, byte[] buffer)
+        {
+            using (MemoryStream m = new MemoryStream(buffer))
+            {
+                return Serializer.Deserialize(type, m);
+            }
         }
     }
 }

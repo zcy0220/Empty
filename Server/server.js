@@ -10,15 +10,31 @@ const response = root.lookupType("User.LoginResponse")
  */
 const server = net.createServer((socket) => {
     socket.on('data', (buffer) => {
+        //------------------------接收客户端数据测试--------------------------
+        console.log(buffer)
         var length = buffer.readInt32BE(0);
         console.log("Length: " + length);
         var msgId = buffer.readInt32BE(4);
         console.log("MsgId: " + msgId);
         var data = buffer.slice(8, buffer.length);
         console.log(request.decode(data));
-        //-------------------------------------------------
-        var respond = response.create({ ExampleInt: -1, ExampleFloat: -2.5, ExampleString: 'cba', ExampleArray: [ { ItemDouble: 1.2, ItemBool: true } ] })
-        socket.write(message.encode(respond).finish())
+        //------------------------发送服务器数据测试--------------------------
+        var respondData = {
+            Result: 0,
+            User: {
+                Base: { UID: 123, Name: "zcy" },
+                Items: [ { Id: 1, Num: 100 }, { Id: 2, Num: 200 } ]
+            }
+        }
+        var respond = response.create(respondData)
+        var msgBuffer = response.encode(respond).finish()
+        var size = 4 + msgBuffer.length
+        var preBuffer = Buffer.alloc(8)
+        preBuffer.writeInt32BE(size)
+        preBuffer.writeInt32BE(msgId, 4)
+        var sendBuffer = Buffer.concat([preBuffer, msgBuffer])
+        console.log(sendBuffer)
+        socket.write(sendBuffer)
     })
 })
 

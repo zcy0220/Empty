@@ -150,9 +150,10 @@ public class ProtoEditor
             sb.Append(SheetEditor.LineText("public const int " + msg.MsgName.ToUpper() + " = " + msg.MsgId + ";", 1));
         }
         sb.Append(SheetEditor.LineText("//=============================================================================", 1));
-        sb.Append(SheetEditor.LineText("private static Dictionary<int, Type> MsgIdTypeDict = new Dictionary<int, Type>();\n", 1));
+        sb.Append(SheetEditor.LineText("private static Dictionary<int, Type> MsgIdTypeDict;\n", 1));
         sb.Append(SheetEditor.LineText("public static void Init()", 1));
         sb.Append(SheetEditor.LineText("{", 1));
+        sb.Append(SheetEditor.LineText("MsgIdTypeDict = new Dictionary<int, Type>();", 2));
         foreach (var msg in netMsg.list)
         {
             var msgName = msg.MsgName.ToUpper();
@@ -162,6 +163,7 @@ public class ProtoEditor
         sb.Append(SheetEditor.LineText("}\n", 1));
         sb.Append(SheetEditor.LineText("public static Type GetTypeByMsgId(int msgId)", 1));
         sb.Append(SheetEditor.LineText("{", 1));
+        sb.Append(SheetEditor.LineText("if (MsgIdTypeDict == null) Init();", 2));
         sb.Append(SheetEditor.LineText("if (MsgIdTypeDict.ContainsKey(msgId))", 2));
         sb.Append(SheetEditor.LineText("{", 2));
         sb.Append(SheetEditor.LineText("return MsgIdTypeDict[msgId];", 3));
@@ -175,8 +177,9 @@ public class ProtoEditor
         Debugger.Log("Proto ExportNetMsg Done!");
     }
 
-    //[MenuItem("Tools/Proto/ExportLua")]
-    //public static void ExportLua()
-    //{
-    //}
+    [MenuItem("Tools/Proto/ExportLua")]
+    public static void ExportLua()
+    {
+        // todo
+    }
 }
