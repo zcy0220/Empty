@@ -84,6 +84,7 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     private void OnApplicationQuit()
     {
 #if UNITY_EDITOR
+        GameObject.DestroyImmediate(gameObject);
         NetManager.Instance.Disconnect();
 #endif
     }
