@@ -4,7 +4,11 @@
 * MacOS 10.13.6
 * Unity 2018.2.11f1
 
-## 基础
+## 分支
+* master: C#
+* xlua：C# + xLua
+
+## 目录
 * [代码规范](References/Style/README.md)
 * [表格数据](References/Excel/README.md)
 * [资源打包](References/Asset/ASSETBUNDLE.md)
@@ -15,6 +19,4 @@
 * [Lua](References/Lua/README.md)
 * [Jenkins](References/Jenkins/README.md)
 * [Bugly](References/Bugly/README.md)
-
-## 拓展
 * [无限循环列表](References/Extension/SCROLL.md)

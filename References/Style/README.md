@@ -1,5 +1,6 @@
 # 代码规范示例
 
+## C#代码规范
 ~~~c#
 /**
  * 程序说明
@@ -10,7 +11,7 @@
 /// </summary>
 using UnityEngine;
 
-public class ProgramingStyle : MonoBehaviour
+public class Example : MonoBehaviour
 {
     #region Abbreviation
     /**
@@ -45,4 +46,25 @@ public class ProgramingStyle : MonoBehaviour
         var go = transform.Find("Example").gameObject
     }
 }
+~~~
+
+## Lua代码规范
+~~~lua
+-- 系统功能扩展：保持与原功能的风格一致，使用小写，如string的拓展：string.split
+-- 逻辑功能命名：保持与C#代码规范一致，采用大写驼峰式命名
+--------------------------------示例---------------------------------------
+--[[
+    @desc: 程序说明
+]]
+
+local Example = Class("Example")
+
+-- 方法说明（全部为局部）
+local function ExampleFunc()
+end
+
+-- 方法导出（都定义在底部）
+Example.ExampleFunc = ExampleFunc
+
+return Example
 ~~~
