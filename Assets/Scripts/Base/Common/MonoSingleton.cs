@@ -23,5 +23,14 @@ namespace Base.Common
                 return mInstance;
             }
         }
+
+        public void Destroy()
+        {
+            Dispose();
+            GameObject.Destroy(gameObject);
+            mInstance = null;
+        }
+
+        public virtual void Dispose() { }
     }
 }
