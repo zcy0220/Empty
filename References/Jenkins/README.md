@@ -18,29 +18,11 @@
 * sudo chown -R 用户名:群组名 /Users/Shared/Jenkins/
 * sudo chown -R 用户名:群组名 /var/log/jenkins/
 * sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist
+* 重启电脑手动启动：java -jar jenkins.war
 
-## Jenkins打包Android
-* 项目名、项目路径、版本号配置在Jenkins的参数化构建里
-~~~sh
-#!/bin/bash
-cd $PROJECT_PATH
-#Git重置本地变化 拉取远程
-git clean -df
-git reset --hard
-git pull
-#UNITY程序的路径
-UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
-#导出路径
-OUT_PATH=Builds/$PROJECT_NAME$VERSION.apk
-#构建项目
-$UNITY_PATH -projectPath $PROJECT_PATH -executeMethod BuildScript.BuildForAndroid @out=$OUT_PATH @name=$PROJECT_NAME @version=$VERSION -quit
-if [ $? -eq 0 ]; then
-    echo "Unity build success"
-else
-    echo "Unity build failed"
-    exit 1
-fi
-~~~
+## 上传fir.im
+* Mac上安装：sudo gem install fir-cli
+* fir publish path -T token
 
 ## C#构建核心代码
 ~~~C#
@@ -100,4 +82,39 @@ public class BuildScript
         BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.Android, BuildOptions.None);
     }
 }
+~~~
+
+## Jenkins打包Android
+* 项目名、项目路径、版本号配置在Jenkins的参数化构建里
+~~~sh
+#!/bin/bash
+cd $PROJECT_PATH
+#Git重置本地变化 拉取远程
+git clean -df
+git reset --hard
+git pull
+#UNITY程序的路径
+UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+#导出路径
+OUT_PATH=Builds/$PROJECT_NAME$VERSION.apk
+#构建项目
+$UNITY_PATH -projectPath $PROJECT_PATH -executeMethod BuildScript.BuildForAndroid @out=$OUT_PATH @name=$PROJECT_NAME @version=$VERSION -quit
+if [ $? -eq 0 ]; then
+    echo "Unity build success"
+else
+    echo "Unity build failed"
+    exit 1
+fi
+
+#上传fir.im
+echo "Upload to fir.im start"
+fir publish $OUT_PATH -T ${FIRIM_TOKEN}
+if [ $? -eq 0 ]; then
+    echo "Upload to fir.im success"
+else
+    echo "Upload to fir.im failed"
+    exit 1
+fi
+
+echo "Done!"
 ~~~
