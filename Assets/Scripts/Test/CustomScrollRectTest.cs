@@ -2,6 +2,7 @@
  * 自定义ScrollRect测试
  */
 
+using Base.Custom;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
