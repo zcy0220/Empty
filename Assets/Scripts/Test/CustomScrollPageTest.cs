@@ -26,4 +26,9 @@ public class CustomScrollPageTest : MonoBehaviour
             mCurPoint.color = White;
         };
     }
+
+    public void OnTestBtn()
+    {
+        Debug.Log("测试滚动页内的按钮是否会影响滚动操作");
+    }
 }

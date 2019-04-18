@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 
 namespace Base.Custom
 {
-    public class CustomScrollPage : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class CustomScrollPage : CustomScrollBase
     {
         public RectTransform Content;
         public int Count = 0;
@@ -30,16 +30,17 @@ namespace Base.Custom
         /// <summary>
         /// 开始滑动
         /// </summary>
-        public void OnBeginDrag(PointerEventData eventData)
+        public override void OnBeginDrag(PointerEventData eventData)
         {
             mNeedMove = false;
+            mSmoothSpeed = 0;
             mBeginPostion = Content.localPosition;
         }
 
         /// <summary>
         /// 滑动
         /// </summary>
-        public void OnDrag(PointerEventData eventData)
+        public override void OnDrag(PointerEventData eventData)
         {
             var delta = eventData.position - eventData.pressPosition;
             if (Horizontal)
@@ -55,7 +56,7 @@ namespace Base.Custom
         /// <summary>
         /// 拖动结束后判断是否翻页
         /// </summary>
-        public void OnEndDrag(PointerEventData eventData)
+        public override void OnEndDrag(PointerEventData eventData)
         {
             var delta = eventData.position - eventData.pressPosition;
             if (Horizontal)
@@ -94,6 +95,7 @@ namespace Base.Custom
             else
             {
                 mNeedMove = false;
+                Content.localPosition = new Vector3(targetPosX, Content.localPosition.y, 0);
             }
         }
     }
