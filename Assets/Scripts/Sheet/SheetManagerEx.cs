@@ -5,7 +5,6 @@
 using UnityEngine;
 using Base.Common;
 using Base.Utils;
-using Base.Debug;
 
 public partial class SheetManager : Singleton<SheetManager>
 {
