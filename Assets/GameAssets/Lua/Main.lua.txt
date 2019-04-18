@@ -1,9 +1,0 @@
---[[
-    @desc: Lua主入口
-]]
-
--- local breakSocketHandle,debugXpCall = require("LuaDebug")("localhost",7003)
-function Sum(a, b)
-    print("a: " .. a, "b: " .. b)
-    return a + b
-end
