@@ -52,4 +52,15 @@ public class BuildScript
         AssetBundleBuilder.Build();
         BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.Android, BuildOptions.None);
     }
+
+    /// <summary>
+    /// Builds for ios.
+    /// </summary>
+    public static void BuildForIOS()
+    {
+        var args = GetArgs();
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.iOS, BuildTarget.iOS);
+        AssetBundleBuilder.Build();
+        BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.iOS, BuildOptions.None);
+    }
 }
