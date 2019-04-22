@@ -43,9 +43,9 @@ namespace Base.Utils
         /// <summary>
         /// 反序列化pb数据
         /// </summary>
-        public static object NDeserialize(Type type, byte[] buffer)
+        public static object NDeserialize(Type type, byte[] buffer, int index)
         {
-            using (MemoryStream m = new MemoryStream(buffer))
+            using (MemoryStream m = new MemoryStream(buffer, index, buffer.Length - index))
             {
                 return Serializer.Deserialize(type, m);
             }
