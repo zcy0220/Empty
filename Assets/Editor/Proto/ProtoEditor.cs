@@ -19,13 +19,13 @@ public class ProtoEditor
     /// <summary>
     /// Proto转CS的路径
     /// </summary>
-    private static string OUTCSPATH = "Assets/Scripts/Net/Proto";
+    private static string OUTCSPATH = "Assets/Scripts/Proto";
     /// <summary>
     /// 自动生成的NetMsg协议号和协议类型映射关系
     /// NetMsgConfig只是用来手动协议号和协议的配置文件
     /// </summary>
     private static string NETMSGCONFIG = "Server/NetMsgConfig.json";
-    private static string OUTNETMSGPATH = "Assets/Scripts/Net/NetMsg.cs";
+    private static string OUTNETMSGPATH = OUTCSPATH + "/NetMsg.cs";
 
     /// <summary>
     /// Proto -> CS
@@ -94,17 +94,17 @@ public class ProtoEditor
             // 写入
             Base.Utils.FileUtil.WriteAllText(OUTCSPATH + "/" + fileName + ".cs", sb.ToString());
         }
-        // 删除没用的协议
-        var csProtoDir = new DirectoryInfo(OUTCSPATH);
-        var csFiles = csProtoDir.GetFiles();
-        foreach(var file in csFiles)
-        {
-            var fileName = file.Name.Replace(file.Extension, "");
-            if (!fileSet.Contains(fileName))
-            {
-                FileUtil.DeleteFileOrDirectory(file.FullName);
-            }
-        }
+        //删除没用的协议 这里把NetMsg.cs和协议放在了一些，暂时手动删除没用的协议
+        //var csProtoDir = new DirectoryInfo(OUTCSPATH);
+        //var csFiles = csProtoDir.GetFiles();
+        //foreach(var file in csFiles)
+        //{
+        //    var fileName = file.Name.Replace(file.Extension, "");
+        //    if (!fileSet.Contains(fileName))
+        //    {
+        //        FileUtil.DeleteFileOrDirectory(file.FullName);
+        //    }
+        //}
         AssetDatabase.Refresh();
         Debugger.Log("Proto ExportCS Done!");
     }

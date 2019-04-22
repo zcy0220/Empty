@@ -13,6 +13,7 @@ public class NetworkManagerTest : MonoBehaviour, IEventReceiver
     public InputField Send;
     public Button ConnectBtn;
     public Button SendBtn;
+    public Button CloseBtn;
 
     /// <summary>
     /// 创建的时候添加监听
@@ -23,6 +24,7 @@ public class NetworkManagerTest : MonoBehaviour, IEventReceiver
         Port.text = AppConfig.ServerPort.ToString();
         ConnectBtn.onClick.AddListener(OnConnectBtn);
         SendBtn.onClick.AddListener(OnSendBtn);
+        CloseBtn.onClick.AddListener(OnCloseBtn);
         NetworkManager.Instance.AddNetMsgEventListener(NetMsg.LOGIN, OnLogin);
     }
     
@@ -40,6 +42,14 @@ public class NetworkManagerTest : MonoBehaviour, IEventReceiver
     private void OnSendBtn()
     {
         NetworkManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
+    }
+
+    /// <summary>
+    /// 主动关闭连接
+    /// </summary>
+    private void OnCloseBtn()
+    {
+        NetworkManager.Instance.Close();
     }
 
     /// <summary>
@@ -72,8 +82,8 @@ public class NetworkManagerTest : MonoBehaviour, IEventReceiver
     private void OnApplicationQuit()
     {
 #if UNITY_EDITOR
-        GameObject.DestroyImmediate(gameObject);
         NetworkManager.Instance.Close();
+        GameObject.DestroyImmediate(gameObject);
 #endif
     }
 }

@@ -20,7 +20,7 @@ public class ByteBuffer
     private byte[] mBuffer;
     //=========================================================
     public int Capacity { get { return mCapacity; } }
-    public int Size { get { return mLength; } }
+    public int Length { get { return mLength; } }
 
     /// <summary>
     /// 构造

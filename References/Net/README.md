@@ -1,6 +1,6 @@
 # 网络层
 * [构建本地服务器](../../Server/SERVER.md)
-* 测试场景：Scenes->Test->NetManagerTest
+* 测试场景：Scenes->Test->NetworkManagerTest
 * Server/proto：确定协议内容
 * Server/NetMsgConfig：确定协议号与协议的对应配置
 * Tools/Proto/ExportCSNetMsg：自动导出
@@ -58,11 +58,11 @@ message Item
 /// <summary>
 /// 发送数据
 /// </summary>
-// NetManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
+// NetworkManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
 /// <summary>
 /// 监听服务器的消息回调
 /// </summary>
-// NetManager.Instance.AddEventListener(NetMsg.LOGIN, OnLogin);
+// NetworkManager.Instance.AddNetMsgEventListener(NetMsg.LOGIN, OnLogin);
 /// <summary>
 /// 登录成功监听
 /// </summary>

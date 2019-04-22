@@ -98,9 +98,9 @@ public class NetworkManager : MonoSingleton<NetworkManager>
         mSocketState = ESocketState.CLOSED;
         try
         {
-            StopAllThread();
             mSocket.Close();
             mSocket = null;
+            StopAllThread();
         }
         catch (Exception e)
         {
@@ -196,11 +196,10 @@ public class NetworkManager : MonoSingleton<NetworkManager>
         {
             try
             {
-                var leftBufferLength = byteBuffer.Size - curBufferLength;
+                var leftBufferLength = byteBuffer.Capacity - curBufferLength;
                 var readLength = mSocket.Receive(byteBuffer.GetBytes(), curBufferLength, leftBufferLength, SocketFlags.None);
                 if (readLength > 0)
                 {
-                    Debugger.Log(readLength);
                     curBufferLength += readLength;
                     DoReceive(byteBuffer, ref curBufferLength);
                 }
@@ -254,7 +253,9 @@ public class NetworkManager : MonoSingleton<NetworkManager>
             lock (mReceiveLock)
             {
                 var data = mReceiveMsgQueue.Dequeue();
-                var msgId = BitConverter.ToInt32(data, 0);
+                // BitConverter.ToInt32(data, 0) 有大端和小端问题，不如直接手动转
+                var msgId = BytesUtil.ReadInt(data, 0);
+                // NetMsg里定义了协议Id和协议类型的映射，所有比较耦合
                 var type = NetMsg.GetTypeByMsgId(msgId);
                 var response = ProtobufUtil.NDeserialize(type, data, sizeof(int));
                 Debugger.Log(msgId);
@@ -269,6 +270,8 @@ public class NetworkManager : MonoSingleton<NetworkManager>
     /// </summary>
     public void StopAllThread()
     {
+        mSendMsgQueue.Clear();
+        mReceiveMsgQueue.Clear();
         if (mSendThread != null)
         {
             mSendWork = false;
@@ -284,6 +287,9 @@ public class NetworkManager : MonoSingleton<NetworkManager>
         }
     }
 
+    /// <summary>
+    /// 主线程Update处理UI相关
+    /// </summary>
     private void Update()
     {
         HandleRecvMsg();
