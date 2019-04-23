@@ -6,14 +6,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using Base.Debug;
 
-public class NetManagerTest : MonoBehaviour, IEventReceiver
+public class NetworkManagerTest : MonoBehaviour, IEventReceiver
 {
     public InputField Host;
     public InputField Port;
     public InputField Send;
-    public Text MessageText;
     public Button ConnectBtn;
     public Button SendBtn;
+    public Button CloseBtn;
 
     /// <summary>
     /// 创建的时候添加监听
@@ -24,8 +24,8 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
         Port.text = AppConfig.ServerPort.ToString();
         ConnectBtn.onClick.AddListener(OnConnectBtn);
         SendBtn.onClick.AddListener(OnSendBtn);
-        this.AddEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
-        NetManager.Instance.AddEventListener(NetMsg.LOGIN, OnLogin);
+        CloseBtn.onClick.AddListener(OnCloseBtn);
+        NetworkManager.Instance.AddNetMsgEventListener(NetMsg.LOGIN, OnLogin);
     }
     
     /// <summary>
@@ -33,7 +33,7 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     /// </summary>
     private void OnConnectBtn()
     {
-        NetManager.Instance.Connect(Host.text, int.Parse(Port.text));
+        NetworkManager.Instance.Connect(Host.text, int.Parse(Port.text));
     }
     
     /// <summary>
@@ -41,7 +41,15 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     /// </summary>
     private void OnSendBtn()
     {
-        NetManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
+        NetworkManager.Instance.Send(NetMsg.LOGIN, new User.LoginRequest() { Account = "TestUser" });
+    }
+
+    /// <summary>
+    /// 主动关闭连接
+    /// </summary>
+    private void OnCloseBtn()
+    {
+        NetworkManager.Instance.Close();
     }
 
     /// <summary>
@@ -49,17 +57,7 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     /// </summary>
     private void OnDestroy()
     {
-        this.RemoveEventListener(EventMsg.NET_CONNECT_SUCCESS, OnConnectSuccess);
-        NetManager.Instance.RemoveEventListener(NetMsg.LOGIN, OnLogin);
-    }
-
-    /// <summary>
-    /// 连接成功
-    /// </summary>
-    private void OnConnectSuccess(object obj)
-    {
-        Debugger.Log("连接成功");
-        MessageText.text = "Connect Success!";
+        NetworkManager.Instance.RemoveNetMsgEventListener(NetMsg.LOGIN, OnLogin);
     }
 
     /// <summary>
@@ -84,8 +82,8 @@ public class NetManagerTest : MonoBehaviour, IEventReceiver
     private void OnApplicationQuit()
     {
 #if UNITY_EDITOR
+        NetworkManager.Instance.Close();
         GameObject.DestroyImmediate(gameObject);
-        NetManager.Instance.Disconnect();
 #endif
     }
 }

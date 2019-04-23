@@ -18,16 +18,12 @@ public class ByteBufferPool : Singleton<ByteBufferPool>
     /// <param name="capacity"></param>
     public ByteBuffer Spawn(int capacity)
     {
-        // 主要是发送线程和接收线程使用，所以lock
-        lock(mByteBufferQueueDict)
+        if (mByteBufferQueueDict.ContainsKey(capacity))
         {
-            if (mByteBufferQueueDict.ContainsKey(capacity))
+            var queue = mByteBufferQueueDict[capacity];
+            if (queue.Count > 0)
             {
-                var queue = mByteBufferQueueDict[capacity];
-                if (queue.Count > 0)
-                {
-                    return queue.Dequeue();
-                }
+                return queue.Dequeue();
             }
         }
         return new ByteBuffer(capacity);
