@@ -80,7 +80,7 @@ UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 #导出路径
 OUT_PATH=Builds/$PROJECT_NAME$VERSION.apk
 #构建项目
-$UNITY_PATH -projectPath $PROJECT_PATH -executeMethod BuildScript.BuildForAndroid @out=$OUT_PATH @name=$PROJECT_NAME @version=$VERSION -quit
+$UNITY_PATH -projectPath $PROJECT_PATH -batchmode -executeMethod BuildScript.BuildForAndroid @out=$OUT_PATH @name=$PROJECT_NAME @version=$VERSION -quit
 if [ $? -eq 0 ]; then
     echo "Unity build success"
 else
