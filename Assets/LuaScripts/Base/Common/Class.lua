@@ -1,7 +1,10 @@
 --[[
-    @desc:类定义
+    @desc:参考的quick-cocos2d
 ]]
 
+--[[
+    @desc: 拷贝对象
+]]
 function clone(object)
     local lookup_table = {}
     local function _copy(object)
@@ -20,15 +23,29 @@ function clone(object)
     return _copy(object)
 end
 
+--[[
+    @desc: 类定义
+]]
 function Class(classname, super)
-    local cls = (super and clone(super)) or {ctor = function() end}
+    local cls
+
+    if super then
+        cls = clone(super)
+        cls.super = super
+    else
+        cls = {ctor = function() end}
+    end
+
     cls.super = super
     cls.__cname = classname
     cls.__index = cls
+
     cls.new = function(...)
         local instance = setmetatable({}, cls)
         instance.class = cls
         instance:ctor(...)
         return instance   
     end
+
+    return cls
 end

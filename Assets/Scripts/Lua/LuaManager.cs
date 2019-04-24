@@ -1,5 +1,7 @@
 ﻿/**
  * Lua管理
+ * 1.编辑模式下：Assets/LuaScripts
+ * 2.AssetBundle：*.lua -> *.lua.bytes 并移到Assets/GameAssets/LuaScripts目录下进行AB打包
  */
 
 using XLua;
@@ -13,7 +15,7 @@ public class LuaManager : MonoSingleton<LuaManager>
     /// <summary>
     /// lua脚本路径
     /// </summary>
-    const string LUASCRIPTFOLDER = "GameAssets/Lua";
+    const string LUASCRIPTFOLDER = "LuaScripts";
     /// <summary>
     /// Lua脚本入口
     /// </summary>
@@ -96,13 +98,17 @@ public class LuaManager : MonoSingleton<LuaManager>
     {
         filepath = filepath.Replace(".", "/") + ".lua";
         var scriptPath = StringUtil.PathConcat(LUASCRIPTFOLDER, filepath);
-        //if (!AppConfig.UseAssetBundle)
-        //{
-        //    return FileUtil.ReadAllText
-        //}
-        var asset = ResourceManager.Instance.SyncLoad<TextAsset>(filepath);
-        if (asset != null) return asset.bytes;
-        Debugger.LogError("Load lua script failed: " + scriptPath);
-        return null;
+        if (AppConfig.UseAssetBundle)
+        {
+            scriptPath = StringUtil.Concat(scriptPath, ".bytes");
+            var asset = ResourceManager.Instance.SyncLoad<TextAsset>(scriptPath);
+            if (asset != null) return asset.bytes;
+            Debugger.LogError("Load lua script failed: " + scriptPath);
+            return null;
+        }
+        else
+        {
+            return FileUtil.ReadAllBytes(StringUtil.PathConcat(Application.dataPath, scriptPath));
+        }
     }
 }
