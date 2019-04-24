@@ -2,7 +2,6 @@
  * 字节数组处理工具
  */
 
-
 namespace Base.Utils
 {
     public class BytesUtil
