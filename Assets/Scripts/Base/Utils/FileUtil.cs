@@ -87,7 +87,7 @@ namespace Base.Utils
         }
         
         /// <summary>
-        /// 读取资源
+        /// Read Text
         /// </summary>
         public static string ReadAllText(string inFile)
         {
@@ -101,6 +101,25 @@ namespace Base.Utils
             catch (System.Exception e)
             {
                 Debugger.LogError("ReadAllText failed! path = {0} with err = {1}", inFile, e.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Read Bytes
+        /// </summary>
+        public static byte[] ReadAllBytes(string inFile)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(inFile)) return null;
+                if (!File.Exists(inFile)) return null;
+                File.SetAttributes(inFile, FileAttributes.Normal);
+                return File.ReadAllBytes(inFile);
+            }
+            catch (System.Exception e)
+            {
+                Debugger.LogError("ReadAllBytes failed! path = {0} with err = {1}", inFile, e.Message);
                 return null;
             }
         }

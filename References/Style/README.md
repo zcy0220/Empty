@@ -60,7 +60,7 @@ public class Example : MonoBehaviour
 local Example = Class("Example")
 
 -- 方法说明（全部为局部）
-local function ExampleFunc()
+local function ExampleFunc(self)
 end
 
 -- 方法导出（都定义在底部）

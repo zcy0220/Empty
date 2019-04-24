@@ -3,8 +3,7 @@
 
 ## 注意事项和建议
 * Jenkins默认安装在/Users/Shared/Jenkins，并没有自己用户的权限，最好修改主目录到登录用户下
-* 能写在shell里的尽量写在shell里面。Jenkins确实提供了很多配置，但项目久了回头来看时，东一项西一项的反而容易乱
-* 不要为了拓展性，而把所有能配置的参数都暴露在外面配置。一些你认为要配置的信息，对于打包的交接人来说并不需要
+* 少用Jenkins插件，能写在shell里的尽量写在shell里面
 
 ## C#构建核心代码
 ~~~C#
@@ -100,3 +99,6 @@ fi
 
 echo "Done!"
 ~~~
+
+## Jenkins打包IOS
+* 密钥证书管理插件：Keychains and Provisioning Profiles Management
