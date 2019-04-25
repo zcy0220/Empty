@@ -5,7 +5,7 @@
 --[[
     @desc: 拷贝对象
 ]]
-function clone(object)
+function Clone(object)
     local lookup_table = {}
     local function _copy(object)
         if type(object) ~= "table" then
@@ -30,7 +30,7 @@ function Class(classname, super)
     local cls
 
     if super then
-        cls = clone(super)
+        cls = Clone(super)
         cls.super = super
     else
         cls = {ctor = function() end}
