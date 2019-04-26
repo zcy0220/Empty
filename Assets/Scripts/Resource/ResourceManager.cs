@@ -6,7 +6,6 @@ using Base.Common;
 using UnityEngine;
 using Base.Debug;
 using System.Collections.Generic;
-using Base.Collections;
 
 public class ResourceManager : MonoSingleton<ResourceManager>
 {
@@ -21,7 +20,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     /// <summary>
     /// 缓存引用计数为0的资源, 达到缓存上限时情掉最早没用的资源(尾部资源)
     /// </summary>
-    private DoubleLinkedList<ResourceUnit> mNoRefResourceUnitDList = new DoubleLinkedList<ResourceUnit>();
+    private LinkedList<ResourceUnit> mNoRefResourceUnitLinkedList = new LinkedList<ResourceUnit>();
     /// <summary>
     /// 最大资源缓存数（视具体项目而定）
     /// </summary>
@@ -110,14 +109,14 @@ public class ResourceManager : MonoSingleton<ResourceManager>
     private void ClearNoRefCache()
     {
         // 缓存达到上限时，释放一半缓存
-        if (mNoRefResourceUnitDList.Count > MAXCACHECOUNT)
+        if (mNoRefResourceUnitLinkedList.Count > MAXCACHECOUNT)
         {
-            while(mNoRefResourceUnitDList.Count > MAXCACHECOUNT / 2)
+            while(mNoRefResourceUnitLinkedList.Count > MAXCACHECOUNT / 2)
             {
-                var tail = mNoRefResourceUnitDList.Tail;
-                if (tail != null && tail.Current != null)
+                var tail = mNoRefResourceUnitLinkedList.Last;
+                if (tail != null && tail.Value != null)
                 {
-                    Unload(tail.Current.Path, true);
+                    Unload(tail.Value.Path, true);
                 }
             }
         }
@@ -136,7 +135,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         {
             if (unit.NoRefNode != null)
             {
-                mNoRefResourceUnitDList.RemoveNode(unit.NoRefNode);
+                mNoRefResourceUnitLinkedList.Remove(unit.NoRefNode);
                 unit.NoRefNode = null;
             }
             mResourceUnitDict.Remove(path);
@@ -148,7 +147,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         if (unit.RefCount <= 0)
         {
             // 不是马上销毁的资源存入未引用列表中
-            unit.NoRefNode = mNoRefResourceUnitDList.AddToHead(unit);
+            unit.NoRefNode = mNoRefResourceUnitLinkedList.AddFirst(unit);
         }
     }
 
@@ -163,7 +162,7 @@ public class ResourceManager : MonoSingleton<ResourceManager>
             // 当资源重新被引用的时候，从未引用列表中删除
             if (unit.RefCount <= 0 && unit.RefCount + refCount > 0 && unit.NoRefNode != null)
             {
-                mNoRefResourceUnitDList.RemoveNode(unit.NoRefNode);
+                mNoRefResourceUnitLinkedList.Remove(unit.NoRefNode);
                 unit.NoRefNode = null;
             }
             unit.RefCount += refCount;
@@ -221,5 +220,5 @@ public class ResourceUnit
     /// <summary>
     /// 当计数减为0，移入到NoRefResourceUnitDList的节点
     /// </summary>
-    public DoubleLinkedListNode<ResourceUnit> NoRefNode;
+    public LinkedListNode<ResourceUnit> NoRefNode;
 }

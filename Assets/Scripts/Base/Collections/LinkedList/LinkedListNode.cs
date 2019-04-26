@@ -4,19 +4,19 @@
 
 namespace Base.Collections
 {
-    public class DoubleLinkedListNode<T> where T : class, new()
+    public class LinkedListNode<T> where T : class, new()
     {
         /// <summary>
         /// 前置节点
         /// </summary>
-        public DoubleLinkedListNode<T> Prev;
+        public LinkedListNode<T> Previous;
         /// <summary>
         /// 后置节点
         /// </summary>
-        public DoubleLinkedListNode<T> Next;
+        public LinkedListNode<T> Next;
         /// <summary>
         /// 当前节点
         /// </summary>
-        public T Current;
+        public T Value;
     }
 }
