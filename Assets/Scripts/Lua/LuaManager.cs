@@ -5,10 +5,12 @@
  */
 
 using XLua;
+using System;
 using Base.Common;
 using Base.Debug;
 using Base.Utils;
 using UnityEngine;
+using Base.Extension;
 
 public class LuaManager : MonoSingleton<LuaManager>
 {
@@ -24,6 +26,10 @@ public class LuaManager : MonoSingleton<LuaManager>
     /// lua环境
     /// </summary>
     private LuaEnv mLuaEnv;
+    /// <summary>
+    /// Lua暂时先只用Update
+    /// </summary>
+    private Action<float> mLuaUpdate;
     
     /// <summary>
     /// 初始化Lua虚拟器环境
@@ -62,8 +68,10 @@ public class LuaManager : MonoSingleton<LuaManager>
     {
         LoadScript(LUAMAINSCRIPT);
         ExecuteScript("GameMain.Start()");
+        var updater = gameObject.GetOrAddComponent<LuaUpdater>();
+        updater.Init(mLuaEnv);
     }
-    
+
     /// <summary>
     /// 加载脚本
     /// </summary>
@@ -88,6 +96,15 @@ public class LuaManager : MonoSingleton<LuaManager>
                 Debugger.LogError(e.Message);
             }
         }
+    }
+
+    /// <summary>
+    /// Update
+    /// </summary>
+    private void Update()
+    {
+        if (mLuaUpdate != null) mLuaUpdate(Time.deltaTime);
+        if (mLuaEnv != null) mLuaEnv.Tick();
     }
 
     /// <summary>
