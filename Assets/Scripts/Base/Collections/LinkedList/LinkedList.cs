@@ -95,7 +95,7 @@ namespace Base.Collections
         /// <summary>
         /// 删除节点
         /// </summary>
-        public void RemoveNode(LinkedListNode<T> node)
+        public void Remove(LinkedListNode<T> node)
         {
             if (node == null) return;
             if (node == First) First = node.Next;
@@ -111,7 +111,7 @@ namespace Base.Collections
         /// <summary>
         /// 把节点移动到头部
         /// </summary>
-        public void MoveToHead(LinkedListNode<T> node)
+        public void MoveToFirst(LinkedListNode<T> node)
         {
             if (node == null || node == First) return;
             if (node.Previous == null && node.Next == null) return;
@@ -131,7 +131,7 @@ namespace Base.Collections
         {
             while(Last != null)
             {
-                RemoveNode(Last);
+                Remove(Last);
             }
         }
     }
