@@ -26,7 +26,7 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     /// AssetBundleUnit的类对象池
     /// </summary>
-    private ClassObjectPool<AssetBundleUnit> mAssetBundleUnitPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleUnit>();
+    private ClassObjectPool<AssetBundleUnit> mAssetBundleUnitPool = ClassObjectManager.Instance.GetOrCreateClassPool<AssetBundleUnit>();
     /// <summary>
     /// AssetBundle异步加载队列
     /// </summary>
@@ -42,15 +42,15 @@ public class AssetBundleManager : MonoSingleton<AssetBundleManager>
     /// <summary>
     /// 资源加载请求AssetLoadRequest类对象池
     /// </summary>
-    private ClassObjectPool<AssetLoadRequest> mAssetLoadRequestPool = ObjectManager.Instance.GetOrCreateClassPool<AssetLoadRequest>();
+    private ClassObjectPool<AssetLoadRequest> mAssetLoadRequestPool = ClassObjectManager.Instance.GetOrCreateClassPool<AssetLoadRequest>();
     /// <summary>
     /// AssetLoader类对象池
     /// </summary>
-    private ClassObjectPool<AssetLoader> mAssetLoaderPool = ObjectManager.Instance.GetOrCreateClassPool<AssetLoader>();
+    private ClassObjectPool<AssetLoader> mAssetLoaderPool = ClassObjectManager.Instance.GetOrCreateClassPool<AssetLoader>();
     /// <summary>
     /// AssetBundleLoader类对象
     /// </summary>
-    private ClassObjectPool<AssetBundleLoader> mAssetBundleLoaderPool = ObjectManager.Instance.GetOrCreateClassPool<AssetBundleLoader>();
+    private ClassObjectPool<AssetBundleLoader> mAssetBundleLoaderPool = ClassObjectManager.Instance.GetOrCreateClassPool<AssetBundleLoader>();
     /// <summary>
     /// 同时在异步加载的资源上限
     /// </summary>
