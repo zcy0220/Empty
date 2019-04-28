@@ -56,6 +56,7 @@ public class LuaManager : MonoSingleton<LuaManager>
     {
         if (mLuaEnv != null)
         {
+            ExecuteScript("GameMain.Dispose()");
             mLuaEnv.Dispose();
             mLuaEnv = null;
         }

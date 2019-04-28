@@ -24,4 +24,5 @@ GameMain.Dispose = Dispose
 -- C# LuaUpdater调用(这里混了一个全局方法不是很好，但主要是放在其他地方不直观)
 function Update(deltaTime, unscaledDeltaTime)
     UpdateManager:Instance():Update(deltaTime, unscaledDeltaTime)
+    TimerManager:Instance():Update(deltaTime)
 end
