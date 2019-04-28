@@ -22,7 +22,7 @@ namespace Base.Timer
         /// <summary>
         /// 定时器对象池缓存
         /// </summary>
-        private ClassObjectPool<Timer> mTimerPool = ObjectManager.Instance.GetOrCreateClassPool<Timer>();
+        private ClassObjectPool<Timer> mTimerPool = ClassObjectManager.Instance.GetOrCreateClassPool<Timer>();
 
         /// <summary>
         /// 创建定时器

@@ -55,7 +55,7 @@ namespace Base.Timer
             mUnScale = unScale;
             mFinishAction = finishAction;
             mRunning = false;
-            mIsOver = false;
+            mIsOver = true;
         }
         
         /// <summary>

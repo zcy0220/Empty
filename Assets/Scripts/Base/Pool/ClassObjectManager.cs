@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Base.Pool
 {
-    public class ObjectManager : Singleton<ObjectManager>
+    public class ClassObjectManager : Singleton<ClassObjectManager>
     {
         /// <summary>
         /// 存储类对象池的字典
