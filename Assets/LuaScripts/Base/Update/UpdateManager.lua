@@ -86,5 +86,6 @@ UpdateManager.AddFixedUpdate = AddFixedUpdate
 UpdateManager.RemoveUpdate = RemoveUpdate
 UpdateManager.RemoveLateUpdate = RemoveUpdate
 UpdateManager.RemoveFixedUpdate = RemoveFixedUpdate
+UpdateManager.Dispose = Dispose
 
 return UpdateManager

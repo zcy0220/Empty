@@ -11,6 +11,7 @@ public class AppMain : MonoSingleton<AppMain>
     /// </summary>
     public void Startup()
     {
-        // todo 
+        LuaManager.Instance.Restart();
+        LuaManager.Instance.StartGame();
     }
 }
