@@ -86,7 +86,7 @@ public class UILuaEditor
             sb.Append(SheetEditor.LineText("end\n", 0));
             sb.Append(SheetEditor.LineText("-- 创建 UI控件初始化", 0));
             sb.Append(SheetEditor.LineText("local function Create(self)", 0));
-            sb.Append(SheetEditor.LineText(string.Format("{0}.super.Create(self)", fileName), 1));
+            sb.Append(SheetEditor.LineText(string.Format("{0}.super.Create(self, data)", fileName), 1));
             sb.Append(SheetEditor.LineText("end\n", 0));
             sb.Append(SheetEditor.LineText("-- 关闭", 0));
             sb.Append(SheetEditor.LineText("local function Close(self)", 0));

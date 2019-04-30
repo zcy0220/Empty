@@ -10,6 +10,13 @@ require "Base.Init"
 
 ----------------------------------------------------------------------
 --[[
+    全局常量配置
+]]
+GlobalWords          = require "Global.GlobalWords"
+GlobalEvent          = require "Global.GlobalEvent"
+
+----------------------------------------------------------------------
+--[[
     C#侧、Unity侧相关
 ]]
 ResourceManager     = CS.ResourceManager.Instance

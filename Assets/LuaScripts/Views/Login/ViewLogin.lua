@@ -10,7 +10,7 @@ local function Ctor(self, gameObject)
 end
 
 -- 创建 UI控件初始化
-local function Create(self)
+local function Create(self, data)
 	ViewLogin.super.Create(self)
 end
 
@@ -21,7 +21,7 @@ end
 
 -- BtnLogin的监听事件
 local function OnBtnLogin(self)
-	print("点击登录")
+	ViewManager:Instance():Add("Views.Common.ViewCommonTips", 1000)
 end
 
 ViewLogin.Ctor = Ctor

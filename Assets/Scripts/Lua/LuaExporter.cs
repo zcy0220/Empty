@@ -56,9 +56,13 @@ public static class LuaExporter
     {
         typeof(Action),
         typeof(Action<float>),
-        typeof(Action<float, float>)
+        typeof(Action<float, float>),
+        typeof(Func<double, double, double>),
+        typeof(Action<string>),
+        typeof(Action<double>),
+        typeof(UnityEngine.Events.UnityAction),
+        typeof(System.Collections.IEnumerator)
     };
-
 
     /// <summary>
     /// 黑名单 

@@ -26,10 +26,6 @@ public class LuaManager : MonoSingleton<LuaManager>
     /// lua环境
     /// </summary>
     private LuaEnv mLuaEnv;
-    /// <summary>
-    /// Lua暂时先只用Update
-    /// </summary>
-    private Action<float> mLuaUpdate;
     
     /// <summary>
     /// 初始化Lua虚拟器环境
@@ -104,7 +100,6 @@ public class LuaManager : MonoSingleton<LuaManager>
     /// </summary>
     private void Update()
     {
-        if (mLuaUpdate != null) mLuaUpdate(Time.deltaTime);
         if (mLuaEnv != null) mLuaEnv.Tick();
     }
 
