@@ -10,6 +10,7 @@ GameMain = {}
 -- lua开始执行入口
 local function Start()
     Debugger.Log("Lua GameMain Start ...")
+    ViewManager:Instance():Push("Views.Login.ViewLogin")
 end
 
 -- 销毁

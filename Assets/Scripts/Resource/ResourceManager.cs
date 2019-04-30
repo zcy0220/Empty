@@ -197,6 +197,13 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         Resources.UnloadUnusedAssets();
 #endif
     }
+
+    #region Lua
+    public GameObject SyncLoadGameObject(string path)
+    {
+        return SyncLoad<GameObject>(path);
+    }
+    #endregion
 }
 
 public class ResourceUnit

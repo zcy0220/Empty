@@ -7,3 +7,16 @@
 
 -- 基础模块全局初始化
 require "Base.Init"
+
+----------------------------------------------------------------------
+--[[
+    C#侧、Unity侧相关
+]]
+ResourceManager     = CS.ResourceManager.Instance
+
+----------------------------------------------------------------------
+--[[
+    UI视图相关
+]]
+ViewBase            = require "Views.Base.ViewBase"
+ViewManager         = require "Views.ViewManager"
