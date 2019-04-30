@@ -20,11 +20,13 @@ end
 
 -- 定时更新
 local function Update(self, deltaTime)
-    for timer, v in pairs(self.mTimerSet) do
-        timer:Update(deltaTime)
-        if timer:IsOver() then
-            self.mRemoveTimerList = self.mRemoveTimerList or {}
-            table.insert(self.mRemoveTimerList, timer)
+    if self.mTimerSet then
+        for timer, v in pairs(self.mTimerSet) do
+            timer:Update(deltaTime)
+            if timer:IsOver() then
+                self.mRemoveTimerList = self.mRemoveTimerList or {}
+                table.insert(self.mRemoveTimerList, timer)
+            end
         end
     end
     if self.mRemoveTimerList then
@@ -36,8 +38,17 @@ local function Update(self, deltaTime)
     end
 end
 
+-- 销毁
+local function Dispose(self)
+    self.mTimerPool:Clear()
+    self.mTimerPool = nil
+    self.mTimerSet = nil
+    self.mRemoveTimerList = nil
+end
+
 TimerManager.Ctor = Ctor
 TimerManager.CreateTimer = CreateTimer
 TimerManager.Update = Update
+TimerManager.Dispose = Dispose
 
 return TimerManager

@@ -14,10 +14,8 @@ end
 -- 分配对象
 local function Spawn(self)
     if self.mPool:Count() > 0 then
-        print("现有")
         return self.mPool:Pop()
     else
-        print("创新")
         return self.mClass:New()
     end
 end

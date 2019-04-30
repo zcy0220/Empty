@@ -6,13 +6,13 @@ local Debugger = Class("Debugger")
 
 local function Log(message)
     if Config.Debug then
-        CS.Debugger.Log(message)
+        CS.UnityEngine.Debug.Log(message)
     end
 end
 
 local function LogError(message)
     if Config.Debug then
-        CS.Debugger.Log(message)
+        CS.UnityEngine.Debug.LogError(message)
     end
 end
 
