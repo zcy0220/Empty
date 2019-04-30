@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 2868433805
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1dd7cedd03f558b55e418486cb8a3056
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Base/Extension/StringEx.lua.bytes
+Dependencies: []

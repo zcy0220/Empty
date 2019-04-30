@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2835875154
+CRC: 1620037249
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 789601870fb0c517a7e9f71f96e12f09
+    Hash: ecb9e5ea4f2eb392e7b8121e9611de77
   TypeTreeHash:
     serializedVersion: 2
     Hash: 323410836b59df2bd46b1c7423daa819
@@ -24,4 +24,4 @@ ClassTypes:
 Assets:
 - Assets/GameAssets/Prefabs/UISpritePrefab2.prefab
 Dependencies:
-- /Users/zhengchenyang/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+- I:/Empty/Assets/StreamingAssets/AssetBundles/assets/gameassets/ui/atlas/item.spriteatlas.assetbundle

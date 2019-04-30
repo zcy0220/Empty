@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 2865302337
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 058183bbc90fc0e95583999a7707a9c5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Views/ViewConfig.lua.bytes
+Dependencies: []

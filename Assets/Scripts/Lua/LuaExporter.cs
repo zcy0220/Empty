@@ -41,7 +41,7 @@ public static class LuaExporter
         typeof(SkinnedMeshRenderer),
         typeof(Renderer),
         typeof(WWW),
-        typeof(Light),
+        //typeof(Light),
         typeof(Mathf),
         typeof(List<int>),
         typeof(Action<string>),

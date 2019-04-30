@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 1467165505
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 03a12144f248486d5cbd7315cf7546f0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Base/Collections/Queue.lua.bytes
+Dependencies: []

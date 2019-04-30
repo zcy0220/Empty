@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 319523389
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 5488987643f5747d2f9d24c80c7bf353
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Base/Common/Clone.lua.bytes
+Dependencies: []

@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 4010156749
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: be78b8341a59cb7b98837826c96bad6a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Base/Update/UpdateManager.lua.bytes
+Dependencies: []

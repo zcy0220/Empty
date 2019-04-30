@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 2252721442
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0eebe529f0991dc6bed89876fc2b1d70
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameAssets/LuaScripts/Base/Event/EventManager.lua.bytes
+Dependencies: []
