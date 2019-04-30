@@ -14,6 +14,11 @@ namespace Assets.Editor.AssetBundle
         /// </summary>
         public static readonly string AssetRootPath = "Assets/GameAssets";
         /// <summary>
+        /// lua脚本路径
+        /// </summary>
+        public static readonly string LuaScriptsSrcPath = "Assets/LuaScripts";
+        public static readonly string LuaScriptsDestPath = "Assets/GameAssets/LuaScripts";
+        /// <summary>
         /// 图集资源路径
         /// </summary>
         public static readonly string SpriteAtlasPath = AssetRootPath + "/UI/Atlas";
