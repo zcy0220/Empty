@@ -43,7 +43,7 @@ namespace Assets.Editor.AssetBundle
 
         /// <summary>
         /// 创建Lua二进制文件
-        /// Assets/LuaScripts/*.lua -> Assets/GameAssets/LuaScripts/*.bytes
+        /// Assets/LuaScripts/*.lua -> Assets/GameAssets/LuaScripts/*.lua.bytes
         /// </summary>
         public static void CreateLuaBytes()
         {
