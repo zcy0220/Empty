@@ -14,7 +14,7 @@ package User;
 // 登录请求
 message LoginRequest
 {
-	required string Account = 1;
+    required string Account = 1;
 }
 
 // 登录响应
