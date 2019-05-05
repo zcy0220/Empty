@@ -71,3 +71,86 @@
         }
     }
 ~~~
+
+## 追加图集的打包策略
+* SpriteAtlas和其关联的所有资源打成一个AssetBundle包
+* 建立AssetBundle依赖映射时，如果依赖的Sprite有对应的图集，就改为依赖SpriteAtlas
+~~~C#
+/// <summary>
+/// 遍历Atlas下所有的SpriteAtlas，建立图片资源依赖
+/// </summary>
+public static void CreateSpriteAtlasMap()
+{
+    var dir = new DirectoryInfo(BuilderConfig.SpriteAtlasPath);
+    if (!dir.Exists) return;
+    var files = dir.GetFiles();
+    for (var i = 0; i < files.Length; i++)
+    {
+        var fileInfo = files[i];
+        EditorUtility.DisplayProgressBar("CreateSpriteAtlasMap", fileInfo.FullName, 1.0f * (i + 1) / files.Length);
+        if (AssetUtils.ValidAsset(fileInfo.FullName))
+        {
+            var fullPath = fileInfo.FullName.Replace("\\", "/");
+            var path = fullPath.Substring(fullPath.IndexOf(BuilderConfig.AssetRootPath));
+            var assetItem = GetAssetItem(path);
+            var depends = AssetDatabase.GetDependencies(path);
+            foreach (var depend in depends)
+            {
+                if (AssetUtils.ValidAsset(depend) && depend != path)
+                {
+                    mSpriteAtlasDict.Add(depend, path);
+                    assetItem.Depends.Add(depend);
+                    var dependAssetItem = GetAssetItem(depend);
+                    dependAssetItem.BeDepends.Add(path);
+                }
+            }
+            mSpriteAtlasDict.Add(path, path);
+        }
+    }
+}
+~~~
+
+## 追加Lua的打包策略（在xlua分支上）
+* Assets/LuaScripts/*.lua -> Assets/GameAssets/LuaScripts/*.lua.bytes
+~~~C#
+/// <summary>
+/// 创建Lua二进制文件
+/// Assets/LuaScripts/*.lua -> Assets/GameAssets/LuaScripts/*.lua.bytes
+/// </summary>
+public static void CreateLuaBytes()
+{
+    if (Directory.Exists(BuilderConfig.LuaScriptsDestPath))
+    {
+        FileUtil.DeleteFileOrDirectory(BuilderConfig.LuaScriptsDestPath);
+    }
+    var dir = new DirectoryInfo(BuilderConfig.LuaScriptsSrcPath);
+    if (!dir.Exists) return;
+    var stack = new Stack<DirectoryInfo>();
+    stack.Push(dir);
+    while (stack.Count > 0)
+    {
+        var dirInfo = stack.Pop();
+        var files = dirInfo.GetFiles();
+
+        foreach (var file in files)
+        {
+            if (AssetUtils.ValidAsset(file.FullName))
+            {
+                var fullPath = file.FullName.Replace("\\", "/");
+                var startIndex = fullPath.IndexOf("LuaScripts");
+                var destPath = fullPath.Insert(startIndex, "GameAssets/") + ".bytes";
+                if (Base.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(destPath))
+                {
+                    file.CopyTo(destPath);
+                }
+            }
+        }
+
+        var subDirs = dirInfo.GetDirectories();
+        foreach (var subDir in subDirs)
+        {
+            stack.Push(subDir);
+        }
+    }
+}
+~~~
