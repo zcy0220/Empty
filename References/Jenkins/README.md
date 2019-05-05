@@ -4,6 +4,7 @@
 ## 注意事项和建议
 * Jenkins默认安装在/Users/Shared/Jenkins，并没有自己用户的权限，最好修改主目录到登录用户下
 * 少用Jenkins插件，能写在shell里的尽量写在shell里面
+* 整个打包流程我都没有优化，基本上都是删除原来工程，重新生成新工程
 
 ## C#构建核心代码
 ~~~C#
@@ -53,12 +54,6 @@ public class BuildScript
         PlayerSettings.productName = args["name"];
         PlayerSettings.bundleVersion = args["version"];
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-        /**
-         * 这里打包AB有个坑，暂时没找到原因，也没看到对出包有什么影响
-         * BuildPipeline.BuildAssetBundles 打完AB包后调用 AssetDatabase.Refresh
-         * 报一个错：Unsupported image when converting from NSImage
-         * 手动调用没问题，shell外部调用时报的一个错
-         */
         AssetBundleBuilder.Build();
         BuildPipeline.BuildPlayer(GetBuildScenes(), args["out"], BuildTarget.Android, BuildOptions.None);
     }
@@ -101,4 +96,62 @@ echo "Done!"
 ~~~
 
 ## Jenkins打包IOS
+* ExportOptionsPlist：手动导出IPA一次，自动生成
 * 密钥证书管理插件：Keychains and Provisioning Profiles Management
+* 上述插件我用的时候下拉不下来证书的选择，所以我是在Unity设置中先设置好证书相关
+![image](./Images/001.png)
+~~~sh
+#!/bin/bash
+cd $PROJECT_PATH
+#Git重置本地变化 拉取远程
+git clean -df
+git reset --hard
+git pull
+#UNITY程序的路径
+UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+
+#导出Xcode的工程路径
+XCODE_EXPORT_PATH=/Users/zhengchenyang/Empty/Builds/Xcode/${PROJECT_NAME}
+if [ -d ${XCODE_EXPORT_PATH} ];then
+	rm -rf ${XCODE_EXPORT_PATH}
+	echo "删除Xcode工程"
+fi
+
+#导出Xcode工程
+$UNITY_PATH -projectPath $PROJECT_PATH -batchmode -executeMethod BuildScript.BuildForIOS @out=$XCODE_EXPORT_PATH -quit
+if [ $? -eq 0 ]; then
+    echo "Unity build success"
+else
+    echo "Unity build failed"
+    exit 1
+fi
+
+#########################编译导出IPA#########################
+SCHEMENAME="Unity-iPhone"         #项目scheme名
+IPAPATH=$IPA_EXPORT_PATH/$VERSION #打包目标路径
+
+if [ -d ${IPAPATH} ];then
+	rm -rf ${IPAPATH}
+	echo "删除Archive工程"
+fi
+
+#clean
+xcodebuild clean -project $XCODE_EXPORT_PATH/$SCHEMENAME.xcodeproj -scheme $SCHEMENAME -configuration $CONFIGURATION
+
+#archive
+xcodebuild archive -project $XCODE_EXPORT_PATH/$SCHEMENAME.xcodeproj -scheme $SCHEMENAME -configuration $CONFIGURATION -archivePath $IPAPATH/$SCHEMENAME.xcarchive
+
+#export
+xcodebuild -exportArchive -archivePath $IPAPATH/$SCHEMENAME.xcarchive -exportPath $IPAPATH -exportOptionsPlist $EXPORTOPTIONS_PLIST_PATH
+
+#upload
+fir publish $IPAPATH/$SCHEMENAME.ipa -T ${FIRIM_TOKEN}
+if [ $? -eq 0 ]; then
+    echo "Upload to fir.im success"
+else
+    echo "Upload to fir.im failed"
+    exit 1
+fi
+
+echo "Done!"
+~~~

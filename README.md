@@ -18,7 +18,6 @@
 * [网络管理](References/Net/README.md)
 * [脚本开发](References/Lua/README.md)
 * [自动打包](References/Jenkins/README.md)
-* [错误检测](References/Bugly/README.md)
 * 未完待续
 
 ## 自定义
