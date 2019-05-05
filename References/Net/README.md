@@ -83,4 +83,87 @@ public void OnLogin(object arg)
 }
 ~~~
 
+## 接收处理网络包代码
+~~~C#
+/// <summary>
+/// 接收线程执行方法
+/// </summary>
+private void ReceiveThead()
+{
+    var byteBuffer = ByteBufferPool.Instance.Spawn(MAX_RECEIVE_SIZE);
+    var curBufferLength = 0;
+    while (mReceiveWork)
+    {
+        try
+        {
+            var leftBufferLength = byteBuffer.Capacity - curBufferLength;
+            var readLength = mSocket.Receive(byteBuffer.GetBytes(), curBufferLength, leftBufferLength, SocketFlags.None);
+            if (readLength > 0)
+            {
+                curBufferLength += readLength;
+                DoReceive(byteBuffer, ref curBufferLength);
+            }
+        }
+        catch (Exception e)
+        {
+            Debugger.LogError(e.Message);
+            break;
+        }
+    }
+    ByteBufferPool.Instance.Recycle(byteBuffer);
+}
+
+/// <summary>
+/// 拆包组包
+/// </summary>
+private void DoReceive(ByteBuffer byteBuffer, ref int curBufferLength)
+{
+    try
+    {
+        var data = byteBuffer.GetBytes();
+        var intSize = sizeof(int);
+        // 数据包长度所占字节是否达到
+        if (curBufferLength < intSize) return;
+        var msgLength = byteBuffer.ReadInt(0);
+        // 数据长度是否达到
+        if (curBufferLength < intSize + msgLength) return;
+        var recvBuffer = new byte[msgLength];
+        Buffer.BlockCopy(data, intSize, recvBuffer, 0, msgLength);
+        curBufferLength -= (intSize + msgLength);
+        // 把后面的字节拷到前面
+        Buffer.BlockCopy(data, intSize + msgLength, data, 0, curBufferLength);
+        lock (mReceiveLock)
+        {
+            mReceiveMsgQueue.Enqueue(recvBuffer);
+        }
+    }
+    catch (Exception e)
+    {
+        Debugger.LogError("Socket receive package err: {0}\n{1}", e.Message, e.StackTrace);
+    }
+}
+
+/// <summary>
+/// 处理接收的消息
+/// </summary>
+private void HandleRecvMsg()
+{
+    if (!mReceiveMsgQueue.IsEmpty)
+    {
+        lock (mReceiveLock)
+        {
+            var data = mReceiveMsgQueue.Dequeue();
+            // BitConverter.ToInt32(data, 0) 有大端和小端问题，不如直接手动转
+            var msgId = BytesUtil.ReadInt(data, 0);
+            // NetMsg里定义了协议Id和协议类型的映射，所有比较耦合
+            var type = NetMsg.GetTypeByMsgId(msgId);
+            var response = ProtobufUtil.NDeserialize(type, data, sizeof(int));
+            Debugger.Log(msgId);
+            Debugger.Log(response);
+            HandlerEventListener(msgId, response);
+        }
+    }
+}
+~~~
+
 
