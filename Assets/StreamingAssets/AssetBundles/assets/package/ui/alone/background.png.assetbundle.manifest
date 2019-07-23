@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 3146401172
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e0b3c17d9f30e39c82a9922eb8c4c93b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f19fbf085e00d23fbc8d6cf7b345590b
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/UI/Alone/Background.png
+Dependencies: []

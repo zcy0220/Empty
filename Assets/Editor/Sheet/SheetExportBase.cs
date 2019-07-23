@@ -19,7 +19,7 @@ public class SheetExportBase
     /// <summary>
     /// 默认key为"id"
     /// </summary>
-    private string mKey = "id";
+    private string mKey = "Id";
     /// <summary>
     /// 默认keyType为int
     /// </summary>
@@ -82,8 +82,8 @@ public class SheetExportBase
         // Dictionary
         if (exportDict)
         {
-            sb.Append(SheetEditor.LineText(string.Format("private Dictionary<{0}, {1}> {2};", mKeyType, mSheetName, dictParamName), 1));
-            sb.Append(SheetEditor.LineText(string.Format("public {0} Get{0}({1} key)", mSheetName, mKeyType), 1));
+            sb.Append(SheetEditor.LineText(string.Format("private Dictionary<{0}, Sheet.{1}> {2};", mKeyType, mSheetName, dictParamName), 1));
+            sb.Append(SheetEditor.LineText(string.Format("public Sheet.{0} Get{0}({1} key)", mSheetName, mKeyType), 1));
             sb.Append(SheetEditor.LineText("{", 1));
             sb.Append(SheetEditor.LineText(string.Format("if ({0} == null)", dictParamName), 2));
             sb.Append(SheetEditor.LineText("{", 2));
@@ -105,7 +105,7 @@ public class SheetExportBase
             }
             if (exportDict)
             {
-                sb.Append(SheetEditor.LineText(string.Format("{0} = new Dictionary<{1}, {2}>();", dictParamName, mKeyType, mSheetName), 2));
+                sb.Append(SheetEditor.LineText(string.Format("{0} = new Dictionary<{1}, Sheet.{2}>();", dictParamName, mKeyType, mSheetName), 2));
                 sb.Append(SheetEditor.LineText(string.Format("items.ForEach(item => {0}[item.{1}] = item);", dictParamName, mKey), 2));
             }
         }

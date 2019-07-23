@@ -1,119 +1,59 @@
 ManifestFileVersion: 0
-CRC: 1108004287
+CRC: 1830821745
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+      Name: assets/package/ui/atlas/item.spriteatlas.assetbundle
       Dependencies: {}
     Info_1:
-      Name: assets/gameassets/views/login/viewlogin.prefab.assetbundle
+      Name: assets/package/ui/alone/background.png.assetbundle
       Dependencies: {}
     Info_2:
-      Name: assets/gameassets/views/common/viewcommontips.prefab.assetbundle
-      Dependencies: {}
+      Name: assets/package/prefabs/test/exampleprefab1.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/materials/examplematerial.mat.assetbundle
     Info_3:
-      Name: assets/gameassets/ui/alone/background.png.assetbundle
+      Name: assets/package/sheets/example.bytes.assetbundle
       Dependencies: {}
     Info_4:
-      Name: assets/gameassets/prefabs/exampleprefab1.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
+      Name: assets/package/sheets/preload.bytes.assetbundle
+      Dependencies: {}
     Info_5:
-      Name: assets/gameassets/sheets/example.bytes.assetbundle
+      Name: assets/package/sheets/scene.bytes.assetbundle
       Dependencies: {}
     Info_6:
-      Name: assets/gameassets/materials/examplematerial.mat.assetbundle
+      Name: assets/package/materials/examplematerial.mat.assetbundle
       Dependencies: {}
     Info_7:
-      Name: assets/gameassets/prefabs/exampleprefab2.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
+      Name: assets/package/prefabs/views/main/mainview.prefab.assetbundle
+      Dependencies: {}
     Info_8:
-      Name: assets/gameassets/prefabs/uiitemprefab.prefab.assetbundle
+      Name: assets/package/prefabs/views/common/canvas.prefab.assetbundle
       Dependencies: {}
     Info_9:
-      Name: assets/gameassets/prefabs/uispriteprefab1.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
-    Info_10:
-      Name: assets/gameassets/prefabs/uispriteprefab2.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
-    Info_11:
-      Name: assets/gameassets/luascripts/config.lua.bytes.assetbundle
+      Name: assets/package/prefabs/views/common/loadingview.prefab.assetbundle
       Dependencies: {}
+    Info_10:
+      Name: assets/package/prefabs/views/battle/battleview.prefab.assetbundle
+      Dependencies: {}
+    Info_11:
+      Name: assets/package/prefabs/test/exampleprefab2.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/materials/examplematerial.mat.assetbundle
     Info_12:
-      Name: assets/gameassets/luascripts/gamemain.lua.bytes.assetbundle
+      Name: assets/package/prefabs/test/uiitemprefab.prefab.assetbundle
       Dependencies: {}
     Info_13:
-      Name: assets/gameassets/luascripts/views/viewconfig.lua.bytes.assetbundle
-      Dependencies: {}
+      Name: assets/package/prefabs/test/uispriteprefab1.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/ui/atlas/item.spriteatlas.assetbundle
     Info_14:
-      Name: assets/gameassets/luascripts/views/viewmanager.lua.bytes.assetbundle
-      Dependencies: {}
+      Name: assets/package/prefabs/test/uispriteprefab2.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/ui/atlas/item.spriteatlas.assetbundle
     Info_15:
-      Name: assets/gameassets/luascripts/views/login/viewlogin.lua.bytes.assetbundle
+      Name: assets/package/prefabs/models/entitys/1001.prefab.assetbundle
       Dependencies: {}
     Info_16:
-      Name: assets/gameassets/luascripts/views/common/viewcommontips.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_17:
-      Name: assets/gameassets/luascripts/views/base/viewbase.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_18:
-      Name: assets/gameassets/luascripts/global/globalevent.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_19:
-      Name: assets/gameassets/luascripts/global/globalwords.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_20:
-      Name: assets/gameassets/luascripts/global/init.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_21:
-      Name: assets/gameassets/luascripts/base/init.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_22:
-      Name: assets/gameassets/luascripts/base/update/updatemanager.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_23:
-      Name: assets/gameassets/luascripts/base/timer/timer.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_24:
-      Name: assets/gameassets/luascripts/base/timer/timermanager.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_25:
-      Name: assets/gameassets/luascripts/base/pool/classobjectmanager.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_26:
-      Name: assets/gameassets/luascripts/base/pool/classobjectpool.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_27:
-      Name: assets/gameassets/luascripts/base/extension/stringex.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_28:
-      Name: assets/gameassets/luascripts/base/event/eventmanager.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_29:
-      Name: assets/gameassets/luascripts/base/debug/debugger.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_30:
-      Name: assets/gameassets/luascripts/base/common/class.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_31:
-      Name: assets/gameassets/luascripts/base/common/clone.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_32:
-      Name: assets/gameassets/luascripts/base/common/handler.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_33:
-      Name: assets/gameassets/luascripts/base/common/singleton.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_34:
-      Name: assets/gameassets/luascripts/base/collections/queue.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_35:
-      Name: assets/gameassets/luascripts/base/collections/stack.lua.bytes.assetbundle
-      Dependencies: {}
-    Info_36:
-      Name: assets/gameassets/config/pathbundleconfig.bytes.assetbundle
+      Name: assets/package/config/pathbundleconfig.bytes.assetbundle
       Dependencies: {}

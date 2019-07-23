@@ -1,4 +1,5 @@
 # 表格数据
+* 2019.7.23：C#端增加了表格枚举功能，Lua端还没实现
 
 ## 转表
 * Tools->Sheet->ExportBytes
@@ -8,10 +9,10 @@
 * excel必须是xlsx，必须关闭表格才能转表
 * 示例项目用Bytes演示支持client数据，lua演示支持server数据用来测试客户端和服务器数据区分功能
 * Excels/xlsx: excel表格目录
-    - excel 的前四行用于结构定义, 其余则为数据
-    - 第一行：'-' | 'ignore' | 'client' | 'server' 
-    - 第二行：类型 支持 int float string bool array
-    - 第三行：关键字
+    - excel的前四行用于结构定义, 其余为数据
+    - 第一行：'-' | 'ignore'(忽略该列)
+    - 第二行：布尔(bool) 整型(int) 浮点数(float) 字符串(string) 数组(array<基本类型>) 枚举(xxxEnum, 自定义名字+Enum后缀)
+    - 第三行：关键字(MoveSpeed, 首字母大写式驼峰命名规则)
     - 第四行：注释
 
 ## Excel示例
