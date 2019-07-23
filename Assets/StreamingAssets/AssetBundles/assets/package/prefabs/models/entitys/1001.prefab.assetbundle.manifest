@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 641220343
+CRC: 2777662590
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -26,5 +26,5 @@ ClassTypes:
 - Class: 65
   Script: {instanceID: 0}
 Assets:
-- Assets/Package/Models/Entitys/1001.prefab
+- Assets/Package/Prefabs/Models/Entitys/1001.prefab
 Dependencies: []

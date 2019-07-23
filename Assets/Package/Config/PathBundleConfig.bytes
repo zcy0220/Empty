@@ -49,5 +49,5 @@ t
 2Assets/Package/Prefabs/Test/UISpritePrefab1.prefab>assets/package/prefabs/test/uispriteprefab1.prefab.assetbundle
 t
 2Assets/Package/Prefabs/Test/UISpritePrefab2.prefab>assets/package/prefabs/test/uispriteprefab2.prefab.assetbundle
-b
-)Assets/Package/Models/Entitys/1001.prefab5assets/package/models/entitys/1001.prefab.assetbundle
+r
+1Assets/Package/Prefabs/Models/Entitys/1001.prefab=assets/package/prefabs/models/entitys/1001.prefab.assetbundle

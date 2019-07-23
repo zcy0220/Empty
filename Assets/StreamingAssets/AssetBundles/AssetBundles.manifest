@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 4223161531
+CRC: 1830821745
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -52,7 +52,7 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: assets/package/ui/atlas/item.spriteatlas.assetbundle
     Info_15:
-      Name: assets/package/models/entitys/1001.prefab.assetbundle
+      Name: assets/package/prefabs/models/entitys/1001.prefab.assetbundle
       Dependencies: {}
     Info_16:
       Name: assets/package/config/pathbundleconfig.bytes.assetbundle
