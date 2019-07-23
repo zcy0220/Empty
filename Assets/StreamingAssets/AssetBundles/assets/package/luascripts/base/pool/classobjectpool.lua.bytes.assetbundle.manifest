@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 1497374069
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 673e8bf403b2290c68d2227ea932be00
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/LuaScripts/Base/Pool/ClassObjectPool.lua.bytes
+Dependencies: []
