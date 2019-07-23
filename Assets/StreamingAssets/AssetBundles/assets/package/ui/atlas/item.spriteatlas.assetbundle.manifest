@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+CRC: 3514705621
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9870a42eb0d329aad1e9705bf32b2c37
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 8f81471f4cfc7bf93c7fa752ebb4eb40
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/UI/Item/1003.png
+- Assets/Package/UI/Item/1005.png
+- Assets/Package/UI/Item/1006.png
+- Assets/Package/UI/Atlas/Item.spriteatlas
+- Assets/Package/UI/Item/1004.png
+- Assets/Package/UI/Item/1002.png
+- Assets/Package/UI/Item/1007.png
+- Assets/Package/UI/Item/1001.png
+Dependencies: []

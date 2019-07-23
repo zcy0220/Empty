@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 2128461240
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 64209cdbb9513e679193b90efed5a226
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/Sheets/Scene.bytes
+Dependencies: []

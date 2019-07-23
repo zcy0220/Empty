@@ -29,6 +29,7 @@ namespace Assets.Editor.AssetBundle
         {
             mSpriteAtlasDict.Clear();
             mAssetItemDict.Clear();
+            CreateLuaBytes();
             CreateSpriteAtlasMap();
             CreateAssetDependsMap();
             GroupAssetBundles();
@@ -38,6 +39,47 @@ namespace Assets.Editor.AssetBundle
             ClearAssetBundleNames();
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
+        }
+
+        /// <summary>
+        /// 创建Lua二进制文件
+        /// Assets/LuaScripts/*.lua -> Assets/Package/LuaScripts/*.lua.bytes
+        /// </summary>
+        public static void CreateLuaBytes()
+        {
+            if (Directory.Exists(BuilderConfig.LuaScriptsDestPath))
+            {
+                FileUtil.DeleteFileOrDirectory(BuilderConfig.LuaScriptsDestPath);
+            }
+            var dir = new DirectoryInfo(BuilderConfig.LuaScriptsSrcPath);
+            if (!dir.Exists) return;
+            var stack = new Stack<DirectoryInfo>();
+            stack.Push(dir);
+            while (stack.Count > 0)
+            {
+                var dirInfo = stack.Pop();
+                var files = dirInfo.GetFiles();
+
+                foreach (var file in files)
+                {
+                    if (AssetUtils.ValidAsset(file.FullName))
+                    {
+                        var fullPath = file.FullName.Replace("\\", "/");
+                        var startIndex = fullPath.IndexOf("LuaScripts");
+                        var destPath = fullPath.Insert(startIndex, "Package/") + ".bytes";
+                        if (Base.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(destPath))
+                        {
+                            file.CopyTo(destPath);
+                        }
+                    }
+                }
+
+                var subDirs = dirInfo.GetDirectories();
+                foreach (var subDir in subDirs)
+                {
+                    stack.Push(subDir);
+                }
+            }
         }
 
         /// <summary>

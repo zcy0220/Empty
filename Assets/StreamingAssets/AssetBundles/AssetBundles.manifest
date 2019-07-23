@@ -1,38 +1,59 @@
 ManifestFileVersion: 0
-CRC: 3200181523
+CRC: 4223161531
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+      Name: assets/package/ui/atlas/item.spriteatlas.assetbundle
       Dependencies: {}
     Info_1:
-      Name: assets/gameassets/ui/alone/background.png.assetbundle
+      Name: assets/package/ui/alone/background.png.assetbundle
       Dependencies: {}
     Info_2:
-      Name: assets/gameassets/prefabs/exampleprefab1.prefab.assetbundle
+      Name: assets/package/prefabs/test/exampleprefab1.prefab.assetbundle
       Dependencies:
-        Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
+        Dependency_0: assets/package/materials/examplematerial.mat.assetbundle
     Info_3:
-      Name: assets/gameassets/sheets/example.bytes.assetbundle
+      Name: assets/package/sheets/example.bytes.assetbundle
       Dependencies: {}
     Info_4:
-      Name: assets/gameassets/materials/examplematerial.mat.assetbundle
+      Name: assets/package/sheets/preload.bytes.assetbundle
       Dependencies: {}
     Info_5:
-      Name: assets/gameassets/prefabs/exampleprefab2.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/materials/examplematerial.mat.assetbundle
+      Name: assets/package/sheets/scene.bytes.assetbundle
+      Dependencies: {}
     Info_6:
-      Name: assets/gameassets/prefabs/uiitemprefab.prefab.assetbundle
+      Name: assets/package/materials/examplematerial.mat.assetbundle
       Dependencies: {}
     Info_7:
-      Name: assets/gameassets/prefabs/uispriteprefab1.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+      Name: assets/package/prefabs/views/main/mainview.prefab.assetbundle
+      Dependencies: {}
     Info_8:
-      Name: assets/gameassets/prefabs/uispriteprefab2.prefab.assetbundle
-      Dependencies:
-        Dependency_0: assets/gameassets/ui/atlas/item.spriteatlas.assetbundle
+      Name: assets/package/prefabs/views/common/canvas.prefab.assetbundle
+      Dependencies: {}
     Info_9:
-      Name: assets/gameassets/config/pathbundleconfig.bytes.assetbundle
+      Name: assets/package/prefabs/views/common/loadingview.prefab.assetbundle
+      Dependencies: {}
+    Info_10:
+      Name: assets/package/prefabs/views/battle/battleview.prefab.assetbundle
+      Dependencies: {}
+    Info_11:
+      Name: assets/package/prefabs/test/exampleprefab2.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/materials/examplematerial.mat.assetbundle
+    Info_12:
+      Name: assets/package/prefabs/test/uiitemprefab.prefab.assetbundle
+      Dependencies: {}
+    Info_13:
+      Name: assets/package/prefabs/test/uispriteprefab1.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/ui/atlas/item.spriteatlas.assetbundle
+    Info_14:
+      Name: assets/package/prefabs/test/uispriteprefab2.prefab.assetbundle
+      Dependencies:
+        Dependency_0: assets/package/ui/atlas/item.spriteatlas.assetbundle
+    Info_15:
+      Name: assets/package/models/entitys/1001.prefab.assetbundle
+      Dependencies: {}
+    Info_16:
+      Name: assets/package/config/pathbundleconfig.bytes.assetbundle
       Dependencies: {}

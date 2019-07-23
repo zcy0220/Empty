@@ -3,7 +3,6 @@
  */
 
 using UnityEngine;
-using Base.Extension;
 
 public class AppLaunch : MonoBehaviour
 {
@@ -12,6 +11,6 @@ public class AppLaunch : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        gameObject.GetOrAddComponent<ResourceUpdater>();
+        SceneController.Instance.LoadScene(new StartScene(), true);
     }
 }

@@ -1,0 +1,53 @@
+
+\
+,Assets/Package/Config/PathBundleConfig.bytes,Assets/Package/Config/PathBundleConfig.bytes
+`
+(Assets/Package/UI/Atlas/Item.spriteatlas4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1003.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1005.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1006.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1004.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1002.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1007.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+W
+Assets/Package/UI/Item/1001.png4assets/package/ui/atlas/item.spriteatlas.assetbundle
+\
+&Assets/Package/UI/Alone/Background.png2assets/package/ui/alone/background.png.assetbundle
+g
+&Assets/Package/Sounds/SoundExample.wav=assets/package/prefabs/test/exampleprefab1.prefab.assetbundle
+V
+#Assets/Package/Sheets/Example.bytes/assets/package/sheets/example.bytes.assetbundle
+V
+#Assets/Package/Sheets/Preload.bytes/assets/package/sheets/preload.bytes.assetbundle
+R
+!Assets/Package/Sheets/Scene.bytes-assets/package/sheets/scene.bytes.assetbundle
+g
++Assets/Package/Shaders/ShaderExample.shader8assets/package/materials/examplematerial.mat.assetbundle
+r
+1Assets/Package/Prefabs/Views/Main/MainView.prefab=assets/package/prefabs/views/main/mainview.prefab.assetbundle
+r
+1Assets/Package/Prefabs/Views/Common/Canvas.prefab=assets/package/prefabs/views/common/canvas.prefab.assetbundle
+|
+6Assets/Package/Prefabs/Views/Common/LoadingView.prefabBassets/package/prefabs/views/common/loadingview.prefab.assetbundle
+z
+5Assets/Package/Prefabs/Views/Battle/BattleView.prefabAassets/package/prefabs/views/battle/battleview.prefab.assetbundle
+r
+1Assets/Package/Prefabs/Test/ExamplePrefab1.prefab=assets/package/prefabs/test/exampleprefab1.prefab.assetbundle
+h
+,Assets/Package/Materials/ExampleMaterial.mat8assets/package/materials/examplematerial.mat.assetbundle
+r
+1Assets/Package/Prefabs/Test/ExamplePrefab2.prefab=assets/package/prefabs/test/exampleprefab2.prefab.assetbundle
+n
+/Assets/Package/Prefabs/Test/UIItemPrefab.prefab;assets/package/prefabs/test/uiitemprefab.prefab.assetbundle
+t
+2Assets/Package/Prefabs/Test/UISpritePrefab1.prefab>assets/package/prefabs/test/uispriteprefab1.prefab.assetbundle
+t
+2Assets/Package/Prefabs/Test/UISpritePrefab2.prefab>assets/package/prefabs/test/uispriteprefab2.prefab.assetbundle
+b
+)Assets/Package/Models/Entitys/1001.prefab5assets/package/models/entitys/1001.prefab.assetbundle
