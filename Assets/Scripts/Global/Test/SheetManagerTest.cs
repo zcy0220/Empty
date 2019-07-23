@@ -9,13 +9,14 @@ public class SheetManagerTest : MonoBehaviour
 {
     private void Start()
     {
-        AppConfig.UseAssetBundle = true;
+        AppConfig.UseAssetBundle = false;
         var item = SheetManager.Instance.GetExample(1);
         Debugger.Log("exampleInt: " + item.exampleInt);
         Debugger.Log("exampleFloat: " + item.exampleFloat);
         Debugger.Log("exampleString: " + item.exampleString);
         Debugger.Log("exampleBool: " + item.exampleBool);
         Debugger.Log("exampleClient: " + item.exampleClient);
+        Debugger.Log("exampleEnum: " + item.exampleEnum);
         var str = "exampleArray1: ";
         foreach (var value in item.exampleArray1)
         {

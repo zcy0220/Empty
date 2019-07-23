@@ -42,6 +42,8 @@ namespace Sheet
 		[ProtoMember(7)]
 		public List<string> exampleArray3 = new List<string>();
 		[ProtoMember(8)]
+		public ExampleEnum exampleEnum;
+		[ProtoMember(9)]
 		public string exampleClient;
 	}
 
@@ -82,6 +84,13 @@ namespace Sheet
 	{
 		[ProtoMember(1)]
 		public List<Scene> Items = new List<Scene>();
+	}
+
+	public enum ExampleEnum
+	{
+		Type1,
+		Type2,
+		Max
 	}
 
 }
