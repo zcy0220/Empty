@@ -20,9 +20,9 @@ public class SheetEditor
 {
     private const string SHEETROOTPATH = "Excels/xlsx";
     private const string SHEETEXT = ".xlsx";
-    private static string OUTSHEETCSPATH = "Assets/Scripts/Sheet/SheetProtobuf.cs";
-    private static string OUTSHEETMANAGERPATH = "Assets/Scripts/Sheet/SheetManager.cs";
-    private static string OUTSHEETBYTES = "Assets/GameAssets/Sheets/{0}.bytes";
+    private static string OUTSHEETCSPATH = "Assets/Scripts/Global/Sheet/SheetProtobuf.cs";
+    private static string OUTSHEETMANAGERPATH = "Assets/Scripts/Global/Sheet/SheetManager.cs";
+    private static string OUTSHEETBYTES = "Assets/Package/Sheets/{0}.bytes";
     private static string OUTSHEETLUA = "Excels/lua/{0}.lua";
 
     /// <summary>
@@ -30,12 +30,19 @@ public class SheetEditor
     /// </summary>
     private static readonly Dictionary<string, SheetExportBase> mSheetExportConst = new Dictionary<string, SheetExportBase>
     {
-        { "Example", new SheetExportBase("Example").SetKey("exampleInt").SetExportDataType(EExportDataType.BOTH)}
+        { "Example", new SheetExportBase("Example").SetKey("exampleInt") },
+        { "Preload", new SheetExportBase("Preload").SetExportDataType(EExportDataType.ONLY_ARRAY) }
     };
+
+    /// <summary>
+    /// 枚举类型存储地方
+    /// </summary>
+    private static Dictionary<string, HashSet<string>> mSheetEnumDict = new Dictionary<string, HashSet<string>>();
 
     [MenuItem("Tools/Sheet/ExportBytes")]
     private static void ExportBytes()
     {
+        mSheetEnumDict.Clear();
         var sheetDir = new DirectoryInfo(SHEETROOTPATH);
         var files = sheetDir.GetFiles();
         var sheetDict = new Dictionary<string, DataTable>();
@@ -83,6 +90,18 @@ public class SheetEditor
                     {
                         sheetCSSB.Append(LineText(string.Format("public {0} {1};", row1, row2), 2));
                     }
+                    if (row1.EndsWith("Enum"))
+                    {
+                        if (!mSheetEnumDict.ContainsKey(row1)) mSheetEnumDict.Add(row1, new HashSet<string>());
+                        for (int k = 4; k < table.Rows.Count; k++)
+                        {
+                            var enumStr = table.Rows[k][j].ToString();
+                            if (!mSheetEnumDict[row1].Contains(enumStr))
+                            {
+                                mSheetEnumDict[row1].Add(enumStr);
+                            }
+                        }
+                    }
                 }
             }
             sheetCSSB.Append(LineText("}\n", 1));
@@ -91,6 +110,18 @@ public class SheetEditor
             sheetCSSB.Append(LineText("{", 1));
             sheetCSSB.Append(LineText("[ProtoMember(1)]", 2));
             sheetCSSB.Append(LineText(string.Format("public List<{0}> Items = new List<{0}>();", name), 2));
+            sheetCSSB.Append(LineText("}\n", 1));
+        }
+        //添加枚举
+        foreach (var sheetEnum in mSheetEnumDict)
+        {
+            sheetCSSB.Append(LineText("public enum " + sheetEnum.Key, 1));
+            sheetCSSB.Append(LineText("{", 1));
+            foreach (var sheetEnumKey in sheetEnum.Value)
+            {
+                sheetCSSB.Append(LineText(sheetEnumKey + ",", 2));
+            }
+            sheetCSSB.Append(LineText("Max", 2));
             sheetCSSB.Append(LineText("}\n", 1));
         }
         sheetCSSB.Append(LineText("}"));
@@ -191,6 +222,11 @@ public class SheetEditor
                                         break;
                                 }
                             }
+                        }
+                        else if (row1.EndsWith("Enum"))
+                        {
+                            var enumInst = ass.CreateInstance("Sheet." + row1);
+                            type.GetField(row2).SetValue(obj, (int)Enum.Parse(enumInst.GetType(), Convert.ToString(value)));
                         }
                         else
                         {

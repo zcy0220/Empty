@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 4022966236
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 781e1148d927ca572fb16bf4c592cab2
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/LuaScripts/Base/Common/Handler.lua.bytes
+Dependencies: []

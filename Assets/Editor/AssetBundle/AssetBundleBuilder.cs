@@ -43,7 +43,7 @@ namespace Assets.Editor.AssetBundle
 
         /// <summary>
         /// 创建Lua二进制文件
-        /// Assets/LuaScripts/*.lua -> Assets/GameAssets/LuaScripts/*.bytes
+        /// Assets/LuaScripts/*.lua -> Assets/Package/LuaScripts/*.lua.bytes
         /// </summary>
         public static void CreateLuaBytes()
         {
@@ -66,7 +66,7 @@ namespace Assets.Editor.AssetBundle
                     {
                         var fullPath = file.FullName.Replace("\\", "/");
                         var startIndex = fullPath.IndexOf("LuaScripts");
-                        var destPath = fullPath.Insert(startIndex, "GameAssets/") + ".bytes";
+                        var destPath = fullPath.Insert(startIndex, "Package/") + ".bytes";
                         if (Base.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(destPath))
                         {
                             file.CopyTo(destPath);

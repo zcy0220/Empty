@@ -9,3 +9,26 @@
 * CSharpCallLua: 委托等。导出会在DelegatesGensBridge.cs中生成。直观一点：InvalidCastException: This type must add to CSharpCallLua：{funtion} 报该错误就在对应的方法上添加标签导出
 
 ## Lua基本框架
+```sh
+└── LuaScripts
+    ├── Base                  # 基础公用模块(基本上就是C#端翻成Lua)
+    │   ├── Collections       # 常用的集合（Stack, Queue）
+    │   ├── Common            # 公共方法（Class, Singleton等）
+    │   ├── Debug             # 调试器
+    │   ├── Event             # 事件管理
+    │   ├── Extension         # Lua端系统方法拓展（string的拓展等）
+    │   ├── Pool              # 对象池
+    │   ├── Timer             # 定时器
+    │   ├── Update            # Update管理
+    │   └── Init              # 基础公共模块初始化
+    ├── Global                # 全局内容
+    │   └── Init              # 全局内容初始化
+    ├── Modules               # 模块目录
+    │   └── ...               # 各个模块
+    ├── Views                 # 视图UI目录
+    │   ├── ...               # 各个功能UI
+    │   ├── ViewConfig        # UI与Prefab对应配置
+    │   └── ViewManager       # 视图UI管理
+    ├── Config                # 全局配置文件
+    └── GameMain              # Lua程序入口
+```

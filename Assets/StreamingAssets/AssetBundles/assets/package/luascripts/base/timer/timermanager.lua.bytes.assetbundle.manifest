@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 3041424974
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: bd5f34067a820366199a4ee38fb490cc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Package/LuaScripts/Base/Timer/TimerManager.lua.bytes
+Dependencies: []

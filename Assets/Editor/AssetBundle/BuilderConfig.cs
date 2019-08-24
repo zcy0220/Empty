@@ -12,12 +12,12 @@ namespace Assets.Editor.AssetBundle
         /// <summary>
         /// 要打成AssetBundle的资源根目录
         /// </summary>
-        public static readonly string AssetRootPath = "Assets/GameAssets";
+        public static readonly string AssetRootPath = "Assets/Package";
         /// <summary>
         /// lua脚本路径
         /// </summary>
         public static readonly string LuaScriptsSrcPath = "Assets/LuaScripts";
-        public static readonly string LuaScriptsDestPath = "Assets/GameAssets/LuaScripts";
+        public static readonly string LuaScriptsDestPath = "Assets/Package/LuaScripts";
         /// <summary>
         /// 图集资源路径
         /// </summary>
