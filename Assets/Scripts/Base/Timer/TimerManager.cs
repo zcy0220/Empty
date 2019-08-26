@@ -31,12 +31,13 @@ namespace Base.Timer
         /// <param name="finishAction">更新回调</param>
         /// <param name="loop">循环次数</param>
         /// <param name="unScale">时间是否缩放</param>
-        public void CreateTimer(float duration, Action finishAction, int loop = 1, bool unScale = false)
+        public Timer CreateTimer(float duration, Action finishAction, int loop = 1, bool unScale = false)
         {
             var timer = mTimerPool.Spawn();
             timer.Init(duration, finishAction, loop, unScale);
             timer.Start();
             mTimerHashSet.Add(timer);
+            return timer;
         }
         
         /// <summary>
