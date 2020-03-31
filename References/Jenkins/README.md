@@ -3,8 +3,10 @@
 
 ## 注意事项和建议
 * Jenkins默认安装在/Users/Shared/Jenkins，并没有自己用户的权限，最好修改主目录到登录用户下
+* 用命令行 brew install jenkins
 * 少用Jenkins插件，能写在shell里的尽量写在shell里面
 * 整个打包流程我都没有优化，基本上都是删除原来工程，重新生成新工程
+* fir 指令可能需要 #!/bin/bash --login
 
 ## C#构建核心代码
 ~~~C#
